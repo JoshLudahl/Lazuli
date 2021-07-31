@@ -92,16 +92,15 @@ fun ItemListItem(itemsList: ItemList) {
     Row {
         Text(text = itemsList.listName)
     }
-
 }
 
 @Composable
 fun Footer() {
-    Column() {
-        Row() {
+    Column {
+        Row {
             Text("Hello Footer!", color = Color.Magenta)
         }
-        Row() {
+        Row {
             FloatingActionButton(
                 onClick = { /*TODO*/ },
                 Modifier
