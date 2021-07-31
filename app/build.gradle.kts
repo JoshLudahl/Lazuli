@@ -5,11 +5,12 @@ plugins {
 
 android {
     compileSdk = 30
+    buildToolsVersion = "31.0.0"
 
     defaultConfig {
         applicationId = "com.softklass.listuous"
-        minSdk = 23
-        targetSdk = 30
+        minSdk = 24
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
@@ -33,7 +34,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
