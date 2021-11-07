@@ -7,9 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,8 +22,6 @@ import com.softklass.listuous.models.ItemList
 import com.softklass.listuous.models.ListOfItemList
 import com.softklass.listuous.ui.theme.Blue
 import com.softklass.listuous.ui.theme.LightOrange
-import com.softklass.listuous.ui.theme.Orange
-import com.softklass.listuous.ui.theme.Peach
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,7 +139,13 @@ fun Card(itemsList: ItemList) {
                     backgroundColor = Blue,
                     elevation = 4.dp,
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {Toast.makeText(context, "Clicked ${itemsList.listName}", Toast.LENGTH_SHORT).show() }
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            "Clicked ${itemsList.listName}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
                         Text(text = itemsList.listName)
@@ -160,4 +166,3 @@ fun SimpleFilledTextFieldSample() {
         label = { Text("New Item") }
     )
 }
-
