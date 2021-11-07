@@ -21,7 +21,7 @@ import com.softklass.listuous.models.Item
 import com.softklass.listuous.models.ItemList
 import com.softklass.listuous.models.ListOfItemList
 import com.softklass.listuous.ui.theme.Blue
-import com.softklass.listuous.ui.theme.LightOrange
+import com.softklass.listuous.ui.theme.Tan
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +41,7 @@ fun ScreenOutline() {
         Box(
             modifier = Modifier
                 .size(width = maxWidth, height = maxHeight)
-                .background(color = LightOrange)
+                .background(color = Tan)
         ) {
             MainLayout()
         }
@@ -103,7 +103,7 @@ fun ListTitle() {
 
 @Composable
 fun ListContainer(listOfLists: ListOfItemList) {
-    LazyColumn(Modifier.background(color = LightOrange)) {
+    LazyColumn(Modifier.background(color = Tan)) {
         items(listOfLists.lists.size) { message ->
             ItemListItem(listOfLists.lists.elementAt(message))
         }
