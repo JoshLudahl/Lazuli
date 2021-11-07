@@ -57,7 +57,7 @@ fun MainLayout() {
     Column(
         Modifier.fillMaxSize()
     ) {
-        Row() {
+        Row {
             Header()
         }
         Row {
@@ -110,7 +110,7 @@ fun Header() {
 
 @Composable
 fun ListContainer(listOfLists: ListOfItemList) {
-    LazyColumn (Modifier.background(color = Blue)) {
+    LazyColumn(Modifier.background(color = Blue)) {
         items(listOfLists.lists.size) { message ->
             ItemListItem(listOfLists.lists.elementAt(message))
         }
@@ -146,7 +146,6 @@ fun Footer() {
 
 @Composable
 fun Card() {
-
     BoxWithConstraints(
         Modifier.fillMaxSize()
     ) {
@@ -158,7 +157,6 @@ fun Card() {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-
                     .fillMaxHeight()
                     .padding(10.dp)
             ) {
@@ -176,7 +174,4 @@ fun Card() {
             }
         }
     }
-
-
-
 }
