@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,10 @@ import androidx.compose.ui.unit.dp
 import com.softklass.listuous.models.Item
 import com.softklass.listuous.models.ItemList
 import com.softklass.listuous.models.ListOfItemList
+import com.softklass.listuous.ui.theme.Blue
+import com.softklass.listuous.ui.theme.LightOrange
+import com.softklass.listuous.ui.theme.Orange
+import com.softklass.listuous.ui.theme.Peach
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,12 +82,12 @@ fun MainLayout() {
 
 @Composable
 fun Header() {
-    Text("Hello Header!", color = Color.Magenta)
+    Text("Hello Header!")
 }
 
 @Composable
 fun ListContainer(listOfLists: ListOfItemList) {
-    LazyColumn {
+    LazyColumn (Modifier.background(color = Blue)) {
         items(listOfLists.lists.size) { message ->
             ItemListItem(listOfLists.lists.elementAt(message))
         }
@@ -92,7 +97,7 @@ fun ListContainer(listOfLists: ListOfItemList) {
 @Composable
 fun ItemListItem(itemsList: ItemList) {
     Row {
-        Text(text = itemsList.listName)
+        Text(text = itemsList.listName, color = LightOrange)
     }
 }
 
@@ -101,7 +106,7 @@ fun Footer() {
     val context = LocalContext.current
     Column {
         Row {
-            Text("Hello Footer!", color = Color.Magenta)
+            Text("Hello Footer!", color = Orange)
         }
         Row {
             FloatingActionButton(
@@ -109,7 +114,7 @@ fun Footer() {
                 Modifier
                     .height(40.dp)
                     .width(40.dp),
-                backgroundColor = Color.Magenta
+                backgroundColor = Peach
             ) {
             }
         }
