@@ -1,3 +1,5 @@
+[![Android CI](https://github.com/JoshLudahl/Lazuli/actions/workflows/android.yml/badge.svg)](https://github.com/JoshLudahl/Lazuli/actions/workflows/android.yml)
+
 # A simple list application written using Jetpack Compose
 This application is a simple list making application for Android. It has two main features, creating lists and adding items to those lists.
 
