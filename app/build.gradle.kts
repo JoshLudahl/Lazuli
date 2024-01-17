@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.softklass.lazuli"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -69,4 +69,16 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
+
+
+    val appsearch_version = "1.1.0-alpha03"
+
+    implementation("androidx.appsearch:appsearch:$appsearch_version")
+    // Use kapt instead of annotationProcessor if writing Kotlin classes
+    annotationProcessor("androidx.appsearch:appsearch-compiler:$appsearch_version")
+
+    implementation("androidx.appsearch:appsearch-local-storage:$appsearch_version")
+    // PlatformStorage is compatible with Android 12+ devices, and offers additional features
+    // to LocalStorage.
+    implementation("androidx.appsearch:appsearch-platform-storage:$appsearch_version")
 }

@@ -17,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.softklass.lazuli.models.Item
-import com.softklass.lazuli.models.ItemList
-import com.softklass.lazuli.models.ListOfItemList
+import com.softklass.lazuli.data.models.Category
+import com.softklass.lazuli.data.models.Item
+import com.softklass.lazuli.data.models.ItemList
+import com.softklass.lazuli.data.models.Label
+import com.softklass.lazuli.data.models.ListOfItemList
 import com.softklass.lazuli.ui.theme.Blue
 import com.softklass.lazuli.ui.theme.Tan
 
@@ -65,7 +67,11 @@ fun MainLayout() {
                 ItemList(
                     "Grocery",
                     mutableListOf(
-                        Item(" this is an item")
+                        Item(
+                            content = " this is an item",
+                        category = listOf(Category("coins")),
+                            label = listOf(Label("something"))
+                        )
                     )
                 )
 
@@ -74,8 +80,13 @@ fun MainLayout() {
                 ItemList(
                     "To-Do",
                     mutableListOf(
-                        Item(" this is an item")
+                        Item(
+                            content = " this is an item",
+                            category = listOf(Category("coins")),
+                            label = listOf(Label("something"))
+                        )
                     )
+
                 )
 
             )
@@ -83,7 +94,11 @@ fun MainLayout() {
                 ItemList(
                     "Errands",
                     mutableListOf(
-                        Item(" this is an item")
+                        Item(
+                            content = " this is an item",
+                            category = listOf(Category("coins")),
+                            label = listOf(Label("something"))
+                        )
                     )
                 )
             )
