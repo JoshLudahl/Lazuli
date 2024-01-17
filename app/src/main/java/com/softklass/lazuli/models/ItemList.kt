@@ -1,4 +1,4 @@
-package com.softklass.listuous.models
+package com.softklass.lazuli.models
 
 data class ItemList(
     val listName: String,

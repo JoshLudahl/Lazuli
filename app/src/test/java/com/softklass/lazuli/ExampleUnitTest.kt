@@ -1,4 +1,4 @@
-package com.softklass.listuous
+package com.softklass.lazuli
 
 import org.junit.Test
 

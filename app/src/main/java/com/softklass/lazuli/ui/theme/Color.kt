@@ -1,4 +1,4 @@
-package com.softklass.listuous.ui.theme
+package com.softklass.lazuli.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -15,6 +15,11 @@ val Blue = Color(red = 121, green = 180, blue = 183)
 
 // Potential color pallet two
 val Black = Color(27, 38, 44)
-val DarkBlue = Color(15, 76, 117)
 val CleanBlue = Color(50, 130, 184)
-val LightBlue = Color(187, 225, 250)
+
+// Lazuli Bunting colors
+val Dark = Color(38, 41, 50)
+val Brown = Color(183, 128, 81)
+val DarkBlue = Color(102, 165, 206)
+val LightBlue = Color(155, 221, 253)
+val Light = Color(248, 249, 254)

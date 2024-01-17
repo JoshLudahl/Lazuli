@@ -1,4 +1,4 @@
-package com.softklass.listuous
+package com.softklass.lazuli
 
 import android.os.Bundle
 import android.widget.Toast
@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.softklass.listuous.models.Item
-import com.softklass.listuous.models.ItemList
-import com.softklass.listuous.models.ListOfItemList
-import com.softklass.listuous.ui.theme.Blue
-import com.softklass.listuous.ui.theme.Tan
+import com.softklass.lazuli.models.Item
+import com.softklass.lazuli.models.ItemList
+import com.softklass.lazuli.models.ListOfItemList
+import com.softklass.lazuli.ui.theme.Blue
+import com.softklass.lazuli.ui.theme.Tan
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

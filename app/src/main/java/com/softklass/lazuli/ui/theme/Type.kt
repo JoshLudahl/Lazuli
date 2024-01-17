@@ -1,4 +1,4 @@
-package com.softklass.listuous.ui.theme
+package com.softklass.lazuli.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
