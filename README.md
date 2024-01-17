@@ -1,3 +1,5 @@
 # A simple list application written using Jetpack Compose
 
-[colors](https://colorhunt.co/palette/fef1e6f9d5a7ffb08590aacb)
+Lazuli Lists is a list application for Android inspired after the 
+[Lazuli Bunting](https://myodfw.com/wildlife-viewing/species/towhees-sparrows-grosbeaks-and-buntings).
+
