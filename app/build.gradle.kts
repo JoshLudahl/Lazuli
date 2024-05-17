@@ -48,7 +48,6 @@ android {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
     namespace = "com.softklass.lazuli"
-
 }
 
 dependencies {
