@@ -1,16 +1,15 @@
 package com.softklass.lazuli
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -22,6 +21,7 @@ import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ItemList
 import com.softklass.lazuli.data.models.Label
 import com.softklass.lazuli.data.models.ListOfItemList
+import com.softklass.lazuli.ui.theme.primaryLight
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,13 +125,13 @@ fun ListContainer(listOfLists: ListOfItemList) {
 @Composable
 fun ItemListItem(itemsList: ItemList) {
     Row {
-        Card(itemsList = itemsList)
+        CustomCart(itemsList = itemsList)
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Card(itemsList: ItemList) {
+fun CustomCart(itemsList: ItemList) {
     BoxWithConstraints(
         Modifier.fillMaxSize()
     ) {
@@ -148,17 +148,10 @@ fun Card(itemsList: ItemList) {
                     .padding(5.dp)
             ) {
                 Card(
-                    elevation = 4.dp,
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        Toast.makeText(
-                            context,
-                            "Clicked ${itemsList.listName}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+
                 ) {
-                    Column(modifier = Modifier.padding(10.dp)) {
+                    Column(modifier = Modifier.padding(10.dp).background(primaryLight)) {
                         Text(text = itemsList.listName)
                     }
                 }
