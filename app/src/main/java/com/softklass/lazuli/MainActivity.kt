@@ -22,8 +22,6 @@ import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ItemList
 import com.softklass.lazuli.data.models.Label
 import com.softklass.lazuli.data.models.ListOfItemList
-import com.softklass.lazuli.ui.theme.Blue
-import com.softklass.lazuli.ui.theme.Tan
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +41,6 @@ fun ScreenOutline() {
         Box(
             modifier = Modifier
                 .size(width = maxWidth, height = maxHeight)
-                .background(color = Tan)
         ) {
             MainLayout()
         }
@@ -118,7 +115,7 @@ fun ListTitle() {
 
 @Composable
 fun ListContainer(listOfLists: ListOfItemList) {
-    LazyColumn(Modifier.background(color = Tan)) {
+    LazyColumn {
         items(listOfLists.lists.size) { message ->
             ItemListItem(listOfLists.lists.elementAt(message))
         }
@@ -151,7 +148,6 @@ fun Card(itemsList: ItemList) {
                     .padding(5.dp)
             ) {
                 Card(
-                    backgroundColor = Blue,
                     elevation = 4.dp,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
