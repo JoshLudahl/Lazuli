@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    val target = 34
+    val target = 36
     compileSdk = target
 
     defaultConfig {
         applicationId = "com.softklass.lazuli"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = target
         versionCode = 1
         versionName = "1.0"
 
