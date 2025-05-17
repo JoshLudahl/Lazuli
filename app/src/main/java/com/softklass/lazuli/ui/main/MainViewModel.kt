@@ -2,6 +2,8 @@ package com.softklass.lazuli.ui.main
 
 import androidx.lifecycle.ViewModel
 import com.softklass.lazuli.data.models.Parent
+import dagger.hilt.android.lifecycle.HiltViewModel
+
 
 class MainViewModel: ViewModel() {
 

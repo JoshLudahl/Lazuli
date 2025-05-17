@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serializable)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -84,6 +85,11 @@ dependencies {
     // ROOM
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
+
+    // HILT
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.android.compiler)
 
     // APPSEARCH
     implementation(libs.androidx.appsearch)

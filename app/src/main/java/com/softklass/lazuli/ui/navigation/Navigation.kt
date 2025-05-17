@@ -11,6 +11,7 @@ import com.softklass.lazuli.ui.detail.ListDetailViewModel
 import com.softklass.lazuli.ui.main.Main
 import com.softklass.lazuli.ui.main.MainViewModel
 import kotlinx.serialization.Serializable
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Serializable
 private sealed interface Navigation {
@@ -31,7 +32,7 @@ fun AppNavHost(
         modifier = Modifier
     ) {
         composable<Navigation.Main> {
-            val viewModel = MainViewModel()
+            val viewModel = hiltViewModel<MainViewModel>()
             Main(
                 viewModel = viewModel,
                 onDetailItemClick = { id ->
@@ -41,7 +42,7 @@ fun AppNavHost(
         }
 
         composable<Navigation.ListDetail> {
-            val viewModel = ListDetailViewModel()
+            val viewModel = hiltViewModel<ListDetailViewModel>()
             val screen: Navigation.ListDetail = it.toRoute()
             ListDetailScreen(
                 listId = screen.id,
