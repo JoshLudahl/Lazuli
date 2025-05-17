@@ -1,0 +1,31 @@
+package com.softklass.lazuli.data
+
+import android.util.Log
+import com.softklass.lazuli.data.database.ParentDao
+import com.softklass.lazuli.data.models.Parent
+import kotlinx.coroutines.flow.flow
+
+private const val TAG = "ParentRepository"
+
+class ParentRepository(
+    private val parentDao: ParentDao
+) {
+
+    fun getAllListItems() = flow {
+        val listItems: List<Parent>
+
+        try {
+            Log.d(TAG, "Getting list items")
+            listItems = parentDao.getAll()
+            emit(listItems)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting list items", e)
+            emit(emptyList())
+        }
+    }
+
+    fun addListItem(parent: Parent) {
+        Log.d(TAG, "Adding list item")
+        parentDao.upsertAll(parent)
+    }
+}
