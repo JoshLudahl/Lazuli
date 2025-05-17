@@ -26,7 +26,7 @@ import com.softklass.lazuli.data.models.Parent
 @Composable
 fun Main(
     viewModel: MainViewModel,
-    onDetailItemClick: (String) -> Unit
+    onDetailItemClick: (Int) -> Unit
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
 
@@ -40,7 +40,7 @@ fun Main(
 
 @Composable
 fun MainContent(
-    onDetailItemClick: (String) -> Unit,
+    onDetailItemClick: (Int) -> Unit,
     list: List<Parent>,
     listName: String,
     onListNameChange: (String) -> Unit
@@ -57,7 +57,7 @@ fun MainContent(
         )
 
         Button(
-            onClick = { onDetailItemClick("1") },
+            onClick = { onDetailItemClick(1) },
             modifier = Modifier
                 .fillMaxWidth(.80f)
                 .align(Alignment.CenterHorizontally)
@@ -97,9 +97,9 @@ fun DisplayList(
 @Composable
 fun DisplayListPreview() {
     val list = listOf(
-        Parent("1", "Parent 1"),
-        Parent("2", "Parent 2"),
-        Parent("3", "Parent 3")
+        Parent(1, "Parent 1"),
+        Parent(2, "Parent 2"),
+        Parent(3, "Parent 3")
     )
     DisplayList(list)
 }

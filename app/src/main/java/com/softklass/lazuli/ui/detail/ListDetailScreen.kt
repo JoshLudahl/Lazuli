@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ListDetailScreen(
-    listId: String,
+    listId: Int,
     viewModel: ListDetailViewModel,
     onBack: () -> Unit
 ) {

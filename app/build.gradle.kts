@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serializable)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -79,6 +80,10 @@ dependencies {
     // DATASTORE
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
+
+    // ROOM
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
 
     // APPSEARCH
     implementation(libs.androidx.appsearch)

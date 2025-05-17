@@ -18,7 +18,7 @@ private sealed interface Navigation {
     data object Main : Navigation
 
     @Serializable
-    data class ListDetail(val id: String) : Navigation
+    data class ListDetail(val id: Int) : Navigation
 }
 
 @Composable
