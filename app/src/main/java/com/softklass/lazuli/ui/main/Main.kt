@@ -13,6 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,21 +28,27 @@ fun Main(
     viewModel: MainViewModel,
     onDetailItemClick: (String) -> Unit
 ) {
+    var listName: String by rememberSaveable { mutableStateOf("") }
+
         MainContent(
             onDetailItemClick,
-            listOf()
+            listOf(),
+            listName = listName,
+            onListNameChange = { listName = it },
         )
 }
 
 @Composable
 fun MainContent(
     onDetailItemClick: (String) -> Unit,
-    list: List<Parent>
+    list: List<Parent>,
+    listName: String,
+    onListNameChange: (String) -> Unit
 ) {
     Column(Modifier.fillMaxWidth()) {
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = listName,
+            onValueChange =  onListNameChange,
             label = { Text("List Name") },
             modifier = Modifier
                 .fillMaxWidth(.80f)
