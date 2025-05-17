@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serializable)
 }
 
 android {
@@ -67,6 +68,7 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.navigation.compose.android)
 
     testImplementation(libs.junit)
 
