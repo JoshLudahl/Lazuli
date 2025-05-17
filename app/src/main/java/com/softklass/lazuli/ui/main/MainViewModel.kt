@@ -5,6 +5,9 @@ import com.softklass.lazuli.data.models.Parent
 
 class MainViewModel: ViewModel() {
 
+    fun addList(name: String) {
+
+    }
 }
 
 sealed interface MainUiState {

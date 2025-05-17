@@ -1,17 +1,22 @@
 package com.softklass.lazuli.ui.main
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.softklass.lazuli.data.models.Parent
 
 @Composable
@@ -19,28 +24,51 @@ fun Main(
     viewModel: MainViewModel,
     onDetailItemClick: (String) -> Unit
 ) {
-    Scaffold(
-        floatingActionButton = { FabButton(onClick = { /*TODO*/ }) },
-        floatingActionButtonPosition = androidx.compose.material3.FabPosition.End
-    ) { innerPadding ->
         MainContent(
-            modifier = Modifier.padding(innerPadding),
             onDetailItemClick,
             listOf()
         )
-    }
 }
 
 @Composable
 fun MainContent(
-    modifier: Modifier = Modifier,
     onDetailItemClick: (String) -> Unit,
     list: List<Parent>
 ) {
-    if (list.isEmpty()) {
-        EmptyList()
-    } else {
-        DisplayList(list)
+    Column(Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text("List Name") },
+            modifier = Modifier
+                .fillMaxWidth(.80f)
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 16.dp)
+        )
+
+        Button(
+            onClick = { onDetailItemClick("1") },
+            modifier = Modifier
+                .fillMaxWidth(.80f)
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 16.dp),
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+        ) {
+            Icon(
+                Icons.Filled.Add,
+                contentDescription = "Add list button.",
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = "Add List",
+            )
+        }
+
+        if (list.isEmpty()) {
+            EmptyList()
+        } else {
+            DisplayList(list)
+        }
     }
 }
 
@@ -75,13 +103,4 @@ fun EmptyList() {
 @Composable
 fun EmptyListPreview() {
     EmptyList()
-}
-
-@Composable
-fun FabButton(onClick: () -> Unit) {
-    ExtendedFloatingActionButton(
-        onClick = { onClick() },
-        icon = { Icon(Icons.Filled.Add, "Add list button.") },
-        text = { Text(text = "Add List") },
-    )
 }
