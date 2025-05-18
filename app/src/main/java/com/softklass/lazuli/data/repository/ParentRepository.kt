@@ -1,13 +1,14 @@
-package com.softklass.lazuli.data
+package com.softklass.lazuli.data.repository
 
 import android.util.Log
 import com.softklass.lazuli.data.database.ParentDao
 import com.softklass.lazuli.data.models.Parent
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 private const val TAG = "ParentRepository"
 
-class ParentRepository(
+class ParentRepository @Inject constructor(
     private val parentDao: ParentDao
 ) {
 
