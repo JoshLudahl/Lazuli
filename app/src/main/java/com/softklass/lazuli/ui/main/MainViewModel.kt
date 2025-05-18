@@ -5,29 +5,23 @@ import androidx.lifecycle.viewModelScope
 import com.softklass.lazuli.data.models.Parent
 import com.softklass.lazuli.data.repository.ParentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val parentRepository: ParentRepository
-): ViewModel() {
+) : ViewModel() {
 
-    private val _parentItems = MutableStateFlow<List<Parent?>>(emptyList())
-    val parentItems: StateFlow<List<Parent?>>
-        get() = _parentItems
-
-    init {
-        viewModelScope.launch {
-            parentRepository.getAllListItems().collectLatest { value ->
-                _parentItems.update { value }
-            }
-        }
-    }
+    private val _parentItems = parentRepository.getAllListItems()
+    val parentItems: StateFlow<List<Parent?>> = _parentItems.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun addList(name: String) {
         viewModelScope.launch {

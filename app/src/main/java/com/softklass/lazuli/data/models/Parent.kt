@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "lists")
 data class Parent(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val description: String,
+    val description: String
 )
