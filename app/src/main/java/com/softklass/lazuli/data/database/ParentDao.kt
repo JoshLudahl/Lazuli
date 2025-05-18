@@ -2,8 +2,9 @@ package com.softklass.lazuli.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import com.softklass.lazuli.data.models.Parent
 import kotlinx.coroutines.flow.Flow
 
@@ -13,9 +14,12 @@ interface ParentDao {
     @Query("SELECT * FROM lists")
     fun getAll(): Flow<List<Parent?>>
 
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun upsertAll(vararg parents: Parent)
 
     @Delete
     fun delete(parent: Parent)
+
+    @Query("DELETE FROM lists")
+    suspend fun deleteAll()
 }
