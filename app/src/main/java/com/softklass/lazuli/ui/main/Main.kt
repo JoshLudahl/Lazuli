@@ -50,6 +50,15 @@ fun MainContent(
     onListNameChange: (String) -> Unit
 ) {
     Column(Modifier.fillMaxWidth()) {
+        Button(
+            onClick = { onDetailItemClick(1) },
+            modifier = Modifier
+                .fillMaxWidth(.80f)
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 16.dp),
+        ) {
+            Text(text = "Detail")
+        }
         OutlinedTextField(
             value = listName,
             onValueChange = onListNameChange,
