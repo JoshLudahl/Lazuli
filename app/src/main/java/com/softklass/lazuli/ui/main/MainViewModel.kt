@@ -6,7 +6,6 @@ import com.softklass.lazuli.data.models.Parent
 import com.softklass.lazuli.data.repository.ParentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,6 +14,13 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val parentRepository: ParentRepository
 ): ViewModel() {
+
+    val uiState = parentRepository.getAllListItems()
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            replay = 1
+    )
 
     fun addList(name: String) {
         viewModelScope.launch {
