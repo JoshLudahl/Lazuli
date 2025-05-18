@@ -1,9 +1,13 @@
 package com.softklass.lazuli.data.repository
 
 import android.util.Log
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.database.ParentDao
 import com.softklass.lazuli.data.models.Parent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 private const val TAG = "ParentRepository"
@@ -11,19 +15,7 @@ private const val TAG = "ParentRepository"
 class ParentRepository @Inject constructor(
     private val parentDao: ParentDao
 ) {
-
-    fun getAllListItems() = flow {
-        val listItems: List<Parent>
-
-        try {
-            Log.d(TAG, "Getting list items")
-            listItems = parentDao.getAll()
-            emit(listItems)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting list items", e)
-            emit(emptyList())
-        }
-    }
+    fun getAllListItems() = parentDao.getAll()
 
     suspend fun addListItem(parent: Parent) {
         Log.d(TAG, "Adding list item")

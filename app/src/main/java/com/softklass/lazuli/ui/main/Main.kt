@@ -1,5 +1,6 @@
 package com.softklass.lazuli.ui.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.Parent
 
 @Composable
@@ -29,10 +32,11 @@ fun Main(
     onDetailItemClick: (Int) -> Unit
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
+    val items by viewModel.parentItems.collectAsStateWithLifecycle()
 
     MainContent(
         onDetailItemClick = onDetailItemClick,
-        list = listOf(),
+        list = items,
         listName = listName,
         onListNameChange = { listName = it },
         onAddItemClick = { viewModel.addList(it) }
@@ -43,7 +47,7 @@ fun Main(
 fun MainContent(
     onDetailItemClick: (Int) -> Unit,
     onAddItemClick: (String) -> Unit,
-    list: List<Parent>,
+    list: List<Parent?>,
     listName: String,
     onListNameChange: (String) -> Unit
 ) {
@@ -86,11 +90,11 @@ fun MainContent(
 
 @Composable
 fun DisplayList(
-    list: List<Parent>
+    list: List<Parent?>
 ) {
     LazyColumn {
         items(list) { item ->
-            Text(text = item.description)
+            item?.description?.let { Text(text = it) }
         }
     }
 }
