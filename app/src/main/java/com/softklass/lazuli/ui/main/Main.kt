@@ -30,17 +30,19 @@ fun Main(
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
 
-        MainContent(
-            onDetailItemClick,
-            listOf(),
-            listName = listName,
-            onListNameChange = { listName = it },
-        )
+    MainContent(
+        onDetailItemClick = onDetailItemClick,
+        list = listOf(),
+        listName = listName,
+        onListNameChange = { listName = it },
+        onAddItemClick = { viewModel.addList(it) }
+    )
 }
 
 @Composable
 fun MainContent(
     onDetailItemClick: (Int) -> Unit,
+    onAddItemClick: (String) -> Unit,
     list: List<Parent>,
     listName: String,
     onListNameChange: (String) -> Unit
@@ -48,7 +50,7 @@ fun MainContent(
     Column(Modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = listName,
-            onValueChange =  onListNameChange,
+            onValueChange = onListNameChange,
             label = { Text("List Name") },
             modifier = Modifier
                 .fillMaxWidth(.80f)
@@ -57,7 +59,7 @@ fun MainContent(
         )
 
         Button(
-            onClick = { onDetailItemClick(1) },
+            onClick = { onAddItemClick(listName) },
             modifier = Modifier
                 .fillMaxWidth(.80f)
                 .align(Alignment.CenterHorizontally)

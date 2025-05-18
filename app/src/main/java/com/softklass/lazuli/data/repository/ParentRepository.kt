@@ -12,7 +12,7 @@ class ParentRepository @Inject constructor(
     private val parentDao: ParentDao
 ) {
 
-    fun getAllListItems() = flow {
+    suspend fun getAllListItems() = flow {
         val listItems: List<Parent>
 
         try {
@@ -25,7 +25,7 @@ class ParentRepository @Inject constructor(
         }
     }
 
-    fun addListItem(parent: Parent) {
+    suspend fun addListItem(parent: Parent) {
         Log.d(TAG, "Adding list item")
         parentDao.upsertAll(parent)
     }

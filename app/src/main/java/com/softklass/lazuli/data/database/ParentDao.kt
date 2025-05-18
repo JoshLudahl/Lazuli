@@ -10,10 +10,10 @@ import com.softklass.lazuli.data.models.Parent
 interface ParentDao {
 
     @Query("SELECT * FROM lists")
-    fun getAll(): List<Parent>
+    suspend fun getAll(): List<Parent>
 
     @Upsert
-    fun upsertAll(vararg parents: Parent)
+    suspend fun upsertAll(vararg parents: Parent)
 
     @Delete
     fun delete(parent: Parent)
