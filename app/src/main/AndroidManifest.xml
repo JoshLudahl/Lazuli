@@ -6,6 +6,7 @@
         android:name=".di.App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:theme="@style/Theme.Lazuli"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity

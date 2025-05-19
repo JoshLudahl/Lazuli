@@ -55,6 +55,7 @@ fun DisplayList(
                         Text(
                             modifier = Modifier
                                 .padding(8.dp)
+                                .padding(start = 8.dp)
                                 .weight(.75f),
                             text = it,
                         )
