@@ -28,6 +28,12 @@ class MainViewModel @Inject constructor(
             parentRepository.addListItem(Parent(description = name))
         }
     }
+
+    fun removeItem(item: Parent) {
+        viewModelScope.launch {
+            parentRepository.removeItem(item)
+        }
+    }
 }
 
 sealed interface MainUiState {

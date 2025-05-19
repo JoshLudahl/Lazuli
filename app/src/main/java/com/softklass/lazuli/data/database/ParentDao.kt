@@ -18,7 +18,7 @@ interface ParentDao {
     suspend fun upsertAll(vararg parents: Parent)
 
     @Delete
-    fun delete(parent: Parent)
+    suspend fun delete(parent: Parent)
 
     @Query("DELETE FROM lists")
     suspend fun deleteAll()
