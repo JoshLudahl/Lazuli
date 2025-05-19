@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 @Keep
 @Entity(tableName = "lists")
 data class Parent(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val description: String
-)
+    @PrimaryKey(autoGenerate = true)
+    override val id: Int = 0,
+    override val content: String
+) : ListItem

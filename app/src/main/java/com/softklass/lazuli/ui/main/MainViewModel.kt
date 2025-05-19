@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
 
     fun addList(name: String) {
         viewModelScope.launch {
-            parentRepository.addListItem(Parent(description = name))
+            parentRepository.addListItem(Parent(content = name))
         }
     }
 

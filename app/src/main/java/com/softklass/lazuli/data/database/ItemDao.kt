@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 import com.softklass.lazuli.data.models.Item
 import kotlinx.coroutines.flow.Flow
 
@@ -19,5 +18,5 @@ interface ItemDao {
     suspend fun addItem(vararg items: Item)
 
     @Delete
-    fun delete(item: Item)
+    suspend fun delete(item: Item)
 }

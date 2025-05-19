@@ -17,6 +17,8 @@ class ParentRepository @Inject constructor(
         parentDao.upsertAll(parent)
     }
 
+    fun getParentItem(id: Int) = parentDao.getById(id)
+
     suspend fun removeItem(item: Parent) {
         Log.d(TAG, "Removing list item")
         parentDao.delete(item)

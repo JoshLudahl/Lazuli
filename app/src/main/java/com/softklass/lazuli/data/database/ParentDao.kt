@@ -14,6 +14,9 @@ interface ParentDao {
     @Query("SELECT * FROM lists")
     fun getAll(): Flow<List<Parent?>>
 
+    @Query("SELECT * FROM lists WHERE id = :id")
+    fun getById(id: Int): Flow<Parent?>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun upsertAll(vararg parents: Parent)
 
