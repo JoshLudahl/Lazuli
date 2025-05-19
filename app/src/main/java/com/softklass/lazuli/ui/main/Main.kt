@@ -37,7 +37,10 @@ fun Main(
         list = items,
         listName = listName,
         onListNameChange = { listName = it },
-        onAddItemClick = { viewModel.addList(it) }
+        onAddItemClick = {
+            viewModel.addList(it)
+            listName = ""
+        }
     )
 }
 
