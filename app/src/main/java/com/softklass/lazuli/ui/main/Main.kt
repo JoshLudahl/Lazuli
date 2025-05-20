@@ -3,6 +3,9 @@ package com.softklass.lazuli.ui.main
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +20,7 @@ import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.Footer
 import com.softklass.lazuli.ui.list.HeaderUi
+import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 
 @Composable
 fun Main(
@@ -26,23 +30,41 @@ fun Main(
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
 
-    MainContent(
-        onDetailItemClick = onDetailItemClick,
-        list = items,
-        listName = listName,
-        onListNameChange = { listName = it },
-        onAddItemClick = {
-            viewModel.addList(it)
-            listName = ""
-        },
-        onDeleteIconClick = {
-            viewModel.removeItem(it as Parent)
+    Scaffold(
+        topBar = {
+            ReusableTopAppBar(
+                onNavigateBack = {},
+                includeBackArrow = false,
+                title = {
+                    Text("Lazuli")
+                },
+                modifier = Modifier,
+                actions = {},
+                isEnabled = false
+            )
         }
-    )
+    ) { innerPadding ->
+
+        MainContent(
+            modifier = Modifier.padding(innerPadding),
+            onDetailItemClick = onDetailItemClick,
+            list = items,
+            listName = listName,
+            onListNameChange = { listName = it },
+            onAddItemClick = {
+                viewModel.addList(it)
+                listName = ""
+            },
+            onDeleteIconClick = {
+                viewModel.removeItem(it as Parent)
+            }
+        )
+    }
 }
 
 @Composable
 fun MainContent(
+    modifier: Modifier = Modifier,
     onDetailItemClick: (Int) -> Unit,
     onAddItemClick: (String) -> Unit,
     list: List<Parent?>,
@@ -50,7 +72,7 @@ fun MainContent(
     onListNameChange: (String) -> Unit,
     onDeleteIconClick: (ListItem) -> Unit
 ) {
-    Column(Modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         val context = LocalContext.current
 
         HeaderUi(
