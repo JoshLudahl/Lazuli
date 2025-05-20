@@ -5,6 +5,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -17,6 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softklass.lazuli.ui.theme.primaryLight
 
@@ -37,10 +43,19 @@ fun HeaderUi(
             label = { Text(label) },
             modifier = Modifier
                 .fillMaxWidth(.80f)
-                .align(alignment = Alignment.CenterHorizontally)
-                .padding(top = 16.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Black,
+                .align(alignment = Alignment.CenterHorizontally),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (listName.trim().isNotEmpty()) {
+                        onAddItemClick(listName.trim())
+                    }
+                }
+            ),
+                    colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = primaryLight,
                 unfocusedBorderColor = Color.Gray,
                 focusedLabelColor = primaryLight,
                 unfocusedLabelColor = Color.Gray
