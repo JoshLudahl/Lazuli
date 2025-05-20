@@ -84,9 +84,7 @@ fun ListDetailContent(
     onDeleteItemClick: (ListItem) -> Unit
 ) {
 
-    Column {
-
-        Spacer(modifier = modifier)
+    Column(modifier = modifier) {
 
         HeaderUi(
             listName = listItem,
