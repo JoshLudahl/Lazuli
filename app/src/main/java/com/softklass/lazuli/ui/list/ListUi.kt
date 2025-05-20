@@ -65,10 +65,10 @@ fun DisplayList(
                             contentDescription = "Remove list item.",
                             modifier = Modifier
                                 .padding(8.dp)
+                                .align(Alignment.CenterVertically)
                                 .clickable {
                                     onDeleteIconClick(item)
                                 }
-
                         )
                     }
                 }
@@ -79,7 +79,8 @@ fun DisplayList(
 
 @Composable
 fun EmptyList(message: String) {
-    Column(modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

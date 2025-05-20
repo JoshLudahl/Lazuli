@@ -19,9 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.softklass.lazuli.ui.theme.primaryLight
@@ -54,7 +51,7 @@ fun HeaderUi(
                     }
                 }
             ),
-                    colors = OutlinedTextFieldDefaults.colors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = primaryLight,
                 unfocusedBorderColor = Color.Gray,
                 focusedLabelColor = primaryLight,
