@@ -3,10 +3,13 @@ package com.softklass.lazuli.ui.list
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,8 +22,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
@@ -36,6 +43,7 @@ fun HeaderUi(
     context: Context,
     label: String = "List Name",
 ) {
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -45,7 +53,8 @@ fun HeaderUi(
             label = { Text(label) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
+                .focusable()
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 .align(alignment = Alignment.CenterHorizontally),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
@@ -85,8 +94,11 @@ fun HeaderUi(
                             }
                         }
                 )
-            }
+            },
+            shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+
         )
+
     }
 }
 
@@ -99,7 +111,6 @@ fun DeleteIcon(
             Icons.Rounded.Delete,
             tint = MaterialTheme.colorScheme.error,
             contentDescription = "Delete entire list button",
-            modifier = Modifier,
         )
     }
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,8 +32,7 @@ fun DisplayList(
 ) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(.85f),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(list) { item ->
@@ -42,7 +40,7 @@ fun DisplayList(
             item?.content?.let {
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth(.80f)
+                        .fillMaxWidth(.90f)
                         .padding(8.dp)
                         .clickable {
                             onItemClick(item.id)
@@ -56,7 +54,7 @@ fun DisplayList(
                             modifier = Modifier
                                 .padding(8.dp)
                                 .padding(start = 8.dp)
-                                .weight(.75f),
+                                .weight(.9f),
                             text = it,
                         )
                         Icon(
