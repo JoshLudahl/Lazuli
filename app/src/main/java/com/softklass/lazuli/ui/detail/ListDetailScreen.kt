@@ -16,10 +16,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
+import com.softklass.lazuli.ui.list.DeleteIcon
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
-import com.softklass.lazuli.ui.list.Footer
 import com.softklass.lazuli.ui.list.HeaderUi
+import com.softklass.lazuli.ui.particles.ConfirmationDialog
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 import com.softklass.lazuli.ui.particles.useDebounce
 
@@ -39,6 +40,8 @@ fun ListDetailScreen(
         )
     }
 
+    val openDialog = remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             ReusableTopAppBar(
@@ -51,7 +54,11 @@ fun ListDetailScreen(
                     Text(parent?.content ?: "List Detail")
                 },
                 modifier = Modifier,
-                actions = {},
+                actions = {
+                    if (listItems.isNotEmpty()) {
+                        DeleteIcon { openDialog.value = true }
+                    }
+                },
                 isEnabled = isEnabled
             )
         }
@@ -70,6 +77,20 @@ fun ListDetailScreen(
                 viewModel.removeItem(it as Item)
             }
         )
+
+        if (openDialog.value) {
+            ConfirmationDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                onConfirmation = {
+                    viewModel.clearList(parentId = listId)
+                    openDialog.value = false
+                },
+                dialogTitle = "Clear List",
+                dialogText = "Are you sure you want to clear this list?"
+            )
+        }
     }
 }
 
@@ -90,7 +111,7 @@ fun ListDetailContent(
             onListNameChange = onListItemChange,
             onAddItemClick = onAddItemClick,
             context = LocalContext.current,
-            label = "Add list item"
+            label = "Add list item",
         )
 
         if (list.isEmpty()) {
@@ -102,7 +123,5 @@ fun ListDetailContent(
                 onDeleteIconClick = onDeleteItemClick
             )
         }
-
-        Footer()
     }
 }

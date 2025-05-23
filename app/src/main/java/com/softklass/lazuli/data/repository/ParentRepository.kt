@@ -24,7 +24,7 @@ class ParentRepository @Inject constructor(
         parentDao.delete(item)
     }
 
-    suspend fun removeAll() {
+    suspend fun clearDatabase() {
         Log.d(TAG, "Removing all list items")
         parentDao.deleteAll()
     }

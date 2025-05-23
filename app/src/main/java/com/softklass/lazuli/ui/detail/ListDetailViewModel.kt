@@ -19,7 +19,7 @@ class ListDetailViewModel @Inject constructor(
     private val itemRepository: ItemRepository,
     parentRepository: ParentRepository,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
     private val listId: Int = checkNotNull(savedStateHandle["id"])
 
     private val _listItems = itemRepository.getAllItems(listId)
@@ -45,6 +45,12 @@ class ListDetailViewModel @Inject constructor(
     fun removeItem(item: Item) {
         viewModelScope.launch {
             itemRepository.removeItem(item)
+        }
+    }
+
+    fun clearList(parentId: Int) {
+        viewModelScope.launch {
+            itemRepository.deleteByParent(parentId)
         }
     }
 }

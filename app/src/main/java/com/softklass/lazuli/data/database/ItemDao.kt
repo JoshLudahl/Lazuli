@@ -19,4 +19,10 @@ interface ItemDao {
 
     @Delete
     suspend fun delete(item: Item)
+
+    @Query("DELETE FROM list_item WHERE parent = :parent")
+    suspend fun deleteByParent(parent: Int)
+
+    @Query("DELETE FROM list_item")
+    suspend fun clearDatabase()
 }

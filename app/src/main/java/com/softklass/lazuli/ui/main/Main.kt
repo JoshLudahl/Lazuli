@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -16,10 +17,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.Parent
+import com.softklass.lazuli.ui.list.DeleteIcon
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
-import com.softklass.lazuli.ui.list.Footer
 import com.softklass.lazuli.ui.list.HeaderUi
+import com.softklass.lazuli.ui.particles.ConfirmationDialog
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 
 @Composable
@@ -29,6 +31,8 @@ fun Main(
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
+    val openDialog = remember { mutableStateOf(false) }
+
 
     Scaffold(
         topBar = {
@@ -39,7 +43,11 @@ fun Main(
                     Text("Lazuli")
                 },
                 modifier = Modifier,
-                actions = {},
+                actions = {
+                    if (items.isNotEmpty()) {
+                        DeleteIcon { openDialog.value = true }
+                    }
+                },
                 isEnabled = false
             )
         }
@@ -59,6 +67,20 @@ fun Main(
                 viewModel.removeItem(it as Parent)
             }
         )
+
+        if (openDialog.value) {
+            ConfirmationDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                onConfirmation = {
+                    viewModel.clearList()
+                    openDialog.value = false
+                },
+                dialogTitle = "Clear Lists",
+                dialogText = "Are you sure you want to clear this list? This will clear all lists."
+            )
+        }
     }
 }
 
@@ -79,7 +101,7 @@ fun MainContent(
             listName = listName,
             onListNameChange = onListNameChange,
             onAddItemClick = onAddItemClick,
-            context = context
+            context = context,
         )
 
         if (list.isEmpty()) {
@@ -92,8 +114,6 @@ fun MainContent(
             )
 
             Spacer(modifier = Modifier.weight(.5f))
-
-            Footer()
         }
     }
 }

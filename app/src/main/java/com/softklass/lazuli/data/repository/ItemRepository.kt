@@ -13,4 +13,7 @@ class ItemRepository @Inject constructor(
 
     suspend fun removeItem(item: Item) = itemDao.delete(item)
 
+    suspend fun clearDatabase() = itemDao.clearDatabase()
+
+    suspend fun deleteByParent(parent: Int) = itemDao.deleteByParent(parent)
 }

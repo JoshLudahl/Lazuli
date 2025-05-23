@@ -2,16 +2,19 @@ package com.softklass.lazuli.ui.list
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -19,7 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softklass.lazuli.ui.theme.primaryLight
 
@@ -29,7 +34,7 @@ fun HeaderUi(
     onListNameChange: (String) -> Unit,
     onAddItemClick: (String) -> Unit,
     context: Context,
-    label: String = "List Name"
+    label: String = "List Name",
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -39,7 +44,8 @@ fun HeaderUi(
             onValueChange = onListNameChange,
             label = { Text(label) },
             modifier = Modifier
-                .fillMaxWidth(.80f)
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp)
                 .align(alignment = Alignment.CenterHorizontally),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
@@ -58,35 +64,53 @@ fun HeaderUi(
                 unfocusedLabelColor = Color.Gray
             ),
             singleLine = true,
-            maxLines = 1
+            maxLines = 1,
+            trailingIcon = {
+                Icon(
+                    Icons.Rounded.Add,
+                    tint = MaterialTheme.colorScheme.surfaceTint,
+                    contentDescription = "Add list button.",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(36.dp)
+                        .clickable {
+                            if (listName.trim().isNotEmpty()) {
+                                onAddItemClick(listName.trim())
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Please enter valid text.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                )
+            }
         )
-
-        Button(
-            onClick = {
-                if (listName.trim().isNotEmpty()) {
-                    onAddItemClick(listName.trim())
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Please enter a list name",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth(.80f)
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 16.dp),
-            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
-        ) {
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = "Add list button.",
-                modifier = Modifier.padding(end = 8.dp)
-            )
-            Text(
-                text = "Add"
-            )
-        }
     }
+}
+
+@Composable
+fun DeleteIcon(
+    onClickIcon: () -> Unit
+) {
+    IconButton(onClick = onClickIcon) {
+        Icon(
+            Icons.Rounded.Delete,
+            tint = MaterialTheme.colorScheme.error,
+            contentDescription = "Delete entire list button",
+            modifier = Modifier,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun HeaderUiPreview() {
+    HeaderUi(
+        listName = "",
+        onListNameChange = { },
+        onAddItemClick = { },
+        context = LocalContext.current,
+    )
 }
