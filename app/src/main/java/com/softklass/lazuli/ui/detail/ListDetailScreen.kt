@@ -3,6 +3,7 @@ package com.softklass.lazuli.ui.detail
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -120,7 +121,8 @@ fun ListDetailContent(
             DisplayList(
                 list = list,
                 onItemClick = {},
-                onDeleteIconClick = onDeleteItemClick
+                onDeleteIconClick = onDeleteItemClick,
+                color = MaterialTheme.colorScheme.tertiaryContainer
             )
         }
     }

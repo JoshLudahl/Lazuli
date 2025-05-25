@@ -1,5 +1,6 @@
 package com.softklass.lazuli.ui.list
 
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softklass.lazuli.data.models.ListItem
@@ -28,7 +30,8 @@ import com.softklass.lazuli.data.models.Parent
 fun DisplayList(
     list: List<ListItem?>,
     onItemClick: (Int) -> Unit = {},
-    onDeleteIconClick: (ListItem) -> Unit = {}
+    onDeleteIconClick: (ListItem) -> Unit = {},
+    color: Color = MaterialTheme.colorScheme.secondaryContainer
 ) {
     LazyColumn(
         modifier = Modifier
@@ -47,6 +50,9 @@ fun DisplayList(
                         },
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 2.dp
+                    ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = color
                     )
                 ) {
                     Row {
