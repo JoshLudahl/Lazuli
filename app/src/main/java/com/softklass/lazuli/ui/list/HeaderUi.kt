@@ -12,7 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
+
+
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,10 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.softklass.lazuli.R
 import com.softklass.lazuli.ui.theme.primaryLight
 
 @Composable
@@ -70,7 +74,7 @@ fun HeaderUi(
             maxLines = 1,
             trailingIcon = {
                 Icon(
-                    Icons.Rounded.Add,
+                    imageVector = ImageVector.vectorResource(R.drawable.post_add_24px) ,
                     tint = MaterialTheme.colorScheme.surfaceTint,
                     contentDescription = "Add list button.",
                     modifier = Modifier
@@ -102,7 +106,7 @@ fun DeleteIcon(
 ) {
     IconButton(onClick = onClickIcon) {
         Icon(
-            Icons.Rounded.Delete,
+            imageVector = ImageVector.vectorResource(R.drawable.delete_24px),
             tint = MaterialTheme.colorScheme.error,
             contentDescription = "Delete entire list button",
         )
