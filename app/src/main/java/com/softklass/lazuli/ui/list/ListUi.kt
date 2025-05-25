@@ -1,5 +1,7 @@
 package com.softklass.lazuli.ui.list
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,8 +11,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -35,7 +40,8 @@ fun DisplayList(
     list: List<ListItem?>,
     onItemClick: (Int) -> Unit = {},
     onDeleteIconClick: (ListItem) -> Unit = {},
-    color: Color = MaterialTheme.colorScheme.secondaryContainer
+    color: Color = MaterialTheme.colorScheme.secondaryContainer,
+    shouldShowNextIcon: Boolean = false
 ) {
     LazyColumn(
         modifier = Modifier
@@ -65,8 +71,10 @@ fun DisplayList(
                             modifier = Modifier
                                 .padding(8.dp)
                                 .padding(start = 8.dp)
+                                .align(Alignment.CenterVertically)
                                 .weight(.9f),
                             text = it,
+                            color = MaterialTheme.colorScheme.secondary
                         )
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.delete_24px),
@@ -78,7 +86,17 @@ fun DisplayList(
                                 .clickable {
                                     onDeleteIconClick(item)
                                 }
+                                .size(24.dp)
                         )
+                        if (shouldShowNextIcon) {
+                            Icon(
+                                Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                                tint = MaterialTheme.colorScheme.secondary,
+                                contentDescription = "Remove list item.",
+                                modifier = Modifier
+                                    .padding(8.dp).size(24.dp),
+                            )
+                        }
                     }
                 }
             }
@@ -136,4 +154,25 @@ fun DisplayListPreview() {
 @Composable
 fun EmptyListPreview() {
     EmptyList("No lists created.")
+}
+
+fun shareList(title: String = "Lazuli List", list: List<ListItem?>, context: Context) {
+    val shareText = buildString {
+        appendLine(" List: $title")
+        appendLine("----------")
+        list.forEach { item ->
+            appendLine(item?.content)
+        }
+        appendLine("----------")
+        appendLine("Shared from Lazuli")
+    }
+
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, shareText)
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, "Sharing List")
+    context.startActivity(shareIntent)
 }

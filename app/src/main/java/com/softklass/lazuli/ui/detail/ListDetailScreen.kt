@@ -1,8 +1,12 @@
 package com.softklass.lazuli.ui.detail
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,6 +26,7 @@ import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
 import com.softklass.lazuli.ui.list.SectionTitle
+import com.softklass.lazuli.ui.list.shareList
 import com.softklass.lazuli.ui.particles.ConfirmationDialog
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 import com.softklass.lazuli.ui.particles.useDebounce
@@ -43,6 +48,7 @@ fun ListDetailScreen(
     }
 
     val openDialog = remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -59,7 +65,20 @@ fun ListDetailScreen(
                 actions = {
                     if (listItems.isNotEmpty()) {
                         DeleteIcon { openDialog.value = true }
+                        Icon(
+                            imageVector = Icons.Rounded.Share,
+                            tint = MaterialTheme.colorScheme.error,
+                            contentDescription = "Remove list item.",
+                            modifier = Modifier.clickable {
+                                shareList(
+                                    title = parent?.content ?: "",
+                                    list = listItems,
+                                    context = context
+                                )
+                            }
+                        )
                     }
+
                 },
                 isEnabled = isEnabled
             )

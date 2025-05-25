@@ -114,7 +114,8 @@ fun MainContent(
             DisplayList(
                 list,
                 onItemClick = onDetailItemClick,
-                onDeleteIconClick = onDeleteIconClick
+                onDeleteIconClick = onDeleteIconClick,
+                shouldShowNextIcon = true
             )
 
             Spacer(modifier = Modifier.weight(.5f))
