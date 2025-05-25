@@ -71,7 +71,7 @@ fun HeaderUi(
             trailingIcon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.post_add_24px),
-                    tint = MaterialTheme.colorScheme.surfaceTint,
+                    tint = MaterialTheme.colorScheme.secondary,
                     contentDescription = "Add list button.",
                     modifier = Modifier
                         .padding(8.dp)
