@@ -11,10 +11,6 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-
-
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -74,7 +70,7 @@ fun HeaderUi(
             maxLines = 1,
             trailingIcon = {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.post_add_24px) ,
+                    imageVector = ImageVector.vectorResource(R.drawable.post_add_24px),
                     tint = MaterialTheme.colorScheme.surfaceTint,
                     contentDescription = "Add list button.",
                     modifier = Modifier
@@ -95,7 +91,7 @@ fun HeaderUi(
             },
             shape = RoundedCornerShape(corner = CornerSize(16.dp)),
 
-        )
+            )
 
     }
 }
