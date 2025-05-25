@@ -18,7 +18,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -48,8 +47,8 @@ fun HeaderUi(
             label = { Text(label) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .align(alignment = Alignment.CenterHorizontally),
+                .padding(start = 16.dp, end = 16.dp),
+
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),

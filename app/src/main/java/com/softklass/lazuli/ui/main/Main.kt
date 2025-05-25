@@ -21,6 +21,7 @@ import com.softklass.lazuli.ui.list.DeleteIcon
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
+import com.softklass.lazuli.ui.list.SectionTitle
 import com.softklass.lazuli.ui.particles.ConfirmationDialog
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 
@@ -97,6 +98,8 @@ fun MainContent(
     Column(modifier = modifier.fillMaxSize()) {
         val context = LocalContext.current
 
+        SectionTitle(title = "Create New List")
+
         HeaderUi(
             listName = listName,
             onListNameChange = onListNameChange,
@@ -107,6 +110,7 @@ fun MainContent(
         if (list.isEmpty()) {
             EmptyList(message = "No lists created.")
         } else {
+            SectionTitle("Lists")
             DisplayList(
                 list,
                 onItemClick = onDetailItemClick,

@@ -21,6 +21,7 @@ import com.softklass.lazuli.ui.list.DeleteIcon
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
+import com.softklass.lazuli.ui.list.SectionTitle
 import com.softklass.lazuli.ui.particles.ConfirmationDialog
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 import com.softklass.lazuli.ui.particles.useDebounce
@@ -107,6 +108,8 @@ fun ListDetailContent(
 
     Column(modifier = modifier) {
 
+        SectionTitle(title = "Add New Item")
+
         HeaderUi(
             listName = listItem,
             onListNameChange = onListItemChange,
@@ -118,6 +121,7 @@ fun ListDetailContent(
         if (list.isEmpty()) {
             EmptyList(message = "No items created.")
         } else {
+            SectionTitle("Items")
             DisplayList(
                 list = list,
                 onItemClick = {},

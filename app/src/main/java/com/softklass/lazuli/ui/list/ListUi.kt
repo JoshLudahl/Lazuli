@@ -39,8 +39,7 @@ fun DisplayList(
 ) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(list) { item ->
@@ -48,8 +47,9 @@ fun DisplayList(
             item?.content?.let {
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth(.90f)
-                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp)
+                        .padding(bottom = 8.dp, top = 8.dp)
                         .clickable {
                             onItemClick(item.id)
                         },
