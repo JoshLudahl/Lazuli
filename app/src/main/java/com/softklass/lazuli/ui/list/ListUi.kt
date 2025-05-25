@@ -94,7 +94,8 @@ fun DisplayList(
                                 tint = MaterialTheme.colorScheme.secondary,
                                 contentDescription = "Remove list item.",
                                 modifier = Modifier
-                                    .padding(8.dp).size(24.dp),
+                                    .padding(8.dp)
+                                    .size(24.dp),
                             )
                         }
                     }
@@ -157,12 +158,15 @@ fun EmptyListPreview() {
 }
 
 fun shareList(title: String = "Lazuli List", list: List<ListItem?>, context: Context) {
+
     val shareText = buildString {
         appendLine(" List: $title")
         appendLine("----------")
-        list.forEach { item ->
-            appendLine(item?.content)
-        }
+        list.map { it?.content ?: "" }
+            .sortedWith(String.CASE_INSENSITIVE_ORDER)
+            .forEach { item ->
+                appendLine(item)
+            }
         appendLine("----------")
         appendLine("Shared from Lazuli")
     }

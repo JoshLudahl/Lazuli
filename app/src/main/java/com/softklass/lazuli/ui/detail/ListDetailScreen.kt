@@ -1,12 +1,14 @@
 package com.softklass.lazuli.ui.detail
 
 import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
-import com.softklass.lazuli.ui.list.DeleteIcon
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
@@ -62,27 +63,47 @@ fun ListDetailScreen(
                     Text(parent?.content ?: "List Detail")
                 },
                 modifier = Modifier,
-                actions = {
-                    if (listItems.isNotEmpty()) {
-                        DeleteIcon { openDialog.value = true }
-                        Icon(
-                            imageVector = Icons.Rounded.Share,
-                            tint = MaterialTheme.colorScheme.error,
-                            contentDescription = "Remove list item.",
-                            modifier = Modifier.clickable {
+                actions = { },
+                isEnabled = isEnabled
+            )
+        },
+        bottomBar = {
+            if (listItems.isNotEmpty()) {
+                BottomAppBar(
+                    actions = {
+                        // Delete button
+                        IconButton(
+                            onClick = {
+                                openDialog.value = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Delete,
+                                contentDescription = "Delete"
+                            )
+                        }
+
+                        // Share button
+                        IconButton(
+                            onClick = {
                                 shareList(
                                     title = parent?.content ?: "",
                                     list = listItems,
                                     context = context
                                 )
                             }
-                        )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Share"
+                            )
+                        }
                     }
-
-                },
-                isEnabled = isEnabled
-            )
+                )
+            }
         }
+
+
     ) { innerPadding ->
 
         ListDetailContent(
