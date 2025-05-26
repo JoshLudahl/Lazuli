@@ -41,10 +41,22 @@ fun AppNavHost(
                 )
             },
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(700)
-                )
+                when (initialState.destination.route) {
+                    Navigation.ListDetail.toString() ->  {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(700)
+                        )
+                    }
+
+                    else -> {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(700)
+                        )
+                    }
+                }
+
             }
 
         ) {
