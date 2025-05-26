@@ -2,6 +2,8 @@ package com.softklass.lazuli.ui.detail
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
@@ -20,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
@@ -62,7 +65,6 @@ fun ListDetailScreen(
                 title = {
                     Text(parent?.content ?: "List Detail")
                 },
-                modifier = Modifier,
                 actions = { },
                 isEnabled = isEnabled
             )
@@ -70,8 +72,14 @@ fun ListDetailScreen(
         bottomBar = {
             if (listItems.isNotEmpty()) {
                 BottomAppBar(
+                    modifier = Modifier.height(56.dp),
+                    windowInsets = WindowInsets(
+                        left = 8.dp,
+                        top = 0.dp,
+                        right = 0.dp,
+                        bottom = 0.dp
+                    ),
                     actions = {
-                        // Delete button
                         IconButton(
                             onClick = {
                                 openDialog.value = true
@@ -83,7 +91,6 @@ fun ListDetailScreen(
                             )
                         }
 
-                        // Share button
                         IconButton(
                             onClick = {
                                 shareList(
@@ -102,7 +109,6 @@ fun ListDetailScreen(
                 )
             }
         }
-
 
     ) { innerPadding ->
 
