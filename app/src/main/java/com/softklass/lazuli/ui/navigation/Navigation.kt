@@ -1,7 +1,10 @@
 package com.softklass.lazuli.ui.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,7 +14,6 @@ import com.softklass.lazuli.ui.detail.ListDetailViewModel
 import com.softklass.lazuli.ui.main.Main
 import com.softklass.lazuli.ui.main.MainViewModel
 import kotlinx.serialization.Serializable
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @Serializable
 private sealed interface Navigation {
@@ -31,7 +33,21 @@ fun AppNavHost(
         startDestination = Navigation.Main,
         modifier = Modifier
     ) {
-        composable<Navigation.Main> {
+        composable<Navigation.Main>(
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+
+        ) {
             val viewModel = hiltViewModel<MainViewModel>()
             Main(
                 viewModel = viewModel,
@@ -41,7 +57,20 @@ fun AppNavHost(
             )
         }
 
-        composable<Navigation.ListDetail> {
+        composable<Navigation.ListDetail>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
             val viewModel = hiltViewModel<ListDetailViewModel>()
             val screen: Navigation.ListDetail = it.toRoute()
             ListDetailScreen(
