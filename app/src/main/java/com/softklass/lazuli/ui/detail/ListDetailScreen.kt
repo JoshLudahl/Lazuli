@@ -21,9 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.softklass.lazuli.R
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.ui.list.DisplayList
@@ -41,8 +44,10 @@ fun ListDetailScreen(
     viewModel: ListDetailViewModel,
     onBack: () -> Unit
 ) {
+    val sorted by viewModel.sorted.collectAsStateWithLifecycle()
     var listItem: String by rememberSaveable { mutableStateOf("") }
     val listItems by viewModel.listItems.collectAsStateWithLifecycle()
+
     val parent by viewModel.parent.collectAsStateWithLifecycle(null)
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
         Log.i(
@@ -93,6 +98,17 @@ fun ListDetailScreen(
 
                         IconButton(
                             onClick = {
+                                viewModel.toggleSort()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.sort_24px),
+                                contentDescription = "Sort"
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
                                 shareList(
                                     title = parent?.content ?: "",
                                     list = listItems,
@@ -115,7 +131,7 @@ fun ListDetailScreen(
         ListDetailContent(
             modifier = Modifier.padding(innerPadding),
             listItem = listItem,
-            list = listItems,
+            list = if (sorted) listItems.sortedBy { it?.content } else listItems,
             onListItemChange = { listItem = it },
             onAddItemClick = {
                 viewModel.addListItem(it, listId)
@@ -126,19 +142,18 @@ fun ListDetailScreen(
             }
         )
 
-        if (openDialog.value) {
-            ConfirmationDialog(
-                onDismissRequest = {
-                    openDialog.value = false
-                },
-                onConfirmation = {
-                    viewModel.clearList(parentId = listId)
-                    openDialog.value = false
-                },
-                dialogTitle = "Clear List",
-                dialogText = "Are you sure you want to clear this list?"
-            )
-        }
+        ConfirmationDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            onConfirmation = {
+                viewModel.clearList(parentId = listId)
+                openDialog.value = false
+            },
+            dialogTitle = "Clear List",
+            dialogText = "Are you sure you want to clear this list?",
+            showConfirmation = openDialog.value
+        )
     }
 }
 

@@ -7,6 +7,7 @@ import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.repository.ItemRepository
 import com.softklass.lazuli.data.repository.ParentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.shareIn
@@ -21,6 +22,10 @@ class ListDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val listId: Int = checkNotNull(savedStateHandle["id"])
+
+    private val _sorted = MutableStateFlow(false)
+    val sorted: StateFlow<Boolean>
+        get() = _sorted
 
     private val _listItems = itemRepository.getAllItems(listId)
     val listItems: StateFlow<List<Item?>> = _listItems.stateIn(
@@ -52,5 +57,9 @@ class ListDetailViewModel @Inject constructor(
         viewModelScope.launch {
             itemRepository.deleteByParent(parentId)
         }
+    }
+
+    fun toggleSort() {
+        _sorted.value = !_sorted.value
     }
 }
