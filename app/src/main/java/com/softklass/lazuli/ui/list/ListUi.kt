@@ -19,6 +19,7 @@ import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,34 +70,48 @@ fun DisplayList(
                     Row {
                         Text(
                             modifier = Modifier
-                                .padding(8.dp)
-                                .padding(start = 8.dp)
+                                .padding(
+                                    start = 16.dp,
+                                    top = 12.dp,
+                                    bottom = 12.dp,
+                                    end = 8.dp
+                                )
+
                                 .align(Alignment.CenterVertically)
                                 .weight(.9f),
                             text = it,
-                            color = MaterialTheme.colorScheme.secondary
+                            color = MaterialTheme.colorScheme.secondary,
+                            style = MaterialTheme.typography.bodyLarge
                         )
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.delete_24px),
-                            tint = MaterialTheme.colorScheme.error,
-                            contentDescription = "Remove list item.",
+                        IconButton(
+                            onClick = {
+                                onDeleteIconClick(item)
+                            },
                             modifier = Modifier
-                                .padding(8.dp)
                                 .align(Alignment.CenterVertically)
-                                .clickable {
-                                    onDeleteIconClick(item)
-                                }
-                                .size(24.dp)
-                        )
-                        if (shouldShowNextIcon) {
+                        ) {
                             Icon(
-                                Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                tint = MaterialTheme.colorScheme.secondary,
+                                imageVector = ImageVector.vectorResource(id = R.drawable.delete_forever_24px),
+                                tint = MaterialTheme.colorScheme.error,
                                 contentDescription = "Remove list item.",
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .size(24.dp),
+                                modifier = Modifier.size(24.dp)
                             )
+                        }
+
+                        if (shouldShowNextIcon) {
+                            IconButton(
+                                onClick = {
+                                    onItemClick(item.id)
+                                },
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            ) {
+                                Icon(
+                                    Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    contentDescription = "Remove list item.",
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
                         }
                     }
                 }

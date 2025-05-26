@@ -80,7 +80,7 @@ fun Main(
                 openDialog.value = false
             },
             dialogTitle = "Clear Lists",
-            dialogText = "Are you sure you want to clear this list? This will clear all lists.",
+            dialogText = "Are you sure you want to clear this list? This will delete everything from the database.",
             showConfirmation = openDialog.value
         )
 

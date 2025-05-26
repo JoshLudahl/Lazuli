@@ -75,55 +75,58 @@ fun ListDetailScreen(
             )
         },
         bottomBar = {
-            if (listItems.isNotEmpty()) {
-                BottomAppBar(
-                    modifier = Modifier.height(56.dp),
-                    windowInsets = WindowInsets(
-                        left = 8.dp,
-                        top = 0.dp,
-                        right = 0.dp,
-                        bottom = 0.dp
-                    ),
-                    actions = {
-                        IconButton(
-                            onClick = {
-                                openDialog.value = true
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Delete,
-                                contentDescription = "Delete"
-                            )
-                        }
-
-                        IconButton(
-                            onClick = {
-                                viewModel.toggleSort()
-                            }
-                        ) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.sort_24px),
-                                contentDescription = "Sort"
-                            )
-                        }
-
-                        IconButton(
-                            onClick = {
-                                shareList(
-                                    title = parent?.content ?: "",
-                                    list = listItems,
-                                    context = context
-                                )
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = "Share"
-                            )
-                        }
+            BottomAppBar(
+                modifier = Modifier.height(56.dp),
+                containerColor = MaterialTheme.colorScheme.surface,
+                windowInsets = WindowInsets(
+                    left = 8.dp,
+                    top = 0.dp,
+                    right = 0.dp,
+                    bottom = 0.dp
+                ),
+                actions = {
+                    IconButton(
+                        onClick = {
+                            openDialog.value = true
+                        },
+                        enabled = listItems.isNotEmpty()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Delete,
+                            contentDescription = "Delete"
+                        )
                     }
-                )
-            }
+
+                    IconButton(
+                        onClick = {
+                            viewModel.toggleSort()
+                        },
+                        enabled = listItems.isNotEmpty()
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.sort_24px),
+                            contentDescription = "Sort"
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            shareList(
+                                title = parent?.content ?: "",
+                                list = listItems,
+                                context = context
+                            )
+                        },
+                        enabled = listItems.isNotEmpty()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share"
+                        )
+                    }
+                }
+            )
+
         }
 
     ) { innerPadding ->
