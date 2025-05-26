@@ -15,42 +15,44 @@ fun ConfirmationDialog(
     onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
-
-    ) {
-    AlertDialog(
-        icon = {
-            Icon(
-                Icons.Rounded.Warning,
-                tint = MaterialTheme.colorScheme.error,
-                contentDescription = "Warning"
-            )
-        },
-        title = {
-            Text(text = dialogTitle)
-        },
-        text = {
-            Text(text = dialogText)
-        },
-        onDismissRequest = {
-            onDismissRequest()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
+    showConfirmation: Boolean = false
+) {
+    if (showConfirmation) {
+        AlertDialog(
+            icon = {
+                Icon(
+                    Icons.Rounded.Warning,
+                    tint = MaterialTheme.colorScheme.error,
+                    contentDescription = "Warning"
+                )
+            },
+            title = {
+                Text(text = dialogTitle)
+            },
+            text = {
+                Text(text = dialogText)
+            },
+            onDismissRequest = {
+                onDismissRequest()
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirmation()
+                    }
+                ) {
+                    Text("Confirm")
                 }
-            ) {
-                Text("Confirm")
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onDismissRequest()
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onDismissRequest()
+                    }
+                ) {
+                    Text("Dismiss")
                 }
-            ) {
-                Text("Dismiss")
             }
-        }
-    )
+        )
+    }
 }

@@ -71,33 +71,32 @@ fun Main(
             }
         )
 
-        if (openDialog.value) {
-            ConfirmationDialog(
-                onDismissRequest = {
-                    openDialog.value = false
-                },
-                onConfirmation = {
-                    viewModel.clearList()
-                    openDialog.value = false
-                },
-                dialogTitle = "Clear Lists",
-                dialogText = "Are you sure you want to clear this list? This will clear all lists."
-            )
-        }
+        ConfirmationDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            onConfirmation = {
+                viewModel.clearList()
+                openDialog.value = false
+            },
+            dialogTitle = "Clear Lists",
+            dialogText = "Are you sure you want to clear this list? This will clear all lists.",
+            showConfirmation = openDialog.value
+        )
 
-        if (openDeleteListDialog.value) {
-            ConfirmationDialog(
-                onDismissRequest = {
-                    openDeleteListDialog.value = false
-                },
-                onConfirmation = {
-                    viewModel.removeItem(parent.value as Parent)
-                    openDeleteListDialog.value = false
-                },
-                dialogTitle = "Clear List?",
-                dialogText = "Are you sure you want to clear this list? This action will remove the list and all items it contains."
-            )
-        }
+        ConfirmationDialog(
+            onDismissRequest = {
+                openDeleteListDialog.value = false
+            },
+            onConfirmation = {
+                viewModel.removeItem(parent.value as Parent)
+                openDeleteListDialog.value = false
+            },
+            dialogTitle = "Clear List?",
+            dialogText = "Are you sure you want to clear this list? This action will remove the list and all items it contains.",
+            showConfirmation = openDeleteListDialog.value
+        )
+
     }
 }
 
@@ -127,6 +126,7 @@ fun MainContent(
             EmptyList(message = "No lists created.")
         } else {
             SectionTitle("Lists")
+
             DisplayList(
                 list,
                 onItemClick = onDetailItemClick,
