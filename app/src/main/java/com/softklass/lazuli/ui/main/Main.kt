@@ -33,7 +33,8 @@ fun Main(
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
     val openDialog = remember { mutableStateOf(false) }
-
+    val openDeleteListDialog = remember { mutableStateOf(false) }
+    val parent = remember { mutableStateOf<Parent?>(null) }
 
     Scaffold(
         topBar = {
@@ -65,7 +66,8 @@ fun Main(
                 listName = ""
             },
             onDeleteIconClick = {
-                viewModel.removeItem(it as Parent)
+                parent.value = it as Parent
+                openDeleteListDialog.value = true
             }
         )
 
@@ -80,6 +82,20 @@ fun Main(
                 },
                 dialogTitle = "Clear Lists",
                 dialogText = "Are you sure you want to clear this list? This will clear all lists."
+            )
+        }
+
+        if (openDeleteListDialog.value) {
+            ConfirmationDialog(
+                onDismissRequest = {
+                    openDeleteListDialog.value = false
+                },
+                onConfirmation = {
+                    viewModel.removeItem(parent.value as Parent)
+                    openDeleteListDialog.value = false
+                },
+                dialogTitle = "Clear List?",
+                dialogText = "Are you sure you want to clear this list? This action will remove the list and all items it contains."
             )
         }
     }
