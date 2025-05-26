@@ -131,7 +131,13 @@ fun ListDetailScreen(
         ListDetailContent(
             modifier = Modifier.padding(innerPadding),
             listItem = listItem,
-            list = if (sorted) listItems.sortedBy { it?.content } else listItems,
+            list = if (sorted) listItems.sortedWith { first, second ->
+                second?.content?.let {
+                    first?.content?.compareTo(
+                        it, ignoreCase = true
+                    )
+                } ?: 0
+            } else listItems,
             onListItemChange = { listItem = it },
             onAddItemClick = {
                 viewModel.addListItem(it, listId)
