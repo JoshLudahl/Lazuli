@@ -92,7 +92,7 @@ fun ListDetailScreen(
                         enabled = listItems.isNotEmpty()
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.Delete,
+                            imageVector = ImageVector.vectorResource(R.drawable.delete_sweep_24px),
                             contentDescription = "Delete"
                         )
                     }

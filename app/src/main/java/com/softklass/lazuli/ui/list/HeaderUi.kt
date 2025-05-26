@@ -101,7 +101,7 @@ fun DeleteIcon(
 ) {
     IconButton(onClick = onClickIcon) {
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.delete_24px),
+            imageVector = ImageVector.vectorResource(R.drawable.delete_sweep_24px),
             tint = MaterialTheme.colorScheme.error,
             contentDescription = "Delete entire list button",
         )
