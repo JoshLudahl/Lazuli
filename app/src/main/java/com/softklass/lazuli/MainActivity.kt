@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.softklass.lazuli.ui.navigation.AppNavHost
 import com.softklass.lazuli.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,10 +18,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Surface(modifier = Modifier.padding(innerPadding)) {
-                        AppNavHost()
-                    }
+                Surface(modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxSize()) {
+                    AppNavHost()
                 }
             }
         }
