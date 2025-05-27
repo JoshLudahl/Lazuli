@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softklass.lazuli.R
@@ -50,7 +51,8 @@ fun HeaderUi(
                 .padding(start = 16.dp, end = 16.dp),
 
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                capitalization = KeyboardCapitalization.Sentences
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
