@@ -57,6 +57,7 @@ fun DisplayList(
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp)
                         .padding(bottom = 8.dp, top = 8.dp)
+                        .animateItem()
                         .clickable {
                             onItemClick(item.id)
                         },

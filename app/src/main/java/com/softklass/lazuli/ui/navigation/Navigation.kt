@@ -33,11 +33,13 @@ fun AppNavHost(
         startDestination = Navigation.Main,
         modifier = Modifier
     ) {
+        val animationTween = 350
+
         composable<Navigation.Main>(
             exitTransition = {
                 slideOutOfContainer(
                     AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
+                    animationSpec = tween(animationTween)
                 )
             },
             enterTransition = {
@@ -45,14 +47,14 @@ fun AppNavHost(
                     Navigation.ListDetail.toString() ->  {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
+                            animationSpec = tween(animationTween)
                         )
                     }
 
                     else -> {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(700)
+                            animationSpec = tween(animationTween)
                         )
                     }
                 }
@@ -73,13 +75,13 @@ fun AppNavHost(
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(700)
+                    animationSpec = tween(animationTween)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
                     AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(700)
+                    animationSpec = tween(animationTween)
                 )
             }
         ) {
