@@ -15,8 +15,8 @@ android {
         applicationId = "com.softklass.lazuli"
         minSdk = 26
         targetSdk = target
-        versionCode = 3
-        versionName = "2025.5.26"
+        versionCode = 4
+        versionName = "2025.5.27"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
