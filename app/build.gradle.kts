@@ -15,7 +15,7 @@ android {
         applicationId = "com.softklass.lazuli"
         minSdk = 26
         targetSdk = target
-        versionCode = 4
+        versionCode = 5
         versionName = "2025.6.02"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
