@@ -11,8 +11,12 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -101,11 +105,17 @@ fun HeaderUi(
 fun DeleteIcon(
     onClickIcon: () -> Unit
 ) {
-    IconButton(onClick = onClickIcon) {
+    FilledIconButton(
+        onClick = onClickIcon,
+        colors = IconButtonDefaults.filledIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.inverseSurface,
+            contentColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.delete_sweep_24px),
-            tint = MaterialTheme.colorScheme.error,
-            contentDescription = "Delete entire list button",
+            contentDescription = "Back",
+            modifier = Modifier,
         )
     }
 }
