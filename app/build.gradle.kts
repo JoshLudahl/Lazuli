@@ -70,7 +70,7 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.text.google.fonts)
-    runtimeOnly("androidx.compose.material:material-icons-extended:1.7.8")
+    runtimeOnly(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose.android)
 
     testImplementation(libs.junit)
@@ -91,14 +91,4 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
-
-    // APPSEARCH
-    implementation(libs.androidx.appsearch)
-    // Use kapt instead of annotationProcessor if writing Kotlin classes
-    annotationProcessor(libs.androidx.appsearch.compiler)
-
-    implementation(libs.androidx.appsearch.local.storage)
-    // PlatformStorage is compatible with Android 12+ devices, and offers additional features
-    // to LocalStorage.
-    implementation(libs.androidx.appsearch.platform.storage)
 }
