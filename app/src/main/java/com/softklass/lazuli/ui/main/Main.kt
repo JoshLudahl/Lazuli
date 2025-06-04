@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.Parent
@@ -52,7 +53,8 @@ fun Main(
                 },
                 isEnabled = false
             )
-        }
+        },
+        modifier = Modifier.padding(8.dp)
     ) { innerPadding ->
 
         MainContent(

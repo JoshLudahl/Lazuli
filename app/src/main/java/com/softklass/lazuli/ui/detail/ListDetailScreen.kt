@@ -127,8 +127,8 @@ fun ListDetailScreen(
                 }
             )
 
-        }
-
+        },
+        modifier = Modifier.padding(8.dp)
     ) { innerPadding ->
 
         ListDetailContent(
