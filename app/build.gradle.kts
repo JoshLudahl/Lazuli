@@ -70,7 +70,6 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.text.google.fonts)
-    runtimeOnly(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose.android)
 
     testImplementation(libs.junit)
