@@ -11,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.softklass.lazuli.ui.detail.ListDetailScreen
 import com.softklass.lazuli.ui.detail.ListDetailViewModel
+import com.softklass.lazuli.ui.edit.ItemEditScreen
+import com.softklass.lazuli.ui.edit.ItemEditViewModel
 import com.softklass.lazuli.ui.main.Main
 import com.softklass.lazuli.ui.main.MainViewModel
 import kotlinx.serialization.Serializable
@@ -22,6 +24,9 @@ private sealed interface Navigation {
 
     @Serializable
     data class ListDetail(val id: Int) : Navigation
+
+    @Serializable
+    data class ItemEdit(val id: Int) : Navigation
 }
 
 @Composable
@@ -44,7 +49,7 @@ fun AppNavHost(
             },
             enterTransition = {
                 when (initialState.destination.route) {
-                    Navigation.ListDetail.toString() ->  {
+                    toString() -> {
                         slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Right,
                             animationSpec = tween(animationTween)
@@ -58,9 +63,7 @@ fun AppNavHost(
                         )
                     }
                 }
-
             }
-
         ) {
             val viewModel = hiltViewModel<MainViewModel>()
             Main(
@@ -90,6 +93,15 @@ fun AppNavHost(
             ListDetailScreen(
                 listId = screen.id,
                 viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable<Navigation.ItemEdit> {
+            val screen: Navigation.ItemEdit = it.toRoute()
+            ItemEditScreen(
+                viewModel = hiltViewModel<ItemEditViewModel>(),
+                itemId = screen.id,
                 onBack = { navController.popBackStack() }
             )
         }
