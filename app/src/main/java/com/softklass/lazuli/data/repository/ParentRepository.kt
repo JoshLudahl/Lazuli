@@ -4,7 +4,6 @@ import com.softklass.lazuli.data.database.ParentDao
 import com.softklass.lazuli.data.models.Parent
 import javax.inject.Inject
 
-
 class ParentRepository @Inject constructor(
     private val parentDao: ParentDao
 ) {

@@ -70,6 +70,9 @@ fun AppNavHost(
                 viewModel = viewModel,
                 onDetailItemClick = { id ->
                     navController.navigate(Navigation.ListDetail(id))
+                },
+                onEditItemClick = {
+                    navController.navigate(Navigation.ItemEdit(it.id))
                 }
             )
         }
@@ -97,10 +100,24 @@ fun AppNavHost(
             )
         }
 
-        composable<Navigation.ItemEdit> {
+        composable<Navigation.ItemEdit>(
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(animationTween)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(animationTween)
+                )
+            }
+        ) {
             val screen: Navigation.ItemEdit = it.toRoute()
+            val viewModel = hiltViewModel<ItemEditViewModel>()
             ItemEditScreen(
-                viewModel = hiltViewModel<ItemEditViewModel>(),
+                viewModel = viewModel,
                 itemId = screen.id,
                 onBack = { navController.popBackStack() }
             )

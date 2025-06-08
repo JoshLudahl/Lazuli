@@ -29,7 +29,8 @@ import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 @Composable
 fun Main(
     viewModel: MainViewModel,
-    onDetailItemClick: (Int) -> Unit
+    onDetailItemClick: (Int) -> Unit,
+    onEditItemClick: (ListItem) -> Unit
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
@@ -70,7 +71,8 @@ fun Main(
             onDeleteIconClick = {
                 parent.value = it as Parent
                 openDeleteListDialog.value = true
-            }
+            },
+            onEditItemClick = onEditItemClick
         )
 
         ConfirmationDialog(
@@ -110,7 +112,8 @@ fun MainContent(
     list: List<Parent?>,
     listName: String,
     onListNameChange: (String) -> Unit,
-    onDeleteIconClick: (ListItem) -> Unit
+    onDeleteIconClick: (ListItem) -> Unit,
+    onEditItemClick: (ListItem) -> Unit
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         val context = LocalContext.current
@@ -133,7 +136,8 @@ fun MainContent(
                 list,
                 onItemClick = onDetailItemClick,
                 onDeleteIconClick = onDeleteIconClick,
-                shouldShowNextIcon = true
+                isListItemDetail = true,
+                onEditItemClick = onEditItemClick,
             )
 
             Spacer(modifier = Modifier.weight(.5f))

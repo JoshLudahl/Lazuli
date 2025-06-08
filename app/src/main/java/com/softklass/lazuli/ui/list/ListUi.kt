@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -39,10 +38,10 @@ import com.softklass.lazuli.data.models.Parent
 @Composable
 fun DisplayList(
     list: List<ListItem?>,
-    onItemClick: (Int) -> Unit = {},
-    onDeleteIconClick: (ListItem) -> Unit = {},
-    color: Color = MaterialTheme.colorScheme.secondaryContainer,
-    shouldShowNextIcon: Boolean = false
+    onItemClick: (Int) -> Unit,
+    onDeleteIconClick: (ListItem) -> Unit,
+    onEditItemClick: (ListItem) -> Unit,
+    isListItemDetail: Boolean = false
 ) {
     LazyColumn(
         modifier = Modifier
@@ -65,7 +64,7 @@ fun DisplayList(
                         defaultElevation = 2.dp
                     ),
                     colors = CardDefaults.cardColors(
-                        containerColor = color
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     )
                 ) {
                     Row {
@@ -84,6 +83,24 @@ fun DisplayList(
                             color = MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.bodyLarge
                         )
+
+                        if (isListItemDetail) {
+                            IconButton(
+                                onClick = {
+                                    onEditItemClick(item)
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                            ) {
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    contentDescription = "Remove list item.",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
+
                         IconButton(
                             onClick = {
                                 onDeleteIconClick(item)
@@ -99,7 +116,7 @@ fun DisplayList(
                             )
                         }
 
-                        if (shouldShowNextIcon) {
+                        if (isListItemDetail) {
                             IconButton(
                                 onClick = {
                                     onItemClick(item.id)
@@ -164,7 +181,13 @@ fun DisplayListPreview() {
         Parent(2, "Parent 2"),
         Parent(3, "Parent 3")
     )
-    DisplayList(list)
+    DisplayList(
+        list,
+        onItemClick = {},
+        onDeleteIconClick = {},
+        onEditItemClick = {},
+        isListItemDetail = false
+    )
 }
 
 @Preview

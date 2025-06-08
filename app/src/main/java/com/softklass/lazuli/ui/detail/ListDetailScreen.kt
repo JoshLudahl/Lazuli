@@ -195,7 +195,8 @@ fun ListDetailContent(
                 list = list,
                 onItemClick = {},
                 onDeleteIconClick = onDeleteItemClick,
-                color = MaterialTheme.colorScheme.tertiaryContainer
+                onEditItemClick = {},
+                isListItemDetail = false
             )
         }
     }
