@@ -10,19 +10,13 @@ class ParentRepository @Inject constructor(
 ) {
     fun getAllListItems() = parentDao.getAll()
 
-    suspend fun addListItem(parent: Parent) {
-        parentDao.upsertAll(parent)
-    }
+    suspend fun addListItem(parent: Parent) = parentDao.upsertAll(parent)
 
     fun getParentItem(id: Int) = parentDao.getById(id)
 
-    suspend fun removeItem(item: Parent) {
-        parentDao.delete(item)
-    }
+    suspend fun removeItem(item: Parent) = parentDao.delete(item)
 
-    suspend fun clearDatabase() {
-        parentDao.deleteAll()
-    }
+    suspend fun clearDatabase() = parentDao.deleteAll()
 
     suspend fun update(item: Parent) = parentDao.update(item)
 }
