@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.softklass.lazuli.data.models.Item
 import kotlinx.coroutines.flow.Flow
 
@@ -25,4 +26,7 @@ interface ItemDao {
 
     @Query("DELETE FROM list_item")
     suspend fun clearDatabase()
+
+    @Update
+    suspend fun update(item: Item)
 }
