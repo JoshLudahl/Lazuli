@@ -5,61 +5,79 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
+enum class Action {
+    DATABASE, NETWORK, UNKNOWN
+}
+
 /**
- * Represents the result of an operation, which can be one of the following:
- * - Error: Contains details about an error that occurred during the operation.
- * - Loading: Indicates that the operation is still in progress.
- * - Success: Contains the successful result of the operation.
+ * A sealed interface representing the state of a resource, commonly used for wrapping data fetching
+ * or processing results. It encompasses various states such as loading, success, and error scenarios.
+ *
+ * Usage Example:
+ * ```
+ * val resource: Resource<Int> = Resource.Success(42)
+ * when (resource) {
+ *     is Resource.Loading -> // Handle loading state
+ *     is Resource.Success -> println("Data: ${resource.data}")
+ *     is Resource.Error -> when (resource) {
+ *         is Resource.Error.DataBase -> println("Database Error: ${resource.exception}")
+ *         is Resource.Error.Network -> println("Network Error: ${resource.exception}")
+ *         is Resource.Error.Unknown -> println("Unknown Error: ${resource.exception}")
+ *     }
+ * }
+ * ```
  */
 sealed interface Resource<out T> {
-    data class Error(
-        val exception: Exception? = null,
-        val message: String? = null,
-    ) : Resource<Nothing>
+
+    sealed interface Error : Resource<Nothing> {
+        data class DataBase(val exception: Exception) : Error
+        data class Network(val exception: Exception) : Error
+        data class Unknown(val exception: Exception) : Error
+    }
 
     data object Loading : Resource<Nothing>
 
     class Success<T>(val data: T) : Resource<T>
 }
 
+
 /**
- * Executes a suspendable action and emits its state as a flow of `Resource`.
- *
- * The emitted flow will go through the following states:
- * 1. `Resource.Loading`: Indicates that the operation is in progress.
- * 2. `Resource.Success`: Contains the result of the successful operation.
- * 3. `Resource.Error`: Contains error details if the operation fails.
- *
- * This function ensures that the computation is performed on the `Dispatchers.Default` dispatcher.
+ * Executes a suspend function and emits its results wrapped in a Resource. Handles loading, success, and error states.
  *
  * Usage Example:
  * ```
- * val resultFlow = action { yourSuspendableFunction() }
- * resultFlow.collect { resource ->
+ * val resourceFlow = action {
+ *     // Perform a suspend operation, e.g., a network or database fetch
+ *     fetchDataFromApi()
+ * }
+ * resourceFlow.collect { resource ->
  *     when (resource) {
  *         is Resource.Loading -> // Handle loading state
- *         is Resource.Success -> // Access resource.data for result
- *         is Resource.Error -> // Handle error using resource.exception or resource.message
+ *         is Resource.Success -> println("Data: ${resource.data}")
+ *         is Resource.Error -> println("Error: ${resource.exception.message}")
  *     }
  * }
  * ```
  *
- * @param action A suspendable lambda that represents the operation to perform.
- * @return A flow that emits the state (`Resource`) of the operation.
+ * @param action The suspend function to be executed, returning the desired type.
+ * @param coroutineDispatcher The [CoroutineDispatcher] to run the action on; defaults to [Dispatchers.Default].
+ * @return A Flow emitting [Resource] states ([Resource.Loading], [Resource.Success], [Resource.Error]).
  */
 fun <T> action(
     action: suspend () -> T,
-    coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
+    coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    actionType: Action = Action.UNKNOWN
 ) = flow {
     emit(Resource.Loading)
     try {
         emit(Resource.Success(action()))
     } catch (e: Exception) {
         emit(
-            Resource.Error(
-                exception = e,
-                message = e.localizedMessage ?: "An unknown error occurred"
-            )
+            when (actionType) {
+                Action.DATABASE -> Resource.Error.DataBase(e)
+                Action.NETWORK -> Resource.Error.Network(e)
+                else -> Resource.Error.Unknown(e)
+            }
         )
     }
 }.flowOn(coroutineDispatcher)
