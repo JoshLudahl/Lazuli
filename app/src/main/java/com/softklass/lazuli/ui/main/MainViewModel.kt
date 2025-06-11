@@ -27,16 +27,18 @@ class MainViewModel @Inject constructor(
     )
 
     val parentItemsWithResource = action(
-        action = { parentRepository.getAllListItems().stateIn(
+        action = {
+            parentRepository.getAllListItems().stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+        })
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )})
-        .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = MainUiState.Loading
-    )
+            initialValue = MainUiState.Loading
+        )
 
     fun addList(name: String) {
         viewModelScope.launch {
