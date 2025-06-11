@@ -3,6 +3,7 @@ package com.softklass.lazuli.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.softklass.lazuli.data.models.Parent
+import com.softklass.lazuli.data.models.action
 import com.softklass.lazuli.data.repository.ItemRepository
 import com.softklass.lazuli.data.repository.ParentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,18 @@ class MainViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
+    )
+
+    val parentItemsWithResource = action(
+        action = { parentRepository.getAllListItems().stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )})
+        .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = MainUiState.Loading
     )
 
     fun addList(name: String) {
