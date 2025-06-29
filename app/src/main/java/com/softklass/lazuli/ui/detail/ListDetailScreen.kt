@@ -81,7 +81,7 @@ fun ListDetailScreen(
                     left = 8.dp,
                     top = 0.dp,
                     right = 0.dp,
-                    bottom = 0.dp
+                    bottom = 16.dp
                 ),
                 actions = {
                     IconButton(
