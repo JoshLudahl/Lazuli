@@ -15,8 +15,8 @@ android {
         applicationId = "com.softklass.lazuli"
         minSdk = 26
         targetSdk = target
-        versionCode = 7
-        versionName = "2025.6.08"
+        versionCode = 8
+        versionName = "2025.6.30"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -42,12 +42,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
@@ -55,6 +51,12 @@ android {
     }
 
     namespace = "com.softklass.lazuli"
+}
+
+kotlin {
+    kotlin {
+        jvmToolchain(21)
+    }
 }
 
 dependencies {
