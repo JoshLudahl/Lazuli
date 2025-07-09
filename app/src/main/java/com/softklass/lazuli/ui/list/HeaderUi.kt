@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -49,7 +50,8 @@ fun HeaderUi(
             label = { Text(label) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
+                .padding(start = 16.dp, end = 16.dp)
+                .testTag("list"),
 
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
@@ -89,6 +91,7 @@ fun HeaderUi(
                                 ).show()
                             }
                         }
+                        .testTag("add_list_icon")
                 )
             },
             shape = RoundedCornerShape(corner = CornerSize(16.dp)),
@@ -112,7 +115,7 @@ fun DeleteIcon(
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.delete_sweep_24px),
             contentDescription = "Back",
-            modifier = Modifier,
+            modifier = Modifier.testTag("clear"),
         )
     }
 }

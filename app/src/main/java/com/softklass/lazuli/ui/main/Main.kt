@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.ListItem
@@ -46,7 +47,7 @@ fun Main(
                 title = {
                     Text("Lazuli")
                 },
-                modifier = Modifier,
+                modifier = Modifier.testTag("title"),
                 actions = {
                     if (items.isNotEmpty()) {
                         DeleteIcon { openDialog.value = true }

@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,7 +79,9 @@ fun DisplayList(
                                 )
 
                                 .align(Alignment.CenterVertically)
-                                .weight(.9f),
+                                .weight(.9f)
+                                .testTag(item.content)
+                            ,
                             text = it,
                             color = MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.bodyLarge
@@ -97,6 +100,7 @@ fun DisplayList(
                                     tint = MaterialTheme.colorScheme.secondary,
                                     contentDescription = "Remove list item.",
                                     modifier = Modifier.size(24.dp)
+                                        .testTag("edit_icon")
                                 )
                             }
                         }
@@ -107,12 +111,14 @@ fun DisplayList(
                             },
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
+                                .testTag("delete_icon")
                         ) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.delete_forever_24px),
                                 tint = MaterialTheme.colorScheme.error,
                                 contentDescription = "Remove list item.",
                                 modifier = Modifier.size(24.dp)
+                                    .testTag("delete_icon")
                             )
                         }
 
