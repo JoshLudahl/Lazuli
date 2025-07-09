@@ -80,8 +80,7 @@ fun DisplayList(
 
                                 .align(Alignment.CenterVertically)
                                 .weight(.9f)
-                                .testTag(item.content)
-                            ,
+                                .testTag(item.content),
                             text = it,
                             color = MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.bodyLarge
@@ -99,7 +98,8 @@ fun DisplayList(
                                     imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
                                     tint = MaterialTheme.colorScheme.secondary,
                                     contentDescription = "Remove list item.",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier
+                                        .size(24.dp)
                                         .testTag("edit_icon")
                                 )
                             }
@@ -117,7 +117,8 @@ fun DisplayList(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.delete_forever_24px),
                                 tint = MaterialTheme.colorScheme.error,
                                 contentDescription = "Remove list item.",
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier
+                                    .size(24.dp)
                                     .testTag("delete_icon")
                             )
                         }
