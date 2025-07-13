@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Card
@@ -32,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.softklass.lazuli.R
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.Parent
@@ -51,7 +54,7 @@ fun DisplayList(
     ) {
         items(list) { item ->
 
-            item?.content?.let {
+            item?.content?.let { content ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -69,7 +72,7 @@ fun DisplayList(
                     )
                 ) {
                     Row {
-                        Text(
+                        BasicText(
                             modifier = Modifier
                                 .padding(
                                     start = 16.dp,
@@ -77,13 +80,18 @@ fun DisplayList(
                                     bottom = 12.dp,
                                     end = 8.dp
                                 )
-
                                 .align(Alignment.CenterVertically)
                                 .weight(.9f)
-                                .testTag(item.content),
-                            text = it,
-                            color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.bodyLarge
+                                .testTag(item.content)
+                                .fillMaxWidth(),
+                            text = content,
+                            autoSize = TextAutoSize.StepBased(
+                                minFontSize = 12.sp,
+                                maxFontSize = 16.sp
+                            ),
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = MaterialTheme.colorScheme.secondary
+                            )
                         )
 
                         if (isListItemDetail) {
