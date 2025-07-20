@@ -38,8 +38,8 @@ fun ReusableTopAppBar(
                     onClick = onNavigateBack,
                     enabled = isEnabled,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.inverseSurface,
-                        contentColor = MaterialTheme.colorScheme.secondaryContainer
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 ) {
                     Icon(

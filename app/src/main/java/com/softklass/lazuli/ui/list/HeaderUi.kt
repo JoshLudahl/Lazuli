@@ -109,7 +109,7 @@ fun DeleteIcon(
         onClick = onClickIcon,
         colors = IconButtonDefaults.filledIconButtonColors(
             containerColor = MaterialTheme.colorScheme.inverseSurface,
-            contentColor = MaterialTheme.colorScheme.secondaryContainer
+            contentColor = MaterialTheme.colorScheme.onSecondary
         )
     ) {
         Icon(

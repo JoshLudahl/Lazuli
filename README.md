@@ -10,7 +10,6 @@ Lazuli Lists is a list application for Android inspired after the
 ## Libraries and Technologies
 The application is build using the following libraries from Android and other third-party sources:
 - Android Application written in Kotlin and built with Gradle
-- [AppSearch](https://developer.android.com/develop/ui/views/search/appsearch)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
 
