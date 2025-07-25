@@ -98,6 +98,11 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
 
+    // In App Updates
+    implementation(libs.app.update)
+    // For Kotlin users also add the Kotlin extensions library for Play In-App Update:
+    implementation(libs.app.update.ktx)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
