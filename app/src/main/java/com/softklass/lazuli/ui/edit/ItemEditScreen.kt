@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
@@ -46,7 +46,7 @@ fun ItemEditScreen(
 ) {
 
     val item by viewModel.item.collectAsStateWithLifecycle()
-    var fieldValue by rememberSaveable { mutableStateOf(item?.content ?: "") }
+    var fieldValue by rememberSaveable(item) { mutableStateOf(item?.content ?: "") }
 
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
         Log.i(
@@ -56,6 +56,7 @@ fun ItemEditScreen(
     }
 
     val context = LocalContext.current
+
     Scaffold(
         topBar = {
             ReusableTopAppBar(
@@ -90,11 +91,12 @@ fun ItemEditScreen(
     ) { innerPadding ->
         ItemDetailScreenContent(
             modifier = Modifier.padding(innerPadding),
-            value = fieldValue.toString(),
+            value = fieldValue,
+            label = fieldValue,
             onValueChange = { fieldValue = it },
             onSaveClick = {
                 if (fieldValue.trim().isNotEmpty()) {
-                    viewModel.saveItem(fieldValue.toString())
+                    viewModel.saveItem(fieldValue)
                     onBack()
                 } else {
                     Toast.makeText(
@@ -112,6 +114,7 @@ fun ItemEditScreen(
 fun ItemDetailScreenContent(
     modifier: Modifier = Modifier,
     value: String,
+    label: String,
     onValueChange: (String) -> Unit,
     onSaveClick: () -> Unit
 ) {
@@ -121,7 +124,7 @@ fun ItemDetailScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
-            label = { Text("Edit Item") },
+            label = { Text(label) },
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
@@ -165,12 +168,13 @@ fun ItemDetailScreenContent(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun ItemEditScreenPreview() {
     ItemDetailScreenContent(
         value = "",
         onValueChange = {},
-        onSaveClick = {}
+        onSaveClick = {},
+        label = "List Name"
     )
 }
