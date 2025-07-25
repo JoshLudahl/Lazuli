@@ -94,6 +94,7 @@ fun DisplayList(
                             )
                         )
 
+                        // TODO remove if block after implementing edit screen to handle child and parent
                         if (isListItemDetail) {
                             IconButton(
                                 onClick = {

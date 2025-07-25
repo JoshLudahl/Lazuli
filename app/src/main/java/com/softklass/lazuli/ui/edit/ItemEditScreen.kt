@@ -56,7 +56,7 @@ fun ItemEditScreen(
     }
 
     val context = LocalContext.current
-
+Log.i("ItemEditScreen", "itemId: ${item?.content}")
     Scaffold(
         topBar = {
             ReusableTopAppBar(

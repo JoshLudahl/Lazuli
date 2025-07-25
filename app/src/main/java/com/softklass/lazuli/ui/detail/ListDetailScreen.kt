@@ -41,7 +41,8 @@ import com.softklass.lazuli.ui.particles.useDebounce
 fun ListDetailScreen(
     listId: Int,
     viewModel: ListDetailViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onEditItemClick: (ListItem) -> Unit
 ) {
     val sorted by viewModel.sorted.collectAsStateWithLifecycle()
     var listItem: String by rememberSaveable { mutableStateOf("") }
@@ -147,7 +148,8 @@ fun ListDetailScreen(
             },
             onDeleteItemClick = {
                 viewModel.removeItem(it as Item)
-            }
+            },
+            onEditItemClick = onEditItemClick
         )
 
         ConfirmationDialog(
@@ -172,7 +174,8 @@ fun ListDetailContent(
     list: List<Item?>,
     onListItemChange: (String) -> Unit,
     onAddItemClick: (String) -> Unit,
-    onDeleteItemClick: (ListItem) -> Unit
+    onDeleteItemClick: (ListItem) -> Unit,
+    onEditItemClick: (ListItem) -> Unit
 ) {
 
     Column(modifier = modifier) {
@@ -195,7 +198,7 @@ fun ListDetailContent(
                 list = list,
                 onItemClick = {},
                 onDeleteIconClick = onDeleteItemClick,
-                onEditItemClick = {},
+                onEditItemClick = onEditItemClick,
                 isListItemDetail = false
             )
         }
