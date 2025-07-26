@@ -12,6 +12,7 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 kotlin = "2.2.0"
 ksp = "2.2.0-2.0.2"
+ktlint = "13.0.0"
 lifecycleRuntimeKtx = "2.9.2"
 material = "1.12.0"
 material3Android = "1.4.0-alpha18"
@@ -65,4 +66,5 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidGradlePlugin" }
 kotlin-serializable = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
