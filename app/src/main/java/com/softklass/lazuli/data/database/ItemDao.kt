@@ -15,6 +15,9 @@ interface ItemDao {
     @Query("SELECT * FROM list_item WHERE parent = :parent")
     fun getAll(parent: Int): Flow<List<Item>>
 
+    @Query("SELECT * FROM list_item WHERE id = :id")
+    fun getById(id: Int): Flow<Item>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addItem(vararg items: Item)
 

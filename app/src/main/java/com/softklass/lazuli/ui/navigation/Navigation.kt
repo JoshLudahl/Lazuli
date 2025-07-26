@@ -26,7 +26,7 @@ private sealed interface Navigation {
     data class ListDetail(val id: Int) : Navigation
 
     @Serializable
-    data class ItemEdit(val id: Int) : Navigation
+    data class ItemEdit(val id: Int, val isParent: Boolean = true) : Navigation
 }
 
 @Composable
@@ -97,7 +97,7 @@ fun AppNavHost(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onEditItemClick = { item ->
-                    navController.navigate(Navigation.ItemEdit(item.id))
+                    navController.navigate(Navigation.ItemEdit(item.id, isParent = false))
                 }
             )
         }

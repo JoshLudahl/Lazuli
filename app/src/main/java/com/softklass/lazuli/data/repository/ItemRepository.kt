@@ -9,6 +9,8 @@ class ItemRepository @Inject constructor(
 ) {
     fun getAllItems(parent: Int) = itemDao.getAll(parent)
 
+    fun getItemById(id: Int) = itemDao.getById(id)
+
     suspend fun addItem(item: Item) = itemDao.addItem(item)
 
     suspend fun removeItem(item: Item) = itemDao.delete(item)

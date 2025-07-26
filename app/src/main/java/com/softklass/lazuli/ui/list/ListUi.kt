@@ -94,25 +94,23 @@ fun DisplayList(
                             )
                         )
 
-                        // TODO remove if block after implementing edit screen to handle child and parent
-                        if (isListItemDetail) {
-                            IconButton(
-                                onClick = {
-                                    onEditItemClick(item)
-                                },
+                        IconButton(
+                            onClick = {
+                                onEditItemClick(item)
+                            },
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
+                                tint = MaterialTheme.colorScheme.secondary,
+                                contentDescription = "Remove list item.",
                                 modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                            ) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                    contentDescription = "Remove list item.",
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .testTag("edit_icon")
-                                )
-                            }
+                                    .size(24.dp)
+                                    .testTag("edit_icon")
+                            )
                         }
+
 
                         IconButton(
                             onClick = {
