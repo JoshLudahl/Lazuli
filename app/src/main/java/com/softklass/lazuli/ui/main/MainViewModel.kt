@@ -13,40 +13,48 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    private val parentRepository: ParentRepository,
-    private val itemRepository: ItemRepository
-) : ViewModel() {
+class MainViewModel
+    @Inject
+    constructor(
+        private val parentRepository: ParentRepository,
+        private val itemRepository: ItemRepository,
+    ) : ViewModel() {
+        private val _parentItems = parentRepository.getAllListItems()
+        val parentItems: StateFlow<List<Parent?>> =
+            _parentItems.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
+            )
 
-    private val _parentItems = parentRepository.getAllListItems()
-    val parentItems: StateFlow<List<Parent?>> = _parentItems.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList()
-    )
+        fun addList(name: String) {
+            viewModelScope.launch {
+                parentRepository.addListItem(Parent(content = name))
+            }
+        }
 
-    fun addList(name: String) {
-        viewModelScope.launch {
-            parentRepository.addListItem(Parent(content = name))
+        fun removeItem(item: Parent) {
+            viewModelScope.launch {
+                parentRepository.removeItem(item)
+            }
+        }
+
+        fun clearList() {
+            viewModelScope.launch {
+                parentRepository.clearDatabase()
+                itemRepository.clearDatabase()
+            }
         }
     }
-
-    fun removeItem(item: Parent) {
-        viewModelScope.launch {
-            parentRepository.removeItem(item)
-        }
-    }
-
-    fun clearList() {
-        viewModelScope.launch {
-            parentRepository.clearDatabase()
-            itemRepository.clearDatabase()
-        }
-    }
-}
 
 sealed interface MainUiState {
     data object Loading : MainUiState
-    data class Success(val items: List<Parent>) : MainUiState
-    data class Error(val message: String) : MainUiState
+
+    data class Success(
+        val items: List<Parent>,
+    ) : MainUiState
+
+    data class Error(
+        val message: String,
+    ) : MainUiState
 }

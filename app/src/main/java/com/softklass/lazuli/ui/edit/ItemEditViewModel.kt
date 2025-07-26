@@ -14,46 +14,49 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ItemEditViewModel @Inject constructor(
-    private val parentRepository: ParentRepository,
-    private val itemRepository: ItemRepository,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    private val id: Int = checkNotNull(savedStateHandle["id"])
-    private val isParent: Boolean = checkNotNull(savedStateHandle["isParent"])
+class ItemEditViewModel
+    @Inject
+    constructor(
+        private val parentRepository: ParentRepository,
+        private val itemRepository: ItemRepository,
+        savedStateHandle: SavedStateHandle,
+    ) : ViewModel() {
+        private val id: Int = checkNotNull(savedStateHandle["id"])
+        private val isParent: Boolean = checkNotNull(savedStateHandle["isParent"])
 
-    private val _item = if (isParent) {
-        parentRepository.getParentItem(id)
-    } else {
-        itemRepository.getItemById(id)
-    }
-    val item = _item.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = null
-    )
-
-    fun saveItem(content: String) {
-        viewModelScope.launch {
-
+        private val _item =
             if (isParent) {
-                parentRepository.update(
-                    Parent(
-                        id = id,
-                        content = content
-                    )
-                )
+                parentRepository.getParentItem(id)
             } else {
-                item.value?.let {
-                    itemRepository.update(
-                        Item(
-                            id = it.id,
+                itemRepository.getItemById(id)
+            }
+        val item =
+            _item.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null,
+            )
+
+        fun saveItem(content: String) {
+            viewModelScope.launch {
+                if (isParent) {
+                    parentRepository.update(
+                        Parent(
+                            id = id,
                             content = content,
-                            parent = (it as Item).parent
-                        )
+                        ),
                     )
+                } else {
+                    item.value?.let {
+                        itemRepository.update(
+                            Item(
+                                id = it.id,
+                                content = content,
+                                parent = (it as Item).parent,
+                            ),
+                        )
+                    }
                 }
             }
         }
     }
-}

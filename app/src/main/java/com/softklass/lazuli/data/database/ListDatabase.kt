@@ -8,7 +8,7 @@ import com.softklass.lazuli.data.models.Parent
 @Database(
     entities = [
         Item::class,
-        Parent::class
+        Parent::class,
     ],
     version = 1,
     exportSchema = false,

@@ -23,20 +23,24 @@ private sealed interface Navigation {
     data object Main : Navigation
 
     @Serializable
-    data class ListDetail(val id: Int) : Navigation
+    data class ListDetail(
+        val id: Int,
+    ) : Navigation
 
     @Serializable
-    data class ItemEdit(val id: Int, val isParent: Boolean = true) : Navigation
+    data class ItemEdit(
+        val id: Int,
+        val isParent: Boolean = true,
+    ) : Navigation
 }
 
 @Composable
-fun AppNavHost(
-) {
+fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = Navigation.Main,
-        modifier = Modifier
+        modifier = Modifier,
     ) {
         val animationTween = 350
         val slideLeft = AnimatedContentTransitionScope.SlideDirection.Left
@@ -44,18 +48,22 @@ fun AppNavHost(
 
         // Navigation.Main
         composable<Navigation.Main>(
-            enterTransition = { // When Main becomes the destination (e.g., popping from ListDetail or ItemEdit)
+            enterTransition = {
+                // When Main becomes the destination (e.g., popping from ListDetail or ItemEdit)
                 slideIntoContainer(slideRight, animationSpec = tween(animationTween))
             },
-            exitTransition = { // When Main is leaving (e.g., navigating to ListDetail or ItemEdit)
+            exitTransition = {
+                // When Main is leaving (e.g., navigating to ListDetail or ItemEdit)
                 slideOutOfContainer(slideLeft, animationSpec = tween(animationTween))
             },
-            popEnterTransition = { // When Main is revealed after a pop
+            popEnterTransition = {
+                // When Main is revealed after a pop
                 slideIntoContainer(slideRight, animationSpec = tween(animationTween))
             },
-            popExitTransition = { // When Main is being popped (should not happen if it's the start destination and not on top)
+            popExitTransition = {
+                // When Main is being popped (should not happen if it's the start destination and not on top)
                 slideOutOfContainer(slideLeft, animationSpec = tween(animationTween))
-            }
+            },
         ) {
             val viewModel = hiltViewModel<MainViewModel>()
             Main(
@@ -65,16 +73,18 @@ fun AppNavHost(
                 },
                 onEditItemClick = {
                     navController.navigate(Navigation.ItemEdit(it.id))
-                }
+                },
             )
         }
 
         // Navigation.ListDetail
         composable<Navigation.ListDetail>(
-            enterTransition = { // When ListDetail becomes the destination (from Main)
+            enterTransition = {
+                // When ListDetail becomes the destination (from Main)
                 slideIntoContainer(slideLeft, animationSpec = tween(animationTween))
             },
-            exitTransition = { // When ListDetail is leaving
+            exitTransition = {
+                // When ListDetail is leaving
                 // If going to ItemEdit, ListDetail slides Left
                 // If going back to Main, ListDetail slides Right
                 if (targetState.destination.route?.startsWith(Navigation.ItemEdit::class.simpleName.orEmpty()) == true) {
@@ -83,12 +93,14 @@ fun AppNavHost(
                     slideOutOfContainer(slideLeft, animationSpec = tween(animationTween))
                 }
             },
-            popEnterTransition = { // When ListDetail is revealed after ItemEdit pops
+            popEnterTransition = {
+                // When ListDetail is revealed after ItemEdit pops
                 slideIntoContainer(slideRight, animationSpec = tween(animationTween))
             },
-            popExitTransition = { // When ListDetail is popped (back to Main)
+            popExitTransition = {
+                // When ListDetail is popped (back to Main)
                 slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
-            }
+            },
         ) {
             val viewModel = hiltViewModel<ListDetailViewModel>()
             val screen: Navigation.ListDetail = it.toRoute()
@@ -98,31 +110,35 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() },
                 onEditItemClick = { item ->
                     navController.navigate(Navigation.ItemEdit(item.id, isParent = false))
-                }
+                },
             )
         }
 
         // Navigation.ItemEdit
         composable<Navigation.ItemEdit>(
-            enterTransition = { // When ItemEdit becomes the destination (from Main or ListDetail)
+            enterTransition = {
+                // When ItemEdit becomes the destination (from Main or ListDetail)
                 slideIntoContainer(slideLeft, animationSpec = tween(animationTween))
             },
-            exitTransition = { // When ItemEdit is leaving (should only be on pop back)
+            exitTransition = {
+                // When ItemEdit is leaving (should only be on pop back)
                 slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
             },
-            popEnterTransition = { // When ItemEdit is revealed after a pop (should not happen if it's not a host)
+            popEnterTransition = {
+                // When ItemEdit is revealed after a pop (should not happen if it's not a host)
                 slideIntoContainer(slideLeft, animationSpec = tween(animationTween))
             },
-            popExitTransition = { // When ItemEdit is popped (back to Main or ListDetail)
+            popExitTransition = {
+                // When ItemEdit is popped (back to Main or ListDetail)
                 slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
-            }
+            },
         ) {
             val screen: Navigation.ItemEdit = it.toRoute()
             val viewModel = hiltViewModel<ItemEditViewModel>()
             ItemEditScreen(
                 viewModel = viewModel,
                 itemId = screen.id,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
             )
         }
     }

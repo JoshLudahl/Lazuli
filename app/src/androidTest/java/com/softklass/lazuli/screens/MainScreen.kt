@@ -6,5 +6,5 @@ enum class MainScreen(
     CLEAR("clear"),
     LIST_ENTRY("list"),
     LIST_ENTRY_BUTTON("add_list_icon"),
-    TITLE("title")
+    TITLE("title"),
 }

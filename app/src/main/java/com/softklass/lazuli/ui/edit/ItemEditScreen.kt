@@ -42,21 +42,20 @@ import com.softklass.lazuli.ui.theme.primaryLight
 fun ItemEditScreen(
     viewModel: ItemEditViewModel,
     onBack: () -> Unit,
-    itemId: Int
+    itemId: Int,
 ) {
-
     val item by viewModel.item.collectAsStateWithLifecycle()
     var fieldValue by rememberSaveable(item) { mutableStateOf(item?.content ?: "") }
 
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
         Log.i(
             "Debounce",
-            "isEnabled: $it"
+            "isEnabled: $it",
         )
     }
 
     val context = LocalContext.current
-Log.i("ItemEditScreen", "itemId: ${item?.content}")
+    Log.i("ItemEditScreen", "itemId: ${item?.content}")
     Scaffold(
         topBar = {
             ReusableTopAppBar(
@@ -69,25 +68,25 @@ Log.i("ItemEditScreen", "itemId: ${item?.content}")
                     Text("Edit")
                 },
                 actions = { },
-                isEnabled = isEnabled
+                isEnabled = isEnabled,
             )
         },
         bottomBar = {
             BottomAppBar(
                 modifier = Modifier.height(56.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
-                windowInsets = WindowInsets(
-                    left = 8.dp,
-                    top = 0.dp,
-                    right = 0.dp,
-                    bottom = 0.dp
-                ),
+                windowInsets =
+                    WindowInsets(
+                        left = 8.dp,
+                        top = 0.dp,
+                        right = 0.dp,
+                        bottom = 0.dp,
+                    ),
                 actions = {
-                }
+                },
             )
-
         },
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(8.dp),
     ) { innerPadding ->
         ItemDetailScreenContent(
             modifier = Modifier.padding(innerPadding),
@@ -99,13 +98,14 @@ Log.i("ItemEditScreen", "itemId: ${item?.content}")
                     viewModel.saveItem(fieldValue)
                     onBack()
                 } else {
-                    Toast.makeText(
-                        context,
-                        "Please enter a valid list name.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast
+                        .makeText(
+                            context,
+                            "Please enter a valid list name.",
+                            Toast.LENGTH_SHORT,
+                        ).show()
                 }
-            }
+            },
         )
     }
 }
@@ -116,38 +116,40 @@ fun ItemDetailScreenContent(
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
 ) {
-
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         OutlinedTextField(
             label = { Text(label) },
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
-
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                capitalization = KeyboardCapitalization.Sentences
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    if (value.trim().isNotEmpty()) {
-                        onSaveClick()
-                    }
-                }
-            ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = primaryLight,
-                unfocusedBorderColor = Color.Gray,
-                focusedLabelColor = primaryLight,
-                unfocusedLabelColor = Color.Gray
-            ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
+            keyboardOptions =
+                KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    capitalization = KeyboardCapitalization.Sentences,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        if (value.trim().isNotEmpty()) {
+                            onSaveClick()
+                        }
+                    },
+                ),
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = primaryLight,
+                    unfocusedLabelColor = Color.Gray,
+                ),
             singleLine = true,
             maxLines = 1,
             shape = RoundedCornerShape(corner = CornerSize(16.dp)),
@@ -155,13 +157,15 @@ fun ItemDetailScreenContent(
 
         Button(
             onClick = onSaveClick,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.inverseSurface,
-                contentColor = MaterialTheme.colorScheme.secondaryContainer
-            )
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.inverseSurface,
+                    contentColor = MaterialTheme.colorScheme.secondaryContainer,
+                ),
         ) {
             Text("Save")
         }
@@ -175,6 +179,6 @@ fun ItemEditScreenPreview() {
         value = "",
         onValueChange = {},
         onSaveClick = {},
-        label = "List Name"
+        label = "List Name",
     )
 }

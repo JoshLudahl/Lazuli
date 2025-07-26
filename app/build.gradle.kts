@@ -33,14 +33,14 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         debug {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -82,6 +82,10 @@ ktlint {
             "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
         ),
     )
+}
+
+tasks.named("preBuild") {
+    dependsOn("ktlintFormat")
 }
 
 dependencies {

@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ItemDao {
-
     @Query("SELECT * FROM list_item WHERE parent = :parent")
     fun getAll(parent: Int): Flow<List<Item>>
 

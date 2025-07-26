@@ -13,13 +13,15 @@ import androidx.compose.ui.unit.sp
 fun SectionTitle(title: String) {
     BasicText(
         text = title,
-        style = MaterialTheme.typography.titleSmall.copy(
-            color = MaterialTheme.colorScheme.onSurface,
-        ),
+        style =
+            MaterialTheme.typography.titleSmall.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+            ),
         modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-        autoSize = TextAutoSize.StepBased(
-            minFontSize = 12.sp,
-            maxFontSize = 16.sp
-        ),
+        autoSize =
+            TextAutoSize.StepBased(
+                minFontSize = 12.sp,
+                maxFontSize = 16.sp,
+            ),
     )
 }

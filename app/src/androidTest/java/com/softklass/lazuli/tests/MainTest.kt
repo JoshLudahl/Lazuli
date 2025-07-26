@@ -9,7 +9,6 @@ import com.softklass.lazuli.screens.MainScreen
 import org.junit.Test
 
 class MainTest : BaseTest() {
-
     @Test
     fun titleIsDisplayed() {
         composeTestRule.onNodeWithTag(MainScreen.TITLE.tag).isDisplayed()

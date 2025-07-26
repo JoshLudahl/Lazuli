@@ -16,50 +16,57 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListDetailViewModel @Inject constructor(
-    private val itemRepository: ItemRepository,
-    parentRepository: ParentRepository,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    private val listId: Int = checkNotNull(savedStateHandle["id"])
+class ListDetailViewModel
+    @Inject
+    constructor(
+        private val itemRepository: ItemRepository,
+        parentRepository: ParentRepository,
+        savedStateHandle: SavedStateHandle,
+    ) : ViewModel() {
+        private val listId: Int = checkNotNull(savedStateHandle["id"])
 
-    private val _sorted = MutableStateFlow(false)
-    val sorted: StateFlow<Boolean>
-        get() = _sorted
+        private val _sorted = MutableStateFlow(false)
+        val sorted: StateFlow<Boolean>
+            get() = _sorted
 
-    private val _listItems = itemRepository.getAllItems(listId)
-    val listItems: StateFlow<List<Item?>> = _listItems.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList()
-    )
+        private val _listItems = itemRepository.getAllItems(listId)
+        val listItems: StateFlow<List<Item?>> =
+            _listItems.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
+            )
 
-    private val _parent = parentRepository.getParentItem(listId)
-    val parent = _parent.shareIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        replay = 1
-    )
+        private val _parent = parentRepository.getParentItem(listId)
+        val parent =
+            _parent.shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                replay = 1,
+            )
 
-    fun addListItem(item: String, parentId: Int) {
-        viewModelScope.launch {
-            itemRepository.addItem(Item(content = item, parent = parentId))
+        fun addListItem(
+            item: String,
+            parentId: Int,
+        ) {
+            viewModelScope.launch {
+                itemRepository.addItem(Item(content = item, parent = parentId))
+            }
+        }
+
+        fun removeItem(item: Item) {
+            viewModelScope.launch {
+                itemRepository.removeItem(item)
+            }
+        }
+
+        fun clearList(parentId: Int) {
+            viewModelScope.launch {
+                itemRepository.deleteByParent(parentId)
+            }
+        }
+
+        fun toggleSort() {
+            _sorted.value = !_sorted.value
         }
     }
-
-    fun removeItem(item: Item) {
-        viewModelScope.launch {
-            itemRepository.removeItem(item)
-        }
-    }
-
-    fun clearList(parentId: Int) {
-        viewModelScope.launch {
-            itemRepository.deleteByParent(parentId)
-        }
-    }
-
-    fun toggleSort() {
-        _sorted.value = !_sorted.value
-    }
-}

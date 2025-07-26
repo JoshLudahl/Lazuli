@@ -9,5 +9,5 @@ import androidx.room.PrimaryKey
 data class Parent(
     @PrimaryKey(autoGenerate = true)
     override val id: Int = 0,
-    override val content: String
+    override val content: String,
 ) : ListItem

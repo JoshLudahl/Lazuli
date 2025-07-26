@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ParentDao {
-
     @Query("SELECT * FROM lists")
     fun getAll(): Flow<List<Parent?>>
 

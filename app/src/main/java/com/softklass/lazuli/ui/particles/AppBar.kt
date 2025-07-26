@@ -20,7 +20,7 @@ fun ReusableTopAppBar(
     title: @Composable () -> Unit,
     actions: @Composable () -> Unit,
     includeBackArrow: Boolean = true,
-    isEnabled: Boolean = true
+    isEnabled: Boolean = true,
 ) {
     CenterAlignedTopAppBar(
         title = title,
@@ -37,10 +37,11 @@ fun ReusableTopAppBar(
                 FilledIconButton(
                     onClick = onNavigateBack,
                     enabled = isEnabled,
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
+                    colors =
+                        IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        ),
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
@@ -51,6 +52,6 @@ fun ReusableTopAppBar(
             }
         },
         actions = { actions() },
-        modifier = modifier
+        modifier = modifier,
     )
 }

@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 enum class Action {
-    DATABASE, NETWORK, UNKNOWN
+    DATABASE,
+    NETWORK,
+    UNKNOWN,
 }
 
 /**
@@ -28,18 +30,26 @@ enum class Action {
  * ```
  */
 sealed interface Resource<out T> {
-
     sealed interface Error : Resource<Nothing> {
-        data class DataBase(val exception: Exception) : Error
-        data class Network(val exception: Exception) : Error
-        data class Unknown(val exception: Exception) : Error
+        data class DataBase(
+            val exception: Exception,
+        ) : Error
+
+        data class Network(
+            val exception: Exception,
+        ) : Error
+
+        data class Unknown(
+            val exception: Exception,
+        ) : Error
     }
 
     data object Loading : Resource<Nothing>
 
-    class Success<T>(val data: T) : Resource<T>
+    class Success<T>(
+        val data: T,
+    ) : Resource<T>
 }
-
 
 /**
  * Executes a suspend function and emits its results wrapped in a Resource. Handles loading, success, and error states.
@@ -66,7 +76,7 @@ sealed interface Resource<out T> {
 fun <T> action(
     action: suspend () -> T,
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default,
-    actionType: Action = Action.UNKNOWN
+    actionType: Action = Action.UNKNOWN,
 ) = flow {
     emit(Resource.Loading)
     try {
@@ -77,7 +87,7 @@ fun <T> action(
                 Action.DATABASE -> Resource.Error.DataBase(e)
                 Action.NETWORK -> Resource.Error.Network(e)
                 else -> Resource.Error.Unknown(e)
-            }
+            },
         )
     }
 }.flowOn(coroutineDispatcher)

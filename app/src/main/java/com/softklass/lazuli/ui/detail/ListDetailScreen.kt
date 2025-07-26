@@ -42,7 +42,7 @@ fun ListDetailScreen(
     listId: Int,
     viewModel: ListDetailViewModel,
     onBack: () -> Unit,
-    onEditItemClick: (ListItem) -> Unit
+    onEditItemClick: (ListItem) -> Unit,
 ) {
     val sorted by viewModel.sorted.collectAsStateWithLifecycle()
     var listItem: String by rememberSaveable { mutableStateOf("") }
@@ -52,7 +52,7 @@ fun ListDetailScreen(
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
         Log.i(
             "Debounce",
-            "isEnabled: $it"
+            "isEnabled: $it",
         )
     }
 
@@ -71,29 +71,30 @@ fun ListDetailScreen(
                     Text(parent?.content ?: "List Detail")
                 },
                 actions = { },
-                isEnabled = isEnabled
+                isEnabled = isEnabled,
             )
         },
         bottomBar = {
             BottomAppBar(
                 modifier = Modifier.height(56.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
-                windowInsets = WindowInsets(
-                    left = 8.dp,
-                    top = 0.dp,
-                    right = 0.dp,
-                    bottom = 16.dp
-                ),
+                windowInsets =
+                    WindowInsets(
+                        left = 8.dp,
+                        top = 0.dp,
+                        right = 0.dp,
+                        bottom = 16.dp,
+                    ),
                 actions = {
                     IconButton(
                         onClick = {
                             openDialog.value = true
                         },
-                        enabled = listItems.isNotEmpty()
+                        enabled = listItems.isNotEmpty(),
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.delete_sweep_24px),
-                            contentDescription = "Delete"
+                            contentDescription = "Delete",
                         )
                     }
 
@@ -101,11 +102,11 @@ fun ListDetailScreen(
                         onClick = {
                             viewModel.toggleSort()
                         },
-                        enabled = listItems.isNotEmpty()
+                        enabled = listItems.isNotEmpty(),
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.sort_24px),
-                            contentDescription = "Sort"
+                            contentDescription = "Sort",
                         )
                     }
 
@@ -114,33 +115,38 @@ fun ListDetailScreen(
                             shareList(
                                 title = parent?.content ?: "",
                                 list = listItems,
-                                context = context
+                                context = context,
                             )
                         },
-                        enabled = listItems.isNotEmpty()
+                        enabled = listItems.isNotEmpty(),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Share,
-                            contentDescription = "Share"
+                            contentDescription = "Share",
                         )
                     }
-                }
+                },
             )
-
         },
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(8.dp),
     ) { innerPadding ->
 
         ListDetailContent(
             modifier = Modifier.padding(innerPadding),
             listItem = listItem,
-            list = if (sorted) listItems.sortedWith { first, second ->
-                second?.content?.let {
-                    first?.content?.compareTo(
-                        it, ignoreCase = true
-                    )
-                } ?: 0
-            } else listItems,
+            list =
+                if (sorted) {
+                    listItems.sortedWith { first, second ->
+                        second?.content?.let {
+                            first?.content?.compareTo(
+                                it,
+                                ignoreCase = true,
+                            )
+                        } ?: 0
+                    }
+                } else {
+                    listItems
+                },
             onListItemChange = { listItem = it },
             onAddItemClick = {
                 viewModel.addListItem(it, listId)
@@ -149,7 +155,7 @@ fun ListDetailScreen(
             onDeleteItemClick = {
                 viewModel.removeItem(it as Item)
             },
-            onEditItemClick = onEditItemClick
+            onEditItemClick = onEditItemClick,
         )
 
         ConfirmationDialog(
@@ -162,7 +168,7 @@ fun ListDetailScreen(
             },
             dialogTitle = "Clear List",
             dialogText = "Are you sure you want to clear this list?",
-            showConfirmation = openDialog.value
+            showConfirmation = openDialog.value,
         )
     }
 }
@@ -175,11 +181,9 @@ fun ListDetailContent(
     onListItemChange: (String) -> Unit,
     onAddItemClick: (String) -> Unit,
     onDeleteItemClick: (ListItem) -> Unit,
-    onEditItemClick: (ListItem) -> Unit
+    onEditItemClick: (ListItem) -> Unit,
 ) {
-
     Column(modifier = modifier) {
-
         SectionTitle(title = "Add New Item")
 
         HeaderUi(
@@ -199,7 +203,7 @@ fun ListDetailContent(
                 onItemClick = {},
                 onDeleteIconClick = onDeleteItemClick,
                 onEditItemClick = onEditItemClick,
-                isListItemDetail = false
+                isListItemDetail = false,
             )
         }
     }

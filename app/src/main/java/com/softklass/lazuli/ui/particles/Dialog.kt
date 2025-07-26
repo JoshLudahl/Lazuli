@@ -15,7 +15,7 @@ fun ConfirmationDialog(
     onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
-    showConfirmation: Boolean = false
+    showConfirmation: Boolean = false,
 ) {
     if (showConfirmation) {
         AlertDialog(
@@ -23,7 +23,7 @@ fun ConfirmationDialog(
                 Icon(
                     Icons.Rounded.Warning,
                     tint = MaterialTheme.colorScheme.error,
-                    contentDescription = "Warning"
+                    contentDescription = "Warning",
                 )
             },
             title = {
@@ -39,7 +39,7 @@ fun ConfirmationDialog(
                 TextButton(
                     onClick = {
                         onConfirmation()
-                    }
+                    },
                 ) {
                     Text("Confirm")
                 }
@@ -48,11 +48,11 @@ fun ConfirmationDialog(
                 TextButton(
                     onClick = {
                         onDismissRequest()
-                    }
+                    },
                 ) {
                     Text("Dismiss")
                 }
-            }
+            },
         )
     }
 }

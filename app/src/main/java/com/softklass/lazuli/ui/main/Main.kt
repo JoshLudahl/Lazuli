@@ -31,7 +31,7 @@ import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 fun Main(
     viewModel: MainViewModel,
     onDetailItemClick: (Int) -> Unit,
-    onEditItemClick: (ListItem) -> Unit
+    onEditItemClick: (ListItem) -> Unit,
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
@@ -53,10 +53,10 @@ fun Main(
                         DeleteIcon { openDialog.value = true }
                     }
                 },
-                isEnabled = false
+                isEnabled = false,
             )
         },
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(8.dp),
     ) { innerPadding ->
 
         MainContent(
@@ -73,7 +73,7 @@ fun Main(
                 parent.value = it as Parent
                 openDeleteListDialog.value = true
             },
-            onEditItemClick = onEditItemClick
+            onEditItemClick = onEditItemClick,
         )
 
         ConfirmationDialog(
@@ -86,7 +86,7 @@ fun Main(
             },
             dialogTitle = "Clear Lists",
             dialogText = "Are you sure you want to clear this list? This will delete everything from the database.",
-            showConfirmation = openDialog.value
+            showConfirmation = openDialog.value,
         )
 
         ConfirmationDialog(
@@ -99,9 +99,8 @@ fun Main(
             },
             dialogTitle = "Clear List?",
             dialogText = "Are you sure you want to clear this list? This action will remove the list and all items it contains.",
-            showConfirmation = openDeleteListDialog.value
+            showConfirmation = openDeleteListDialog.value,
         )
-
     }
 }
 
@@ -114,7 +113,7 @@ fun MainContent(
     listName: String,
     onListNameChange: (String) -> Unit,
     onDeleteIconClick: (ListItem) -> Unit,
-    onEditItemClick: (ListItem) -> Unit
+    onEditItemClick: (ListItem) -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         val context = LocalContext.current

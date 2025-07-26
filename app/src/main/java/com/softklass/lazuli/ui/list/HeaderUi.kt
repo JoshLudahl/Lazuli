@@ -40,36 +40,38 @@ fun HeaderUi(
     context: Context,
     label: String = "List Name",
 ) {
-
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         OutlinedTextField(
             value = listName,
             onValueChange = onListNameChange,
             label = { Text(label) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
-                .testTag("list"),
-
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                capitalization = KeyboardCapitalization.Sentences
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    if (listName.trim().isNotEmpty()) {
-                        onAddItemClick(listName.trim())
-                    }
-                }
-            ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = primaryLight,
-                unfocusedBorderColor = Color.Gray,
-                focusedLabelColor = primaryLight,
-                unfocusedLabelColor = Color.Gray
-            ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp)
+                    .testTag("list"),
+            keyboardOptions =
+                KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    capitalization = KeyboardCapitalization.Sentences,
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        if (listName.trim().isNotEmpty()) {
+                            onAddItemClick(listName.trim())
+                        }
+                    },
+                ),
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = primaryLight,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = primaryLight,
+                    unfocusedLabelColor = Color.Gray,
+                ),
             singleLine = true,
             maxLines = 1,
             trailingIcon = {
@@ -77,40 +79,40 @@ fun HeaderUi(
                     imageVector = ImageVector.vectorResource(R.drawable.post_add_24px),
                     tint = MaterialTheme.colorScheme.secondary,
                     contentDescription = "Add list button.",
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .size(36.dp)
-                        .clickable {
-                            if (listName.trim().isNotEmpty()) {
-                                onAddItemClick(listName.trim())
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Please enter valid text.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                        .testTag("add_list_icon")
+                    modifier =
+                        Modifier
+                            .padding(8.dp)
+                            .size(36.dp)
+                            .clickable {
+                                if (listName.trim().isNotEmpty()) {
+                                    onAddItemClick(listName.trim())
+                                } else {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "Please enter valid text.",
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                }
+                            }.testTag("add_list_icon"),
                 )
             },
             shape = RoundedCornerShape(corner = CornerSize(16.dp)),
-
-            )
-
+        )
     }
 }
 
 @Composable
 fun DeleteIcon(
-    onClickIcon: () -> Unit
+    onClickIcon: () -> Unit,
 ) {
     FilledIconButton(
         onClick = onClickIcon,
-        colors = IconButtonDefaults.filledIconButtonColors(
-            containerColor = MaterialTheme.colorScheme.inverseSurface,
-            contentColor = MaterialTheme.colorScheme.onSecondary
-        )
+        colors =
+            IconButtonDefaults.filledIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+            ),
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.delete_sweep_24px),

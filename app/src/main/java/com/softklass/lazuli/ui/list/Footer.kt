@@ -12,17 +12,18 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Footer() {
-
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier =
+            Modifier
+                .fillMaxWidth(),
     ) {
         Button(
             onClick = { /*TODO*/ },
-            modifier = Modifier
-                .fillMaxWidth(.80f)
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally),
+            modifier =
+                Modifier
+                    .fillMaxWidth(.80f)
+                    .padding(16.dp)
+                    .align(Alignment.CenterHorizontally),
         ) {
             Text(text = "Clear List")
         }
