@@ -16,10 +16,15 @@ The application is build using the following libraries from Android and other th
 - [Room](https://developer.android.com/training/data-storage/room)
 - [Navigation Compose](https://developer.android.com/jetpack/compose/navigation)
 - [Material 3](https://m3.material.io/)
+- [CameraX](https://developer.android.com/training/camerax)
+- [ML Kit](https://developers.google.com/ml-kit)
+- [Play In-App Updates](https://developer.android.com/guide/playcore/in-app-updates)
 
 ## Key Features
 The application is simple, but great for list making. Some key features include
 - List items
+  - Add items to the list manually
+  - Add items using a camera
 - Lists of list items
 - Item categories (on the roadmap)
 - Item labels (on the roadmap)
