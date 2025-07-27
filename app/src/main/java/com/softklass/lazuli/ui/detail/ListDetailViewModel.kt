@@ -1,8 +1,14 @@
 package com.softklass.lazuli.ui.detail
 
+import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.TextRecognizer
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.repository.ItemRepository
 import com.softklass.lazuli.data.repository.ParentRepository
@@ -13,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,5 +75,39 @@ class ListDetailViewModel
 
         fun toggleSort() {
             _sorted.value = !_sorted.value
+        }
+
+        // OCR processing
+        private val textRecognizer: TextRecognizer by lazy {
+            TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        }
+
+        private val _processingImage = MutableStateFlow(false)
+        val processingImage: StateFlow<Boolean> = _processingImage
+
+        /**
+         * Process the captured image using ML Kit Text Recognition
+         * and add each line as a separate item to the list
+         */
+        suspend fun processImageForOcr(bitmap: Bitmap) {
+            _processingImage.value = true
+            try {
+                val image = InputImage.fromBitmap(bitmap, 0)
+                val result = textRecognizer.process(image).await()
+
+                val textLines = result.textBlocks.flatMap { it.lines }
+
+                // Add each line as a separate item
+                textLines.forEach { line ->
+                    val text = line.text.trim()
+                    if (text.isNotEmpty()) {
+                        addListItem(text, listId)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("ListDetailViewModel", "Error processing image: ${e.message}", e)
+            } finally {
+                _processingImage.value = false
+            }
         }
     }

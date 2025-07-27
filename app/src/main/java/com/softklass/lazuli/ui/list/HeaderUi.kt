@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,12 +12,15 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,68 +41,98 @@ fun HeaderUi(
     listName: String,
     onListNameChange: (String) -> Unit,
     onAddItemClick: (String) -> Unit,
+    onCameraClick: (() -> Unit)? = null,
     context: Context,
     label: String = "List Name",
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
-        OutlinedTextField(
-            value = listName,
-            onValueChange = onListNameChange,
-            label = { Text(label) },
+        Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
-                    .testTag("list"),
-            keyboardOptions =
-                KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    capitalization = KeyboardCapitalization.Sentences,
-                ),
-            keyboardActions =
-                KeyboardActions(
-                    onDone = {
-                        if (listName.trim().isNotEmpty()) {
-                            onAddItemClick(listName.trim())
-                        }
-                    },
-                ),
-            colors =
-                OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primaryLight,
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = primaryLight,
-                    unfocusedLabelColor = Color.Gray,
-                ),
-            singleLine = true,
-            maxLines = 1,
-            trailingIcon = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.post_add_24px),
-                    tint = MaterialTheme.colorScheme.secondary,
-                    contentDescription = "Add list button.",
+                    .padding(horizontal = 16.dp),
+        ) {
+            OutlinedTextField(
+                value = listName,
+                onValueChange = onListNameChange,
+                label = { Text(label) },
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .testTag("list"),
+                keyboardOptions =
+                    KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        capitalization = KeyboardCapitalization.Sentences,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onDone = {
+                            if (listName.trim().isNotEmpty()) {
+                                onAddItemClick(listName.trim())
+                            }
+                        },
+                    ),
+                colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = primaryLight,
+                        unfocusedBorderColor = Color.Gray,
+                        focusedLabelColor = primaryLight,
+                        unfocusedLabelColor = Color.Gray,
+                    ),
+                singleLine = true,
+                maxLines = 1,
+                trailingIcon = {
+                    // Add icon
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.post_add_24px),
+                        tint = MaterialTheme.colorScheme.secondary,
+                        contentDescription = "Add list button.",
+                        modifier =
+                            Modifier
+                                .padding(8.dp)
+                                .size(36.dp)
+                                .clickable {
+                                    if (listName.trim().isNotEmpty()) {
+                                        onAddItemClick(listName.trim())
+                                    } else {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Please enter valid text.",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+                                    }
+                                }.testTag("add_list_icon"),
+                    )
+                },
+                shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+            )
+
+            if (onCameraClick != null) {
+                Surface(
                     modifier =
                         Modifier
-                            .padding(8.dp)
-                            .size(36.dp)
+                            .padding(start = 8.dp, top = 12.dp)
                             .clickable {
-                                if (listName.trim().isNotEmpty()) {
-                                    onAddItemClick(listName.trim())
-                                } else {
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            "Please enter valid text.",
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
-                                }
-                            }.testTag("add_list_icon"),
-                )
-            },
-            shape = RoundedCornerShape(corner = CornerSize(16.dp)),
-        )
+                                onCameraClick()
+                            },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CameraAlt,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        contentDescription = "Scan with camera",
+                        modifier =
+                            Modifier
+                                .padding(8.dp)
+                                .size(36.dp)
+                                .testTag("camera_icon"),
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -129,6 +163,7 @@ fun HeaderUiPreview() {
         listName = "",
         onListNameChange = { },
         onAddItemClick = { },
+        onCameraClick = { },
         context = LocalContext.current,
     )
 }

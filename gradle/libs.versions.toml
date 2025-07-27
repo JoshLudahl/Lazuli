@@ -3,8 +3,10 @@ activityCompose = "1.10.1"
 androidApplication = "8.11.1"
 appcompat = "1.7.1"
 appUpdate = "2.1.0"
+camerax = "1.4.2"
 composeBom = "2025.07.00"
 coreKtx = "1.16.0"
+coroutines = "1.10.2"
 espressoCore = "3.6.1"
 hiltAndroidGradlePlugin = "2.57"
 hiltCompiler = "1.2.0"
@@ -19,6 +21,7 @@ material3Android = "1.4.0-alpha18"
 materialIconsCore = "1.7.8"
 materialIconsExtended = "1.7.8"
 materialVersion = "1.8.3"
+mlkitTextRecognition = "16.0.1"
 navigationComposeAndroid = "2.9.2"
 orchestrator = "1.5.1"
 roomRuntime = "2.7.2"
@@ -55,6 +58,19 @@ androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "ui" }
 app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdate" }
 app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdate" }
+
+# CameraX
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+
+# ML Kit
+mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkitTextRecognition" }
+
+# Coroutines
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
+
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidGradlePlugin" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidGradlePlugin" }
 junit = { module = "junit:junit", version.ref = "junit" }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -24,10 +25,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.R
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
+import com.softklass.lazuli.ui.camera.CameraScreen
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
@@ -36,6 +39,7 @@ import com.softklass.lazuli.ui.list.shareList
 import com.softklass.lazuli.ui.particles.ConfirmationDialog
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 import com.softklass.lazuli.ui.particles.useDebounce
+import kotlinx.coroutines.launch
 
 @Composable
 fun ListDetailScreen(
@@ -47,6 +51,7 @@ fun ListDetailScreen(
     val sorted by viewModel.sorted.collectAsStateWithLifecycle()
     var listItem: String by rememberSaveable { mutableStateOf("") }
     val listItems by viewModel.listItems.collectAsStateWithLifecycle()
+    val processingImage by viewModel.processingImage.collectAsStateWithLifecycle()
 
     val parent by viewModel.parent.collectAsStateWithLifecycle(null)
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
@@ -57,7 +62,9 @@ fun ListDetailScreen(
     }
 
     val openDialog = remember { mutableStateOf(false) }
+    var showCamera by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -131,6 +138,24 @@ fun ListDetailScreen(
         modifier = Modifier.padding(8.dp),
     ) { innerPadding ->
 
+        // Camera screen dialog
+        if (showCamera) {
+            Dialog(
+                onDismissRequest = { showCamera = false },
+            ) {
+                CameraScreen(
+                    onImageCaptured = { bitmap ->
+                        coroutineScope.launch {
+                            viewModel.processImageForOcr(bitmap)
+                            showCamera = false
+                        }
+                    },
+                    onClose = { showCamera = false },
+                    isProcessing = processingImage,
+                )
+            }
+        }
+
         ListDetailContent(
             modifier = Modifier.padding(innerPadding),
             listItem = listItem,
@@ -156,6 +181,7 @@ fun ListDetailScreen(
                 viewModel.removeItem(it as Item)
             },
             onEditItemClick = onEditItemClick,
+            onCameraClick = { showCamera = true },
         )
 
         ConfirmationDialog(
@@ -182,6 +208,7 @@ fun ListDetailContent(
     onAddItemClick: (String) -> Unit,
     onDeleteItemClick: (ListItem) -> Unit,
     onEditItemClick: (ListItem) -> Unit,
+    onCameraClick: (() -> Unit)? = null,
 ) {
     Column(modifier = modifier) {
         SectionTitle(title = "Add New Item")
@@ -190,6 +217,7 @@ fun ListDetailContent(
             listName = listItem,
             onListNameChange = onListItemChange,
             onAddItemClick = onAddItemClick,
+            onCameraClick = onCameraClick,
             context = LocalContext.current,
             label = "Add list item",
         )

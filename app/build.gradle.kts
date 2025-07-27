@@ -38,6 +38,8 @@ android {
         }
         debug {
             isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -125,6 +127,18 @@ dependencies {
     implementation(libs.app.update)
     // For Kotlin users also add the Kotlin extensions library for Play In-App Update:
     implementation(libs.app.update.ktx)
+
+    // CameraX
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // ML Kit Text Recognition
+    implementation(libs.mlkit.text.recognition)
+
+    // Coroutines for Play Services
+    implementation(libs.kotlinx.coroutines.play.services)
 
     testImplementation(libs.junit)
 
