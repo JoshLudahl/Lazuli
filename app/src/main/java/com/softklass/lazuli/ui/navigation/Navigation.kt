@@ -15,6 +15,7 @@ import com.softklass.lazuli.ui.edit.ItemEditScreen
 import com.softklass.lazuli.ui.edit.ItemEditViewModel
 import com.softklass.lazuli.ui.main.Main
 import com.softklass.lazuli.ui.main.MainViewModel
+import com.softklass.lazuli.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -32,6 +33,9 @@ private sealed interface Navigation {
         val id: Int,
         val isParent: Boolean = true,
     ) : Navigation
+
+    @Serializable
+    data object Settings : Navigation
 }
 
 @Composable
@@ -73,6 +77,9 @@ fun AppNavHost() {
                 },
                 onEditItemClick = {
                     navController.navigate(Navigation.ItemEdit(it.id))
+                },
+                onSettingsClick = {
+                    navController.navigate(Navigation.Settings)
                 },
             )
         }
@@ -138,6 +145,30 @@ fun AppNavHost() {
             ItemEditScreen(
                 viewModel = viewModel,
                 itemId = screen.id,
+                onBack = { navController.popBackStack() },
+            )
+        }
+
+        // Navigation.Settings
+        composable<Navigation.Settings>(
+            enterTransition = {
+                // When Settings becomes the destination (from Main)
+                slideIntoContainer(slideLeft, animationSpec = tween(animationTween))
+            },
+            exitTransition = {
+                // When Settings is leaving (back to Main)
+                slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
+            },
+            popEnterTransition = {
+                // When Settings is revealed after a pop (should not happen)
+                slideIntoContainer(slideLeft, animationSpec = tween(animationTween))
+            },
+            popExitTransition = {
+                // When Settings is popped (back to Main)
+                slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
+            },
+        ) {
+            SettingsScreen(
                 onBack = { navController.popBackStack() },
             )
         }

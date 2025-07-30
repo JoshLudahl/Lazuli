@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Task
@@ -22,6 +23,7 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.softklass.lazuli.ui.navigation.AppNavHost
 import com.softklass.lazuli.ui.theme.AppTheme
+import com.softklass.lazuli.ui.theme.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,6 +32,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var appUpdateManager: AppUpdateManager
     private lateinit var aut: Task<AppUpdateInfo>
     private val updateType = AppUpdateType.FLEXIBLE
+    private lateinit var themeManager: ThemeManager
 
     val listener =
         InstallStateUpdatedListener { state ->
@@ -51,13 +54,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        themeManager = ThemeManager.getInstance(this)
         appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
         aut = appUpdateManager.appUpdateInfo
         checkIsUpdateAvailable()
 
         enableEdgeToEdge()
         setContent {
-            AppTheme {
+            AppTheme(
+                darkTheme = themeManager.isDarkTheme(),
+                dynamicColor = themeManager.dynamicColor.collectAsState().value,
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {

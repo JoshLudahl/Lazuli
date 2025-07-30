@@ -4,6 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +37,7 @@ fun Main(
     viewModel: MainViewModel,
     onDetailItemClick: (Int) -> Unit,
     onEditItemClick: (ListItem) -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
@@ -55,6 +61,16 @@ fun Main(
                 },
                 isEnabled = false,
             )
+        },
+        bottomBar = {
+            BottomAppBar {
+                IconButton(onClick = onSettingsClick) {
+                    Icon(
+                        imageVector = Icons.Rounded.Settings,
+                        contentDescription = "Settings",
+                    )
+                }
+            }
         },
         modifier = Modifier.padding(8.dp),
     ) { innerPadding ->
