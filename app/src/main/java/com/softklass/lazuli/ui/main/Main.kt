@@ -2,13 +2,16 @@ package com.softklass.lazuli.ui.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,7 +66,17 @@ fun Main(
             )
         },
         bottomBar = {
-            BottomAppBar {
+            BottomAppBar(
+                modifier = Modifier.height(56.dp),
+                containerColor = MaterialTheme.colorScheme.surface,
+                windowInsets =
+                    WindowInsets(
+                        left = 8.dp,
+                        top = 0.dp,
+                        right = 0.dp,
+                        bottom = 16.dp,
+                    ),
+            ) {
                 IconButton(onClick = onSettingsClick) {
                     Icon(
                         imageVector = Icons.Rounded.Settings,
