@@ -2,7 +2,6 @@ package com.softklass.lazuli.ui.settings
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.softklass.lazuli.BuildConfig
 import com.softklass.lazuli.R
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
@@ -104,7 +104,10 @@ fun SettingsContent(
                 ) {
                     colorOptions.forEachIndexed { index, label ->
                         SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(index = index, count = colorOptions.size),
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = colorOptions.size
+                            ),
                             onClick = { themeManager.setDynamicColor(index == 1) },
                             selected = index == selectedColorOption,
                         ) {
@@ -134,8 +137,11 @@ fun SettingsContent(
                 ) {
                     themeOptions.forEachIndexed { index, label ->
                         SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(index = index, count = themeOptions.size),
-                            onClick = { themeManager.setThemeMode(ThemeMode.values()[index]) },
+                            shape = SegmentedButtonDefaults.itemShape(
+                                index = index,
+                                count = themeOptions.size
+                            ),
+                            onClick = { themeManager.setThemeMode(ThemeMode.entries[index]) },
                             selected = index == selectedThemeOption,
                         ) {
                             Text(label)
@@ -175,7 +181,7 @@ private fun openPlayStoreReview(context: Context) {
     try {
         val intent =
             Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("market://details?id=${context.packageName}")
+                data = "market://details?id=${context.packageName}".toUri()
                 setPackage("com.android.vending")
             }
         context.startActivity(intent)
@@ -183,7 +189,8 @@ private fun openPlayStoreReview(context: Context) {
         // Fallback to web browser if Play Store app is not available
         val intent =
             Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")
+                data =
+                    "https://play.google.com/store/apps/details?id=${context.packageName}".toUri()
             }
         context.startActivity(intent)
     }
