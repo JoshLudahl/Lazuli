@@ -104,10 +104,11 @@ fun SettingsContent(
                 ) {
                     colorOptions.forEachIndexed { index, label ->
                         SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = colorOptions.size
-                            ),
+                            shape =
+                                SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = colorOptions.size,
+                                ),
                             onClick = { themeManager.setDynamicColor(index == 1) },
                             selected = index == selectedColorOption,
                         ) {
@@ -137,10 +138,11 @@ fun SettingsContent(
                 ) {
                     themeOptions.forEachIndexed { index, label ->
                         SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = themeOptions.size
-                            ),
+                            shape =
+                                SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = themeOptions.size,
+                                ),
                             onClick = { themeManager.setThemeMode(ThemeMode.entries[index]) },
                             selected = index == selectedThemeOption,
                         ) {
