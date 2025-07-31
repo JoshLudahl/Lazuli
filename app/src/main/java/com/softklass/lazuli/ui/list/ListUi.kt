@@ -22,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -81,8 +82,8 @@ fun DisplayList(
                                 Modifier
                                     .padding(
                                         start = 16.dp,
-                                        top = 12.dp,
-                                        bottom = 12.dp,
+                                        top = 16.dp,
+                                        bottom = 16.dp,
                                         end = 8.dp,
                                     ).align(Alignment.CenterVertically)
                                     .weight(.9f)
@@ -104,6 +105,11 @@ fun DisplayList(
                             onClick = {
                                 onEditItemClick(item)
                             },
+                            colors =
+                                IconButtonDefaults.filledIconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                ),
                             modifier =
                                 Modifier
                                     .align(Alignment.CenterVertically),
@@ -127,6 +133,11 @@ fun DisplayList(
                                 Modifier
                                     .align(Alignment.CenterVertically)
                                     .testTag("delete_icon"),
+                            colors =
+                                IconButtonDefaults.filledIconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                ),
                         ) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.delete_forever_24px),
