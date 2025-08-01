@@ -97,7 +97,7 @@ fun DisplayList(
                                 ),
                             style =
                                 MaterialTheme.typography.bodyLarge.copy(
-                                    color = MaterialTheme.colorScheme.secondary,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                                 ),
                         )
 
@@ -159,7 +159,7 @@ fun DisplayList(
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                    tint = MaterialTheme.colorScheme.secondary,
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
                                     contentDescription = "Remove list item.",
                                     modifier = Modifier.size(32.dp),
                                 )
