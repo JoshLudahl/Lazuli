@@ -4,22 +4,26 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -63,6 +67,7 @@ fun SettingsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsContent(
     modifier: Modifier = Modifier,
@@ -99,20 +104,31 @@ fun SettingsContent(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                SingleChoiceSegmentedButtonRow(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     colorOptions.forEachIndexed { index, label ->
-                        SegmentedButton(
-                            shape =
-                                SegmentedButtonDefaults.itemShape(
-                                    index = index,
-                                    count = colorOptions.size,
-                                ),
-                            onClick = { themeManager.setDynamicColor(index == 1) },
-                            selected = index == selectedColorOption,
+                        ToggleButton(
+                            checked = index == selectedColorOption,
+                            onCheckedChange = { if (it) themeManager.setDynamicColor(index == 1) },
+                            modifier = Modifier.weight(1f),
+                            shapes =
+                                when (index) {
+                                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                    colorOptions.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                },
                         ) {
-                            Text(label)
+                            if (selectedColorOption == index) {
+                                Icon(
+                                    Icons.Rounded.Done,
+                                    contentDescription = "Localized description",
+                                )
+                            }
+
+                            Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
+
+                            Text(label, maxLines = 1)
                         }
                     }
                 }
@@ -133,20 +149,29 @@ fun SettingsContent(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                SingleChoiceSegmentedButtonRow(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     themeOptions.forEachIndexed { index, label ->
-                        SegmentedButton(
-                            shape =
-                                SegmentedButtonDefaults.itemShape(
-                                    index = index,
-                                    count = themeOptions.size,
-                                ),
-                            onClick = { themeManager.setThemeMode(ThemeMode.entries[index]) },
-                            selected = index == selectedThemeOption,
+                        ToggleButton(
+                            checked = index == selectedThemeOption,
+                            onCheckedChange = { if (it) themeManager.setThemeMode(ThemeMode.entries[index]) },
+                            modifier = Modifier.weight(1.2f),
+                            shapes =
+                                when (index) {
+                                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                    themeOptions.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                },
                         ) {
-                            Text(label)
+                            if (selectedThemeOption == index) {
+                                Icon(
+                                    Icons.Rounded.Done,
+                                    contentDescription = "Localized description",
+                                )
+                            }
+
+                            Text(label, maxLines = 1)
                         }
                     }
                 }
