@@ -2,6 +2,7 @@ package com.softklass.lazuli.ui.settings
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.Button
@@ -82,11 +85,13 @@ fun SettingsContent(
 
     val colorOptions = listOf("Default", "Dynamic")
     val themeOptions = listOf("Light", "Dark", "System")
+    val scrollState = rememberScrollState()
 
     Column(
         modifier =
             modifier
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
@@ -213,7 +218,7 @@ private fun openPlayStoreReview(context: Context) {
             }
         context.startActivity(intent)
     } catch (e: Exception) {
-        // Fallback to web browser if Play Store app is not available
+        Log.e("SettingsScreen", "Error opening Play Store", e)
         val intent =
             Intent(Intent.ACTION_VIEW).apply {
                 data =
