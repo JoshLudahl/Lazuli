@@ -14,9 +14,10 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -114,7 +115,7 @@ fun CameraView(
                         previewView
                     },
                     update = { previewView ->
-                        previewUseCase?.setSurfaceProvider(previewView.surfaceProvider)
+                        previewUseCase?.surfaceProvider = previewView.surfaceProvider
                     },
                 )
             }
@@ -132,7 +133,13 @@ fun CameraView(
                                 onImageCaptured(bitmap)
                             } catch (e: Exception) {
                                 Log.e("CameraView", "Failed to take picture", e)
-                                onError(ImageCaptureException(ImageCapture.ERROR_UNKNOWN, "Failed to capture image", e))
+                                onError(
+                                    ImageCaptureException(
+                                        ImageCapture.ERROR_UNKNOWN,
+                                        "Failed to capture image",
+                                        e,
+                                    ),
+                                )
                             }
                         }
                     },
@@ -141,16 +148,17 @@ fun CameraView(
                             .align(Alignment.BottomCenter)
                             .padding(bottom = 24.dp),
                     shape = RoundedCornerShape(20.dp),
-                    containerColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.secondary,
                 ) {
                     Surface(
                         shape = RoundedCornerShape(20.dp),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.secondary,
                     ) {
                         Icon(
-                            imageVector = Icons.Default.CameraAlt,
+                            imageVector = Icons.Rounded.CameraAlt,
                             contentDescription = "Take photo",
-                            modifier = Modifier.padding(8.dp),
+                            Modifier.size(36.dp),
+                            tint = MaterialTheme.colorScheme.onSecondary,
                         )
                     }
                 }
@@ -181,7 +189,8 @@ suspend fun ImageCapture.takePicture(executor: Executor): Bitmap =
             object : ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(image: ImageProxy) {
                     val bitmap = image.toBitmap()
-                    val rotatedBitmap = bitmap.rotateBitmap(image.imageInfo.rotationDegrees.toFloat())
+                    val rotatedBitmap =
+                        bitmap.rotateBitmap(image.imageInfo.rotationDegrees.toFloat())
                     image.close()
                     continuation.resume(rotatedBitmap)
                 }
