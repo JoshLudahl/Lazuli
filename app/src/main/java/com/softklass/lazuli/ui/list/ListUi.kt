@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -75,7 +76,7 @@ fun DisplayList(
                         ),
                     colors =
                         CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
                         ),
                 ) {
                     Row {
@@ -99,7 +100,7 @@ fun DisplayList(
                                 ),
                             style =
                                 MaterialTheme.typography.bodyLarge.copy(
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 ),
                         )
 
@@ -118,8 +119,8 @@ fun DisplayList(
                         ) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
-                                tint = MaterialTheme.colorScheme.secondary,
-                                contentDescription = "Remove list item.",
+                                tint = MaterialTheme.colorScheme.primaryContainer,
+                                contentDescription = "Edit item.",
                                 modifier =
                                     Modifier
                                         .size(24.dp)
@@ -157,15 +158,19 @@ fun DisplayList(
                                 onClick = {
                                     onItemClick(item.id)
                                 },
-                                modifier = Modifier.align(Alignment.CenterVertically),
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.CenterVertically),
                             ) {
                                 Icon(
                                     Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    contentDescription = "Remove list item.",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    contentDescription = "View Item",
                                     modifier = Modifier.size(32.dp),
                                 )
                             }
+                        } else {
+                            Spacer(modifier = Modifier.padding(end = 16.dp))
                         }
                     }
                 }
