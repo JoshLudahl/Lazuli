@@ -90,8 +90,7 @@ fun DisplayList(
                                         top = 16.dp,
                                         bottom = 16.dp,
                                         end = 8.dp,
-                                    )
-                                    .align(Alignment.CenterVertically)
+                                    ).align(Alignment.CenterVertically)
                                     .weight(.9f)
                                     .fillMaxWidth(),
                         ) {
@@ -130,7 +129,7 @@ fun DisplayList(
                                     text = text,
                                     style =
                                         MaterialTheme.typography.bodySmall.copy(
-                                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         ),
                                     modifier =
                                         Modifier
