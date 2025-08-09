@@ -46,6 +46,7 @@ fun Main(
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
+    val itemCounts by viewModel.itemCounts.collectAsStateWithLifecycle()
     val openDialog = remember { mutableStateOf(false) }
     val openDeleteListDialog = remember { mutableStateOf(false) }
     val parent = remember { mutableStateOf<Parent?>(null) }
@@ -108,6 +109,7 @@ fun Main(
                 openDeleteListDialog.value = true
             },
             onEditItemClick = onEditItemClick,
+            itemCounts = itemCounts,
         )
 
         ConfirmationDialog(
@@ -148,6 +150,7 @@ fun MainContent(
     onListNameChange: (String) -> Unit,
     onDeleteIconClick: (ListItem) -> Unit,
     onEditItemClick: (ListItem) -> Unit,
+    itemCounts: Map<Int, Int>,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         val context = LocalContext.current
@@ -170,8 +173,9 @@ fun MainContent(
                 list,
                 onItemClick = onDetailItemClick,
                 onDeleteIconClick = onDeleteIconClick,
-                isListItemDetail = true,
                 onEditItemClick = onEditItemClick,
+                isListItemDetail = true,
+                itemCounts = itemCounts,
             )
 
             Spacer(modifier = Modifier.weight(.5f))

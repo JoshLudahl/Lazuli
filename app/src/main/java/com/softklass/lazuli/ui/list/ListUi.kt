@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -49,6 +50,7 @@ fun DisplayList(
     onDeleteIconClick: (ListItem) -> Unit,
     onEditItemClick: (ListItem) -> Unit,
     isListItemDetail: Boolean = false,
+    itemCounts: Map<Int, Int>? = null,
 ) {
     LazyColumn(
         modifier =
@@ -80,7 +82,7 @@ fun DisplayList(
                         ),
                 ) {
                     Row {
-                        BasicText(
+                        Column(
                             modifier =
                                 Modifier
                                     .padding(
@@ -88,21 +90,55 @@ fun DisplayList(
                                         top = 16.dp,
                                         bottom = 16.dp,
                                         end = 8.dp,
-                                    ).align(Alignment.CenterVertically)
+                                    )
+                                    .align(Alignment.CenterVertically)
                                     .weight(.9f)
-                                    .testTag(item.content)
                                     .fillMaxWidth(),
-                            text = content,
-                            autoSize =
-                                TextAutoSize.StepBased(
-                                    minFontSize = 12.sp,
-                                    maxFontSize = 16.sp,
-                                ),
-                            style =
-                                MaterialTheme.typography.bodyLarge.copy(
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                ),
-                        )
+                        ) {
+                            BasicText(
+                                modifier = Modifier.testTag(item.content),
+                                text = content,
+                                autoSize =
+                                    TextAutoSize.StepBased(
+                                        minFontSize = 12.sp,
+                                        maxFontSize = 16.sp,
+                                    ),
+                                style =
+                                    MaterialTheme.typography.bodyLarge.copy(
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    ),
+                            )
+                            if (isListItemDetail) {
+                                val count = itemCounts?.get(item.id) ?: 0
+
+                                val text =
+                                    when (count) {
+                                        0 -> {
+                                            "Empty List"
+                                        }
+
+                                        1 -> {
+                                            "$count Item"
+                                        }
+
+                                        else -> {
+                                            "$count Items"
+                                        }
+                                    }
+
+                                Text(
+                                    text = text,
+                                    style =
+                                        MaterialTheme.typography.bodySmall.copy(
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        ),
+                                    modifier =
+                                        Modifier
+                                            .padding(top = 4.dp)
+                                            .alpha(0.5f),
+                                )
+                            }
+                        }
 
                         IconButton(
                             onClick = {
@@ -212,7 +248,7 @@ fun EmptyList(message: String) {
 
 @Preview
 @Composable
-fun DisplayListPreview() {
+fun DisplayListPreviewChild() {
     val list =
         listOf(
             Parent(1, "Parent 1"),
@@ -225,6 +261,26 @@ fun DisplayListPreview() {
         onDeleteIconClick = {},
         onEditItemClick = {},
         isListItemDetail = false,
+        itemCounts = mapOf(1 to 3, 2 to 5, 3 to 2),
+    )
+}
+
+@Preview
+@Composable
+fun DisplayListPreviewParent() {
+    val list =
+        listOf(
+            Parent(1, "Parent 1"),
+            Parent(2, "Parent 2"),
+            Parent(3, "Parent 3"),
+        )
+    DisplayList(
+        list,
+        onItemClick = {},
+        onDeleteIconClick = {},
+        onEditItemClick = {},
+        isListItemDetail = true,
+        itemCounts = mapOf(1 to 3, 2 to 5, 3 to 2),
     )
 }
 

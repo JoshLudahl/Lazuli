@@ -6,8 +6,14 @@ import com.softklass.lazuli.data.models.Parent
 import com.softklass.lazuli.data.repository.ItemRepository
 import com.softklass.lazuli.data.repository.ParentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +32,29 @@ class MainViewModel
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList(),
             )
+
+        // Map of Parent.id -> item count
+        @OptIn(ExperimentalCoroutinesApi::class)
+        val itemCounts: StateFlow<Map<Int, Int>> =
+            parentItems
+                .flatMapLatest { parents ->
+                    val validParents = parents.filterNotNull()
+                    if (validParents.isEmpty()) {
+                        flowOf(emptyMap())
+                    } else {
+                        val flows: List<Flow<Pair<Int, Int>>> =
+                            validParents.map { parent ->
+                                itemRepository.getAllItems(parent.id).map { items -> parent.id to items.size }
+                            }
+                        combine(flows) { pairsArray ->
+                            pairsArray.toMap()
+                        }
+                    }
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = emptyMap(),
+                )
 
         fun addList(name: String) {
             viewModelScope.launch {
