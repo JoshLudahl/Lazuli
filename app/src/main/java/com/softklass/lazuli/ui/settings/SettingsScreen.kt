@@ -42,6 +42,7 @@ import com.softklass.lazuli.R
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 import com.softklass.lazuli.ui.theme.ThemeManager
 import com.softklass.lazuli.ui.theme.ThemeMode
+import com.softklass.lazuli.ui.theme.TopAppBarIcon
 
 @Composable
 fun SettingsScreen(
@@ -57,7 +58,9 @@ fun SettingsScreen(
                 title = {
                     Text("Settings")
                 },
-                actions = {},
+                actions = {
+                    TopAppBarIcon { shareAppIntent(context) }
+                },
                 isEnabled = true,
             )
         },
@@ -226,4 +229,17 @@ private fun openPlayStoreReview(context: Context) {
             }
         context.startActivity(intent)
     }
+}
+
+fun shareAppIntent(context: Context) {
+    val packageName = context.packageName
+    val shareText = "Check out Lazuli: https://play.google.com/store/apps/details?id=$packageName"
+    val sendIntent =
+        Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Lazuli")
+            putExtra(Intent.EXTRA_TEXT, shareText)
+        }
+    val chooser = Intent.createChooser(sendIntent, "Share Lazuli")
+    context.startActivity(chooser, null)
 }
