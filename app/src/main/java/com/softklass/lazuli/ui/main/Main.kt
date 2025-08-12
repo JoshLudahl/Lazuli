@@ -94,6 +94,7 @@ fun Main(
                             openDialog.value = true
                         }
                     },
+                    enabled = items.isNotEmpty(),
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.DeleteSweep,
