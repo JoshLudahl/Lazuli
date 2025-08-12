@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -29,13 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.Parent
-import com.softklass.lazuli.ui.list.DeleteIcon
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
 import com.softklass.lazuli.ui.list.SectionTitle
 import com.softklass.lazuli.ui.particles.ConfirmationDialog
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
+import com.softklass.lazuli.ui.theme.TopAppBarIcon
+import com.softklass.lazuli.utils.shareAppIntent
 
 @Composable
 fun Main(
@@ -50,6 +52,7 @@ fun Main(
     val openDialog = remember { mutableStateOf(false) }
     val openDeleteListDialog = remember { mutableStateOf(false) }
     val parent = remember { mutableStateOf<Parent?>(null) }
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -61,9 +64,7 @@ fun Main(
                 },
                 modifier = Modifier.testTag("title"),
                 actions = {
-                    if (items.isNotEmpty()) {
-                        DeleteIcon { openDialog.value = true }
-                    }
+                    TopAppBarIcon { shareAppIntent(context) }
                 },
                 isEnabled = false,
             )
@@ -84,6 +85,19 @@ fun Main(
                     Icon(
                         imageVector = Icons.Rounded.Settings,
                         contentDescription = "Settings",
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        if (items.isNotEmpty()) {
+                            openDialog.value = true
+                        }
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.DeleteSweep,
+                        contentDescription = "Delete everything.",
                     )
                 }
             }
