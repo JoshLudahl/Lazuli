@@ -30,12 +30,22 @@ import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.softklass.lazuli.BuildConfig
 import com.softklass.lazuli.R
@@ -187,6 +197,39 @@ fun SettingsContent(
             }
         }
 
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+            ) {
+                Text(
+                    text = "About",
+                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Lazuli Bunting",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Lazuli is inspired after the lazuli bunting, a small bird known for its vibrant blue color.",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+
+                AttributionAnnotatedText()
+            }
+        }
+
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
@@ -229,5 +272,49 @@ private fun openPlayStoreReview(context: Context) {
                     "https://play.google.com/store/apps/details?id=${context.packageName}".toUri()
             }
         context.startActivity(intent)
+    }
+}
+
+@Composable
+fun AttributionAnnotatedText() {
+    val annotatedLinkString: AnnotatedString =
+        remember {
+            buildAnnotatedString {
+                val style = SpanStyle()
+
+                val styleCenter =
+                    SpanStyle(
+                        color = Color(0xff64B5F6),
+                        textDecoration = TextDecoration.Underline,
+                    )
+
+                withStyle(
+                    style = style,
+                ) {
+                    append("To learn more, ")
+                }
+
+                withLink(LinkAnnotation.Url(url = "https://myodfw.com/wildlife-viewing/species/lazuli-bunting")) {
+                    withStyle(
+                        style = styleCenter,
+                    ) {
+                        append("click here")
+                    }
+                }
+
+                withStyle(
+                    style = style,
+                ) {
+                    append(".")
+                }
+            }
+        }
+
+    Column {
+        Text(
+            text = annotatedLinkString,
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
