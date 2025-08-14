@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
@@ -52,6 +53,8 @@ class MainActivity : ComponentActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Handle the splash screen transition.
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         themeManager = ThemeManager.getInstance(this)

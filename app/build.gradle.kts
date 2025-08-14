@@ -138,6 +138,9 @@ dependencies {
     // ML Kit Text Recognition
     implementation(libs.mlkit.text.recognition)
 
+    // Splash
+    implementation(libs.androidx.core.splashscreen)
+
     // Coroutines for Play Services
     implementation(libs.kotlinx.coroutines.play.services)
 
