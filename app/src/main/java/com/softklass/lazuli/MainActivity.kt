@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // Handle the splash screen transition.
         val splashScreen = installSplashScreen()
-
+        splashScreen
         super.onCreate(savedInstanceState)
 
         themeManager = ThemeManager.getInstance(this)

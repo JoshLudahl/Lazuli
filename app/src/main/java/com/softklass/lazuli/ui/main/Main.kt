@@ -168,6 +168,7 @@ fun MainContent(
     itemCounts: Map<Int, Int>,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
+
         val context = LocalContext.current
 
         SectionTitle(title = "Create New List")
