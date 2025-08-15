@@ -6,6 +6,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,7 @@ class ThemeManager private constructor(
 
     private val _themeMode =
         MutableStateFlow(
-            ThemeMode.values()[prefs.getInt("theme_mode", ThemeMode.SYSTEM.ordinal)],
+            ThemeMode.entries[prefs.getInt("theme_mode", ThemeMode.SYSTEM.ordinal)],
         )
     val themeMode: StateFlow<ThemeMode> = _themeMode.asStateFlow()
 
@@ -47,12 +48,12 @@ class ThemeManager private constructor(
 
     fun setThemeMode(mode: ThemeMode) {
         _themeMode.value = mode
-        prefs.edit().putInt("theme_mode", mode.ordinal).apply()
+        prefs.edit { putInt("theme_mode", mode.ordinal) }
     }
 
     fun setDynamicColor(enabled: Boolean) {
         _dynamicColor.value = enabled
-        prefs.edit().putBoolean("dynamic_color", enabled).apply()
+        prefs.edit { putBoolean("dynamic_color", enabled) }
     }
 
     @Composable
