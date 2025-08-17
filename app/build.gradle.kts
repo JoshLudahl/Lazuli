@@ -141,6 +141,10 @@ dependencies {
     // Splash
     implementation(libs.androidx.core.splashscreen)
 
+    // Markdown
+    implementation(libs.markdown)
+    implementation(libs.richtext.commonmark)
+
     // Coroutines for Play Services
     implementation(libs.kotlinx.coroutines.play.services)
 

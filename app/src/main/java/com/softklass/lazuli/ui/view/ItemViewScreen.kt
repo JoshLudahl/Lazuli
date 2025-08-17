@@ -16,11 +16,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.softklass.lazuli.ui.particles.MarkdownText
+import com.halilibo.richtext.commonmark.CommonmarkAstNodeParser
+import com.halilibo.richtext.markdown.BasicMarkdown // Or other specific components
+import com.halilibo.richtext.ui.BasicRichText
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 
 @Composable
@@ -85,7 +88,8 @@ fun ItemViewScreen(
                 )
             } else {
                 if (item?.notesIsMarkdown == true) {
-                    MarkdownText(text = notes)
+                    // BasicMarkdown(text = notes)
+                    MarkdownBlock(text = notes)
                 } else {
                     Text(
                         text = notes,
@@ -95,5 +99,17 @@ fun ItemViewScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MarkdownBlock(
+    text: String,
+) {
+    val parser = remember { CommonmarkAstNodeParser() }
+    // Re-parse markdown whenever the text changes to reflect latest notes
+    val textAsNote = remember(parser, text) { parser.parse(text) }
+    BasicRichText {
+        BasicMarkdown(textAsNote)
     }
 }
