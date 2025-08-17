@@ -1,17 +1,17 @@
 package com.softklass.lazuli.ui.theme
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 
 @Composable
 fun TopAppBarIcon(
+    icon: ImageVector,
     onClickIcon: () -> Unit,
 ) {
     FilledIconButton(
@@ -23,7 +23,7 @@ fun TopAppBarIcon(
             ),
     ) {
         Icon(
-            Icons.Rounded.Share,
+            imageVector = icon,
             contentDescription = "Back",
             modifier = Modifier.testTag("share"),
         )

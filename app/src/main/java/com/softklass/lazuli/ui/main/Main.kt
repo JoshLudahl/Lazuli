@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -64,7 +65,7 @@ fun Main(
                 },
                 modifier = Modifier.testTag("title"),
                 actions = {
-                    TopAppBarIcon { shareAppIntent(context) }
+                    TopAppBarIcon(icon = Icons.Rounded.Share) { shareAppIntent(context) }
                 },
                 isEnabled = false,
             )

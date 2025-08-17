@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,6 +28,7 @@ import com.halilibo.richtext.commonmark.CommonmarkAstNodeParser
 import com.halilibo.richtext.markdown.BasicMarkdown // Or other specific components
 import com.halilibo.richtext.ui.BasicRichText
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
+import com.softklass.lazuli.ui.theme.TopAppBarIcon
 
 @Composable
 fun ItemViewScreen(
@@ -49,9 +48,7 @@ fun ItemViewScreen(
                     Text(text = item?.content ?: "Item")
                 },
                 actions = {
-                    IconButton(onClick = { item?.let { onEdit(it.id) } }) {
-                        Icon(imageVector = Icons.Rounded.Edit, contentDescription = "Edit item")
-                    }
+                    TopAppBarIcon(icon = Icons.Rounded.EditNote) { item?.let { onEdit(it.id) } }
                 },
                 isEnabled = true,
             )
@@ -94,7 +91,9 @@ fun ItemViewScreen(
             val notes = item?.notes.orEmpty()
 
             Card(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             ) {
                 Column(
                     modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
