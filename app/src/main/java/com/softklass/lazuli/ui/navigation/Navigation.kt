@@ -127,8 +127,8 @@ fun AppNavHost() {
             },
             popEnterTransition = {
                 // If coming from Onboarding, fade in; otherwise keep default slide.
-                if (initialState.destination.route?.startsWith(Navigation.Onboarding::class.simpleName.orEmpty()) == true ||
-                    initialState.destination.route?.startsWith(Navigation.Entry::class.simpleName.orEmpty()) == true
+                if (initialState.destination.route?.startsWith(Navigation.Onboarding::class.simpleName.toString()) == true ||
+                    initialState.destination.route?.startsWith(Navigation.Entry::class.simpleName.toString()) == true
                 ) {
                     fadeIn(animationSpec = tween(animationTween))
                 } else {
@@ -166,7 +166,7 @@ fun AppNavHost() {
                 // When ListDetail is leaving
                 // If going to ItemEdit, ListDetail slides Left
                 // If going back to Main, ListDetail slides Right
-                if (targetState.destination.route?.startsWith(Navigation.ItemEdit::class.simpleName.orEmpty()) == true) {
+                if (targetState.destination.route?.startsWith(Navigation.ItemEdit::class.simpleName.toString()) == true) {
                     slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
                 } else {
                     slideOutOfContainer(slideLeft, animationSpec = tween(animationTween))
