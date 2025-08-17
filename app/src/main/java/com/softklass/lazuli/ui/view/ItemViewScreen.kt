@@ -3,12 +3,14 @@ package com.softklass.lazuli.ui.view
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.halilibo.richtext.commonmark.CommonmarkAstNodeParser
@@ -65,7 +70,10 @@ fun ItemViewScreen(
                 actions = {},
             )
         },
-        modifier = Modifier.fillMaxSize().padding(8.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(8.dp),
     ) { innerPadding ->
         Column(
             modifier =
@@ -76,26 +84,39 @@ fun ItemViewScreen(
         ) {
             Text(
                 text = "Notes",
+                fontSize = 18.sp,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
             )
+            // Notes Card
             val notes = item?.notes.orEmpty()
-            if (notes.isBlank()) {
-                Text(
-                    text = "No notes.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                )
-            } else {
-                if (item?.notesIsMarkdown == true) {
-                    // BasicMarkdown(text = notes)
-                    MarkdownBlock(text = notes)
-                } else {
-                    Text(
-                        text = notes,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
+
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+            ) {
+                Column(
+                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+                ) {
+                    // Notes
+                    if (notes.isBlank()) {
+                        Text(
+                            text = "No notes.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                        )
+                    } else {
+                        if (item?.notesIsMarkdown == true) {
+                            MarkdownBlock(text = notes)
+                        } else {
+                            Text(
+                                text = notes,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -107,9 +128,10 @@ fun MarkdownBlock(
     text: String,
 ) {
     val parser = remember { CommonmarkAstNodeParser() }
-    // Re-parse markdown whenever the text changes to reflect latest notes
     val textAsNote = remember(parser, text) { parser.parse(text) }
-    BasicRichText {
-        BasicMarkdown(textAsNote)
+    BasicRichText(
+        modifier = Modifier.padding(horizontal = 16.dp),
+    ) {
+        BasicMarkdown(astNode = textAsNote)
     }
 }
