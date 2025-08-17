@@ -3,6 +3,7 @@ package com.softklass.lazuli.ui.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,6 +17,7 @@ import com.softklass.lazuli.ui.edit.ItemEditScreen
 import com.softklass.lazuli.ui.edit.ItemEditViewModel
 import com.softklass.lazuli.ui.main.Main
 import com.softklass.lazuli.ui.main.MainViewModel
+import com.softklass.lazuli.ui.onboarding.OnboardingScreen
 import com.softklass.lazuli.ui.onboarding.OnboardingViewModel
 import com.softklass.lazuli.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
@@ -67,7 +69,7 @@ fun AppNavHost() {
         composable<Navigation.Entry> {
             val vm = hiltViewModel<OnboardingViewModel>()
             val done = vm.isOnboardingComplete.collectAsStateWithLifecycle(initialValue = false).value
-            androidx.compose.runtime.LaunchedEffect(done) {
+            LaunchedEffect(done) {
                 if (done) {
                     navController.navigate(Navigation.Main) {
                         popUpTo(Navigation.Entry) { inclusive = true }
@@ -87,8 +89,8 @@ fun AppNavHost() {
             popEnterTransition = { slideIntoContainer(slideRight, animationSpec = tween(animationTween)) },
             popExitTransition = { slideOutOfContainer(slideRight, animationSpec = tween(animationTween)) },
         ) {
-            val vm = hiltViewModel<com.softklass.lazuli.ui.onboarding.OnboardingViewModel>()
-            com.softklass.lazuli.ui.onboarding.OnboardingScreen(
+            val vm = hiltViewModel<OnboardingViewModel>()
+            OnboardingScreen(
                 onFinished = {
                     vm.setCompleted()
                     navController.navigate(Navigation.Main) {
