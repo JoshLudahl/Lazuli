@@ -1,144 +1,233 @@
-# Lazuli Project Guidelines
+# Lazuli Engineering Guidelines
 
-## Project Overview
+This document defines how we build, structure, and maintain the Lazuli Android app. It encodes Android best practices as of 2025-08-17 and should be followed for all code changes.
 
-Lazuli is a modern Android list management application built with Jetpack Compose. The app allows users to create and manage lists with items, featuring OCR (Optical Character Recognition) capabilities through camera integration to automatically extract text from images and add it to lists.
+Goals:
+- Ship maintainable, testable, and scalable features.
+- Adhere to MVVM and Clean Architecture (data/domain/presentation).
+- Apply DRY and SOLID principles with proven design patterns.
+- Prefer composition over inheritance. Keep functions small and pure when possible.
 
-### Key Features
-- Create and manage multiple lists
-- Add, edit, and delete items within lists
-- Camera integration with ML Kit text recognition for OCR
-- Material Design 3 UI with dynamic theming
-- Dark/light theme support
-- In-app updates functionality
-- Local data persistence with Room database
 
-### Technology Stack
-- **Language**: Kotlin
-- **UI Framework**: Jetpack Compose with Material Design 3
-- **Architecture**: MVVM with Repository pattern
-- **Dependency Injection**: Hilt
-- **Database**: Room (SQLite)
-- **Camera**: CameraX
-- **Text Recognition**: ML Kit
-- **Navigation**: Jetpack Navigation Compose
-- **Build System**: Gradle with Kotlin DSL
-- **Code Quality**: KtLint for formatting
+## 1. Architecture Overview
 
-## Project Structure
+We follow Clean Architecture with three layers and MVVM in the presentation layer.
 
-```
-app/src/main/java/com/softklass/lazuli/
-├── MainActivity.kt                    # Main entry point with theme and update management
-├── data/
-│   ├── database/                      # Room database components
-│   │   ├── ItemDao.kt                # Data access for items
-│   │   ├── ParentDao.kt              # Data access for lists/parents
-│   │   └── ListDatabase.kt           # Database configuration
-│   ├── models/                       # Data models
-│   │   ├── Item.kt                   # Item entity
-│   │   ├── Parent.kt                 # List/Parent entity
-│   │   ├── ListItem.kt               # UI model
-│   │   └── Resource.kt               # Resource wrapper
-│   └── repository/                   # Repository layer
-│       ├── ItemRepository.kt         # Item data operations
-│       └── ParentRepository.kt       # Parent data operations
-├── di/                               # Dependency injection
-│   ├── App.kt                        # Application class
-│   └── DatabaseModule.kt             # Database DI module
-└── ui/                               # UI components
-    ├── main/                         # Main screen (list of lists)
-    ├── detail/                       # List detail screen (items in a list)
-    ├── edit/                         # Item editing screen
-    ├── camera/                       # Camera and OCR functionality
-    ├── settings/                     # Settings screen
-    ├── navigation/                   # Navigation setup
-    ├── theme/                        # Theme and styling
-    └── particles/                    # Reusable UI components
-```
+- Presentation (UI + ViewModel)
+  - Technologies: Jetpack Compose, Navigation Compose, Material 3
+  - Responsibilities: UI rendering, user interactions, state management, calling use cases.
+- Domain (Use Cases + Domain Models)
+  - Technology: Pure Kotlin (no Android dependencies)
+  - Responsibilities: Business rules, application-specific logic, interfaces for repositories.
+- Data (Repositories + Data Sources)
+  - Technologies: Room (SQLite), DataStore (if/when used), network clients (if added), CameraX/ML Kit wrappers
+  - Responsibilities: Read/write from local DB, device capabilities, remote APIs; mapping to domain models.
 
-## Testing Guidelines
+Dependencies flow inward only:
+Presentation → Domain → Data
 
-### Running Tests
-- **Unit Tests**: `run_test app/src/test/java/com/softklass/lazuli/ExampleUnitTest.kt`
-- **Instrumented Tests**: `run_test app/src/androidTest/java/com/softklass/lazuli/tests/MainTest.kt`
-- **All Tests**: `run_test app/src/test;app/src/androidTest`
+Avoid crossing boundaries directly (e.g., UI should not depend on Room entities). Map between layers explicitly.
 
-### Test Structure
-- Unit tests are located in `app/src/test/`
-- Instrumented (UI) tests are located in `app/src/androidTest/`
-- Test orchestrator is enabled for better test isolation
-- UI tests use Espresso and Compose testing framework
 
-### When to Run Tests
-- Always run tests after making changes to core functionality
-- Run instrumented tests when modifying UI components
-- Run unit tests when changing business logic or data operations
-- Test camera and OCR functionality manually as it requires device hardware
+## 2. MVVM: Presentation Layer
 
-## Build Instructions
+- UI: Stateless composables where possible, driven by state from ViewModels.
+- ViewModel: Exposes UI state as StateFlow (or Compose state) and UI events via functions. No Android context leaks.
+- State:
+  - Prefer a single immutable UI state data class per screen (copy to update).
+  - Use a "Resource" or sealed result pattern for loading/success/error.
+- Events: One-off events (navigation, toasts, snackbars) via SharedFlow/Channel or Compose’s effect handlers.
+- Navigation: Use Navigation Compose with type-safe routes and argument objects where appropriate. Keep navigation decisions in the UI layer in response to ViewModel state or events.
 
-### Building the Project
-- **Debug Build**: The project builds automatically when running tests
-- **Release Build**: Use `build` command only if specifically needed for verification
-- **Code Formatting**: KtLint runs automatically before build (`preBuild` depends on `ktlintFormat`)
 
-### Build Configuration
-- **Target SDK**: 36 (Android 14)
-- **Min SDK**: 26 (Android 8.0)
-- **Java Version**: 21
-- **Kotlin**: Latest stable version
-- **Proguard**: Enabled for release builds
+## 3. Domain Layer
 
-### Dependencies
-The project uses version catalogs (`gradle/libs.versions.toml`) for dependency management.
+- Use Cases: One class per coherent business action (e.g., AddItem, GetItemsForList). Keep them small and pure.
+- Interfaces: Define repository interfaces here that express the business needs, not the data storage details.
+- Models: Domain models are UI-agnostic and storage-agnostic.
+- Testing: Domain has the highest unit-test coverage; it’s pure Kotlin and fast to test.
 
-## Code Style Guidelines
 
-### Formatting
-- **KtLint**: Automatically enforced with pre-build formatting
-- **Max Line Length**: Disabled (no limit)
-- **Composable Functions**: Exempt from standard function naming rules
-- **Reporters**: Checkstyle, JSON, and HTML reports generated
+## 4. Data Layer
 
-### Architecture Patterns
-- **MVVM**: ViewModels handle UI state and business logic
-- **Repository Pattern**: Repositories abstract data access
-- **Single Source of Truth**: Room database is the primary data source
-- **Unidirectional Data Flow**: State flows down, events flow up
+- Repositories: Implement domain repository interfaces; orchestrate data sources (Room, ML Kit wrappers, etc.).
+- Data Sources:
+  - Local: Room DAOs for persistence. Expose suspend functions and Flows. No business logic in DAOs.
+  - Remote: If added later, keep client code here. Handle retries, mapping, and error conversion.
+  - Device: CameraX/ML Kit wrappers live here and expose clean interfaces to domain.
+- Mappers: Provide clear mapping between Entity ↔ Domain ↔ UI models. Keep mappers in the layer that knows both types (e.g., data layer maps Entity↔Domain).
 
-### Compose Guidelines
-- Use `@Composable` functions for UI components
-- Prefer stateless composables when possible
-- Use `remember` and `rememberSaveable` appropriately
-- Follow Material Design 3 principles
-- Use proper test tags for UI testing
 
-### Naming Conventions
-- **Packages**: lowercase with dots (e.g., `com.softklass.lazuli.ui.main`)
-- **Classes**: PascalCase (e.g., `MainActivity`, `MainViewModel`)
-- **Functions**: camelCase (e.g., `onDetailItemClick`)
-- **Variables**: camelCase (e.g., `listName`, `openDialog`)
-- **Constants**: UPPER_SNAKE_CASE
+## 5. Principles and Patterns
 
-### Database Guidelines
-- Use Room entities with proper annotations
-- Implement DAOs with suspend functions for async operations
-- Use Flow for reactive data streams
-- Handle database migrations properly
+- DRY: Extract common logic into reusable functions/components (e.g., debounce, dialog, app bar already present in ui/particles).
+- SOLID:
+  - Single Responsibility: Each class/composable does one thing well.
+  - Open/Closed: Prefer extension and composition to modification.
+  - Liskov: Respect substitutability in interfaces and implementations.
+  - Interface Segregation: Prefer small, specific interfaces (e.g., repository contracts by feature).
+  - Dependency Inversion: Higher-level modules depend on abstractions; use Hilt to inject implementations.
+- Error Handling:
+  - Convert exceptions to domain-understandable failures (sealed types or Resource.Error).
+  - Centralize error mapping at layer boundaries.
+  - Avoid catching Exception broadly unless translating to a result type.
+- Concurrency:
+  - Use Kotlin Coroutines and Flow. Offload IO work with Dispatchers.IO; don’t block the main thread.
+  - Use viewModelScope for presentation-layer jobs.
+  - Prefer cold Flows from repositories/DAOs; collect in ViewModels.
+- Caching:
+  - Room is the SSOT. Keep UI derived from database flows when possible.
 
-## Development Workflow
 
-1. **Code Changes**: Make minimal, focused changes
-2. **Formatting**: KtLint will auto-format on build
-3. **Testing**: Run relevant tests to verify functionality
-4. **Manual Testing**: Test camera/OCR features manually if modified
-5. **Build Verification**: Only build if tests don't provide sufficient verification
+## 6. Dependency Injection (Hilt)
 
-## Special Considerations
+- Provide database, DAOs, repositories, and other data services from Hilt modules in di/.
+- Inject ViewModels using @HiltViewModel and constructor injection.
+- Keep module bindings aligned with domain interfaces and data implementations.
 
-- **Camera Permissions**: Required for OCR functionality
-- **ML Kit**: Text recognition requires Google Play Services
-- **In-App Updates**: Flexible update flow implemented
-- **Theme Management**: Dynamic color and dark/light theme support
-- **Edge-to-Edge**: Modern Android UI with proper insets handling
+
+## 7. Compose and UI Best Practices
+
+- Stateless over stateful composables; pass state + event lambdas down.
+- Remember/rememberSaveable only for UI state that must survive recomposition/process-death respectively.
+- Use Material 3 components and theming (dynamic color where available).
+- Accessibility: Provide content descriptions, semantics, and test tags.
+- Performance: Avoid heavy work in composition. Use derivedStateOf for expensive computations based on state.
+- Preview: Create meaningful @Preview where useful. Keep previews lightweight and without external IO.
+
+
+## 8. Navigation
+
+- Define routes in a single place (ui/navigation/Navigation.kt). Avoid stringly-typed routes scattered across code.
+- Prefer typed arguments and NavType serializers if passing complex data. Otherwise pass IDs and load data within the destination screen.
+- Navigation decisions are triggered by UI events; ViewModels expose intent (e.g., item selected), UI performs navigation.
+
+
+## 9. Data Persistence (Room)
+
+- DAOs use suspend functions and Flow where streaming is appropriate.
+- Queries are small and explicit. Business rules do not belong in DAOs.
+- Migrations must be provided when schema changes. Bump version and write tests where possible.
+- Entities stay in data/models. Do not leak entities to UI; map to domain/UI models.
+
+
+## 10. Camera and OCR
+
+- CameraX and ML Kit integration is encapsulated behind interfaces implemented in the data/device layer.
+- Handle permissions via a UI-friendly flow that surfaces states to ViewModel/UI; do not block the main thread.
+- ML Kit processing should be cancellable, done off the main thread, and expose results as domain types or Resource.
+
+
+## 11. Resource/Result Pattern
+
+- Use a Resource (Success, Loading, Error) or sealed Result to communicate state across layers.
+- UI renders based on this state and avoids throwing exceptions.
+
+
+## 12. Testing Strategy
+
+- Unit Tests (app/src/test):
+  - Domain: exhaustive tests for use cases and mappers.
+  - Data: repository behavior with fake data sources/DAOs.
+  - ViewModel: business logic and state reduction tested via coroutine test APIs.
+- Instrumented Tests (app/src/androidTest):
+  - Compose UI tests with semantics and test tags.
+  - Navigation flows and critical user journeys.
+- When to run:
+  - Run unit tests on business logic changes.
+  - Run instrumented tests on UI/Compose changes.
+- Mocks/Fakes: Prefer fakes for repositories/DAOs; use MockK for behavior verification when necessary.
+
+
+## 13. Coding Conventions
+
+- Kotlin style enforced by KtLint. No max line length limit.
+- Naming:
+  - Packages: lowercase, dot-separated.
+  - Classes: PascalCase. Functions/vars: camelCase. Constants: UPPER_SNAKE_CASE.
+  - Composable names may be PascalCase and are exempt from standard function naming rules.
+- Nullability: Prefer non-null types; use nullable only when necessary and handle explicitly.
+- Immutability: Use val by default; prefer immutable data classes for state.
+
+
+## 14. Folder Structure (Current + Recommended)
+
+- app/src/main/java/com/softklass/lazuli/
+  - data/
+    - database/ (Room DB, DAOs)
+    - models/ (Entities, DTOs as needed)
+    - repository/ (Repository implementations)
+  - domain/ (Recommended to add)
+    - model/ (Domain models)
+    - repository/ (Repository interfaces)
+    - usecase/ (Use case classes)
+  - ui/
+    - feature folders (main, detail, edit, camera, settings)
+    - navigation/
+    - particles/ (reusable UI components)
+    - theme/
+  - di/
+- Keep layers separated with clear dependencies as described above.
+
+
+## 15. Error Reporting and Logging
+
+- Use structured logs for debug builds where necessary; avoid logging sensitive data.
+- Surface user-friendly errors to UI; avoid leaking internal exception messages.
+- Consider a central ErrorMapper in data or domain to convert throwables into domain failures.
+
+
+## 16. In-App Updates and Permissions
+
+- Updates: Use Play Core’s flexible updates with user-friendly prompts. Handle failures and resumption gracefully.
+- Permissions: Request at point of use with clear rationale. Reflect permission state in ViewModel/UI.
+
+
+## 17. Performance and Stability
+
+- Avoid heavy work on main thread; use coroutines with proper dispatchers.
+- Debounce/throttle user inputs where appropriate (see ui/particles/Debounce.kt).
+- Use snapshotFlow or collectAsStateWithLifecycle to observe flows in Compose.
+
+
+## 18. Contribution Checklist
+
+Before submitting PRs:
+- [ ] Architecture boundaries respected (no UI→Room direct dependency).
+- [ ] New code follows DRY and SOLID.
+- [ ] ViewModels expose immutable state and event handlers.
+- [ ] Hilt bindings provided for new services/repositories.
+- [ ] Unit tests for domain/data; Compose tests for UI as needed.
+- [ ] KtLint passes (preBuild runs ktlintFormat).
+- [ ] Public APIs documented with KDoc where helpful.
+
+
+## 19. Example: Adding a New Feature (Outline)
+
+1) Domain:
+- Define domain models if needed.
+- Create repository interface method(s).
+- Implement use cases (e.g., AddFooUseCase, GetFooUseCase).
+
+2) Data:
+- Update entities/DAOs and migrations.
+- Implement repository interface; map Entity↔Domain.
+
+3) Presentation:
+- Add ViewModel with UI state and event handlers.
+- Create composables and navigation route.
+- Wire ViewModel to use cases via Hilt.
+
+4) Tests:
+- Unit tests for use cases and repository implementation.
+- UI tests for screens and navigation.
+
+
+## 20. Roadmap Notes for Lazuli
+
+- Consider extracting domain layer into app/src/main/java/com/softklass/lazuli/domain to formalize Clean Architecture.
+- Gradually introduce use cases for key flows (e.g., CreateList, AddItem, RecognizeTextFromImage).
+- Expand Resource/Result usage in UI to unify loading/error handling.
+
+
+By following these guidelines, Lazuli will remain robust, testable, and pleasant to contribute to.
