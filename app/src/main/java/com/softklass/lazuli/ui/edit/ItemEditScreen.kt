@@ -3,6 +3,7 @@ package com.softklass.lazuli.ui.edit
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -13,11 +14,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -156,29 +160,29 @@ fun ItemDetailScreenContent(
             )
 
             // Toggle between Text and Markdown (mode selection similar to Settings)
-            @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
-            androidx.compose.foundation.layout.Row(
+            @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+            Row(
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
             ) {
-                androidx.compose.material3.ToggleButton(
+                ToggleButton(
                     checked = !notesIsMarkdown,
                     onCheckedChange = { if (it) onNotesModeChange(false) },
                     modifier = Modifier.weight(1.2f),
                     shapes =
-                        androidx.compose.material3.ButtonGroupDefaults
+                        ButtonGroupDefaults
                             .connectedLeadingButtonShapes(),
                 ) {
                     Text("Text", maxLines = 1)
                 }
-                androidx.compose.material3.ToggleButton(
+                ToggleButton(
                     checked = notesIsMarkdown,
                     onCheckedChange = { if (it) onNotesModeChange(true) },
                     modifier = Modifier.weight(1.2f),
                     shapes =
-                        androidx.compose.material3.ButtonGroupDefaults
+                        ButtonGroupDefaults
                             .connectedTrailingButtonShapes(),
                 ) {
                     Text("Markdown", maxLines = 1)
