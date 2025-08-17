@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ItemViewViewModel
     @Inject
     constructor(
-        private val itemRepository: ItemRepository,
+        itemRepository: ItemRepository,
         savedStateHandle: SavedStateHandle,
     ) : ViewModel() {
         private val id: Int = checkNotNull(savedStateHandle["id"]) // Navigation argument
