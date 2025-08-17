@@ -15,7 +15,7 @@ class OnboardingViewModel
         private val prefs: OnboardingPreferences,
     ) : ViewModel() {
         // Expose the cold Flow directly so callers can await the first real value from DataStore.
-        val isOnboardingComplete: Flow<Boolean> = prefs.isOnboardingComplete
+        val isOnboardingComplete: Flow<Boolean> = prefs.isOnboardingComplete2
 
         fun setCompleted() {
             viewModelScope.launch {
