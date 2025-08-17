@@ -47,12 +47,12 @@ fun OnboardingScreen(
             ),
             OnboardingPage(
                 title = "Scan with Camera",
-                description = "Use the camera to quickly capture text.",
+                description = "Use the camera to quickly capture List items.",
                 rawRes = com.softklass.lazuli.R.raw.onboarding2,
             ),
             OnboardingPage(
                 title = "Stay Productive",
-                description = "Simple, fast, and delightful to use.",
+                description = "Add notes to list items for better organization.",
                 rawRes = com.softklass.lazuli.R.raw.onboarding3,
             ),
         )
