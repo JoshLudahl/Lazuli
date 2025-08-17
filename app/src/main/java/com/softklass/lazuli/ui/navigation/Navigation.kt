@@ -2,10 +2,10 @@ package com.softklass.lazuli.ui.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -21,6 +21,7 @@ import com.softklass.lazuli.ui.main.MainViewModel
 import com.softklass.lazuli.ui.onboarding.OnboardingScreen
 import com.softklass.lazuli.ui.onboarding.OnboardingViewModel
 import com.softklass.lazuli.ui.settings.SettingsScreen
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -67,10 +68,16 @@ fun AppNavHost() {
         val slideRight = AnimatedContentTransitionScope.SlideDirection.Right
 
         // Navigation.Entry
-        composable<Navigation.Entry> {
+        composable<Navigation.Entry>(
+            enterTransition = { fadeIn(animationSpec = tween(animationTween)) },
+            exitTransition = { fadeOut(animationSpec = tween(animationTween)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(animationTween)) },
+            popExitTransition = { fadeOut(animationSpec = tween(animationTween)) },
+        ) {
             val vm = hiltViewModel<OnboardingViewModel>()
-            val done by vm.isOnboardingComplete.collectAsState(false)
-            LaunchedEffect(done) {
+            // Await the first real value from DataStore before deciding where to go.
+            LaunchedEffect(Unit) {
+                val done = vm.isOnboardingComplete.first()
                 if (done) {
                     navController.navigate(Navigation.Main) {
                         popUpTo(Navigation.Entry) { inclusive = true }
@@ -85,10 +92,10 @@ fun AppNavHost() {
 
         // Navigation.Onboarding
         composable<Navigation.Onboarding>(
-            enterTransition = { slideIntoContainer(slideLeft, animationSpec = tween(animationTween)) },
-            exitTransition = { slideOutOfContainer(slideLeft, animationSpec = tween(animationTween)) },
-            popEnterTransition = { slideIntoContainer(slideRight, animationSpec = tween(animationTween)) },
-            popExitTransition = { slideOutOfContainer(slideRight, animationSpec = tween(animationTween)) },
+            enterTransition = { fadeIn(animationSpec = tween(animationTween)) },
+            exitTransition = { fadeOut(animationSpec = tween(animationTween)) },
+            popEnterTransition = { fadeIn(animationSpec = tween(animationTween)) },
+            popExitTransition = { fadeOut(animationSpec = tween(animationTween)) },
         ) {
             val vm = hiltViewModel<OnboardingViewModel>()
             OnboardingScreen(
@@ -104,16 +111,30 @@ fun AppNavHost() {
         // Navigation.Main
         composable<Navigation.Main>(
             enterTransition = {
-                // When Main becomes the destination (e.g., popping from ListDetail or ItemEdit)
-                slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+                // If coming from Onboarding, fade in; otherwise keep default slide.
+                if (initialState.destination.route?.contains(Navigation.Onboarding::class.simpleName.toString()) == true ||
+                    initialState.destination.route?.contains(Navigation.Entry::class.simpleName.toString()) == true
+                ) {
+                    fadeIn(animationSpec = tween(animationTween))
+                } else {
+                    // When Main becomes the destination (e.g., popping from ListDetail or ItemEdit)
+                    slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+                }
             },
             exitTransition = {
                 // When Main is leaving (e.g., navigating to ListDetail or ItemEdit)
                 slideOutOfContainer(slideLeft, animationSpec = tween(animationTween))
             },
             popEnterTransition = {
-                // When Main is revealed after a pop
-                slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+                // If coming from Onboarding, fade in; otherwise keep default slide.
+                if (initialState.destination.route?.startsWith(Navigation.Onboarding::class.simpleName.orEmpty()) == true ||
+                    initialState.destination.route?.startsWith(Navigation.Entry::class.simpleName.orEmpty()) == true
+                ) {
+                    fadeIn(animationSpec = tween(animationTween))
+                } else {
+                    // When Main becomes the destination (e.g., popping from ListDetail or ItemEdit)
+                    slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+                }
             },
             popExitTransition = {
                 // When Main is being popped (should not happen if it's the start destination and not on top)
