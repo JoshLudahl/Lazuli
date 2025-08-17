@@ -148,6 +148,12 @@ dependencies {
     // Coroutines for Play Services
     implementation(libs.kotlinx.coroutines.play.services)
 
+    // DataStore (preferences)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Lottie for Compose
+    implementation("com.airbnb.android:lottie-compose:6.6.2")
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)

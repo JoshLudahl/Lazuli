@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,11 +16,18 @@ import com.softklass.lazuli.ui.edit.ItemEditScreen
 import com.softklass.lazuli.ui.edit.ItemEditViewModel
 import com.softklass.lazuli.ui.main.Main
 import com.softklass.lazuli.ui.main.MainViewModel
+import com.softklass.lazuli.ui.onboarding.OnboardingViewModel
 import com.softklass.lazuli.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 private sealed interface Navigation {
+    @Serializable
+    data object Entry : Navigation
+
+    @Serializable
+    data object Onboarding : Navigation
+
     @Serializable
     data object Main : Navigation
 
@@ -48,12 +56,47 @@ fun AppNavHost() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Navigation.Main,
+        startDestination = Navigation.Entry,
         modifier = Modifier,
     ) {
         val animationTween = 350
         val slideLeft = AnimatedContentTransitionScope.SlideDirection.Left
         val slideRight = AnimatedContentTransitionScope.SlideDirection.Right
+
+        // Navigation.Entry
+        composable<Navigation.Entry> {
+            val vm = hiltViewModel<OnboardingViewModel>()
+            val done = vm.isOnboardingComplete.collectAsStateWithLifecycle(initialValue = false).value
+            androidx.compose.runtime.LaunchedEffect(done) {
+                if (done) {
+                    navController.navigate(Navigation.Main) {
+                        popUpTo(Navigation.Entry) { inclusive = true }
+                    }
+                } else {
+                    navController.navigate(Navigation.Onboarding) {
+                        popUpTo(Navigation.Entry) { inclusive = true }
+                    }
+                }
+            }
+        }
+
+        // Navigation.Onboarding
+        composable<Navigation.Onboarding>(
+            enterTransition = { slideIntoContainer(slideLeft, animationSpec = tween(animationTween)) },
+            exitTransition = { slideOutOfContainer(slideLeft, animationSpec = tween(animationTween)) },
+            popEnterTransition = { slideIntoContainer(slideRight, animationSpec = tween(animationTween)) },
+            popExitTransition = { slideOutOfContainer(slideRight, animationSpec = tween(animationTween)) },
+        ) {
+            val vm = hiltViewModel<com.softklass.lazuli.ui.onboarding.OnboardingViewModel>()
+            com.softklass.lazuli.ui.onboarding.OnboardingScreen(
+                onFinished = {
+                    vm.setCompleted()
+                    navController.navigate(Navigation.Main) {
+                        popUpTo(Navigation.Onboarding) { inclusive = true }
+                    }
+                },
+            )
+        }
 
         // Navigation.Main
         composable<Navigation.Main>(
