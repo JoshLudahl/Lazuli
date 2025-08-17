@@ -235,6 +235,7 @@ fun ItemDetailScreenContent(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ),
+            enabled = title.isNotBlank(),
         ) {
             Text("Save")
         }

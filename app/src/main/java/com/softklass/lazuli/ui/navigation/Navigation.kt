@@ -173,8 +173,11 @@ fun AppNavHost() {
                 }
             },
             popEnterTransition = {
-                // When ListDetail is revealed after ItemEdit pops
-                slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+                if (initialState.destination.route?.startsWith(Navigation.ItemEdit::class.simpleName.toString()) == true) {
+                    slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+                } else {
+                    slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+                }
             },
             popExitTransition = {
                 // When ListDetail is popped (back to Main)
@@ -202,7 +205,7 @@ fun AppNavHost() {
                 slideIntoContainer(slideLeft, animationSpec = tween(animationTween))
             },
             exitTransition = {
-                slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
+                slideOutOfContainer(slideLeft, animationSpec = tween(animationTween))
             },
             popEnterTransition = {
                 slideIntoContainer(slideRight, animationSpec = tween(animationTween))
