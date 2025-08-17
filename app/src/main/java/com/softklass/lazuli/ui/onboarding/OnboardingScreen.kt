@@ -1,7 +1,9 @@
 package com.softklass.lazuli.ui.onboarding
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,8 +11,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -36,9 +40,21 @@ fun OnboardingScreen(
 ) {
     val pages =
         listOf(
-            OnboardingPage(title = "Welcome to Lazuli", description = "Create and organize your lists with ease.", rawRes = com.softklass.lazuli.R.raw.onboarding1),
-            OnboardingPage(title = "Scan with Camera", description = "Use the camera to quickly capture text.", rawRes = com.softklass.lazuli.R.raw.onboarding2),
-            OnboardingPage(title = "Stay Productive", description = "Simple, fast, and delightful to use.", rawRes = com.softklass.lazuli.R.raw.onboarding3),
+            OnboardingPage(
+                title = "Welcome to Lazuli",
+                description = "Create and organize your lists with ease.",
+                rawRes = com.softklass.lazuli.R.raw.onboarding1,
+            ),
+            OnboardingPage(
+                title = "Scan with Camera",
+                description = "Use the camera to quickly capture text.",
+                rawRes = com.softklass.lazuli.R.raw.onboarding2,
+            ),
+            OnboardingPage(
+                title = "Stay Productive",
+                description = "Simple, fast, and delightful to use.",
+                rawRes = com.softklass.lazuli.R.raw.onboarding3,
+            ),
         )
 
     val pagerState = rememberPagerState(pageCount = { pages.size })
@@ -70,12 +86,23 @@ fun OnboardingScreen(
                     LottieAnimation(
                         composition = composition,
                         progress = { progress },
-                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp),
                     )
                 }
-                Text(text = p.title, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = p.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
                 Spacer(Modifier.size(8.dp))
-                Text(text = p.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = p.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
                 Spacer(Modifier.size(24.dp))
             }
         }
@@ -115,23 +142,22 @@ private fun DotsIndicator(
     totalDots: Int,
     selectedIndex: Int,
 ) {
-    Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+    Row(horizontalArrangement = Arrangement.SpaceBetween) {
         repeat(totalDots) { index ->
             val isSelected = index == selectedIndex
-            val size = if (isSelected) 10.dp else 6.dp
-            val color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+            val width = animateDpAsState(targetValue = if (isSelected) 35.dp else 15.dp, label = "")
+            val color =
+                animateColorAsState(targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)
+
             Box(
                 modifier =
                     Modifier
-                        .padding(4.dp)
-                        .size(size)
+                        .padding(2.dp)
+                        .height(15.dp)
+                        .width(width.value)
                         .clip(CircleShape)
-                        .align(Alignment.CenterVertically),
-            ) {
-                Canvas(modifier = Modifier.fillMaxSize()) {
-                    drawCircle(color = color)
-                }
-            }
+                        .background(color.value),
+            )
         }
     }
 }
