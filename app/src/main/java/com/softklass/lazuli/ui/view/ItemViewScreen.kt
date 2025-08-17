@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.halilibo.richtext.commonmark.CommonmarkAstNodeParser
-import com.halilibo.richtext.markdown.BasicMarkdown // Or other specific components
+import com.halilibo.richtext.markdown.BasicMarkdown
 import com.halilibo.richtext.ui.BasicRichText
+import com.halilibo.richtext.ui.RichTextThemeProvider
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 import com.softklass.lazuli.ui.theme.TopAppBarIcon
 
@@ -129,9 +130,14 @@ fun MarkdownBlock(
 ) {
     val parser = remember { CommonmarkAstNodeParser() }
     val textAsNote = remember(parser, text) { parser.parse(text) }
+
     BasicRichText(
         modifier = Modifier.padding(horizontal = 16.dp),
     ) {
-        BasicMarkdown(astNode = textAsNote)
+        RichTextThemeProvider(
+            contentColorProvider = { MaterialTheme.colorScheme.onSurface },
+        ) {
+            BasicMarkdown(astNode = textAsNote)
+        }
     }
 }
