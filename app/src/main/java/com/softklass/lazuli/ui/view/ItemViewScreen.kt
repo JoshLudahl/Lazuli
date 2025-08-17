@@ -91,9 +91,10 @@ fun ItemViewScreen(
             val notes = item?.notes.orEmpty()
 
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
             ) {
                 Column(
                     modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
