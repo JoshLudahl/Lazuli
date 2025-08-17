@@ -29,6 +29,11 @@ private sealed interface Navigation {
     ) : Navigation
 
     @Serializable
+    data class ItemView(
+        val id: Int,
+    ) : Navigation
+
+    @Serializable
     data class ItemEdit(
         val id: Int,
         val isParent: Boolean = true,
@@ -118,6 +123,32 @@ fun AppNavHost() {
                 onEditItemClick = { item ->
                     navController.navigate(Navigation.ItemEdit(item.id, isParent = false))
                 },
+                onViewItemClick = { id ->
+                    navController.navigate(Navigation.ItemView(id))
+                },
+            )
+        }
+
+        // Navigation.ItemView
+        composable<Navigation.ItemView>(
+            enterTransition = {
+                slideIntoContainer(slideLeft, animationSpec = tween(animationTween))
+            },
+            exitTransition = {
+                slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
+            },
+            popEnterTransition = {
+                slideIntoContainer(slideRight, animationSpec = tween(animationTween))
+            },
+            popExitTransition = {
+                slideOutOfContainer(slideRight, animationSpec = tween(animationTween))
+            },
+        ) {
+            val screen: Navigation.ItemView = it.toRoute()
+            com.softklass.lazuli.ui.view.ItemViewScreen(
+                itemId = screen.id,
+                onBack = { navController.popBackStack() },
+                onEdit = { id -> navController.navigate(Navigation.ItemEdit(id, isParent = false)) },
             )
         }
 

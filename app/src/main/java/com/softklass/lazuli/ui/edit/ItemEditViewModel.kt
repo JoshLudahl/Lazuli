@@ -23,6 +23,7 @@ class ItemEditViewModel
     ) : ViewModel() {
         private val id: Int = checkNotNull(savedStateHandle["id"])
         private val isParent: Boolean = checkNotNull(savedStateHandle["isParent"])
+        val isParentFlag: Boolean get() = isParent
 
         private val _item =
             if (isParent) {
@@ -37,7 +38,11 @@ class ItemEditViewModel
                 initialValue = null,
             )
 
-        fun saveItem(content: String) {
+        fun saveItem(
+            content: String,
+            notes: String? = null,
+            notesIsMarkdown: Boolean = false,
+        ) {
             viewModelScope.launch {
                 if (isParent) {
                     parentRepository.update(
@@ -48,11 +53,14 @@ class ItemEditViewModel
                     )
                 } else {
                     item.value?.let {
+                        val existing = it as Item
                         itemRepository.update(
                             Item(
-                                id = it.id,
+                                id = existing.id,
                                 content = content,
-                                parent = (it as Item).parent,
+                                parent = existing.parent,
+                                notes = notes,
+                                notesIsMarkdown = notesIsMarkdown,
                             ),
                         )
                     }

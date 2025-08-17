@@ -49,6 +49,7 @@ fun ListDetailScreen(
     viewModel: ListDetailViewModel,
     onBack: () -> Unit,
     onEditItemClick: (ListItem) -> Unit,
+    onViewItemClick: (Int) -> Unit,
 ) {
     val sorted by viewModel.sorted.collectAsStateWithLifecycle()
     var listItem: String by rememberSaveable { mutableStateOf("") }
@@ -186,6 +187,7 @@ fun ListDetailScreen(
                 viewModel.removeItem(it as Item)
             },
             onEditItemClick = onEditItemClick,
+            onItemClick = onViewItemClick,
             onCameraClick = { showCamera = true },
         )
 
@@ -213,6 +215,7 @@ fun ListDetailContent(
     onAddItemClick: (String) -> Unit,
     onDeleteItemClick: (ListItem) -> Unit,
     onEditItemClick: (ListItem) -> Unit,
+    onItemClick: (Int) -> Unit,
     onCameraClick: (() -> Unit)? = null,
 ) {
     Column(modifier = modifier) {
@@ -233,7 +236,7 @@ fun ListDetailContent(
             SectionTitle("Items")
             DisplayList(
                 list = list,
-                onItemClick = {},
+                onItemClick = onItemClick,
                 onDeleteIconClick = onDeleteItemClick,
                 onEditItemClick = onEditItemClick,
                 isListItemDetail = false,
