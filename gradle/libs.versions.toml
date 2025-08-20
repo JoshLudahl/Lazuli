@@ -1,6 +1,7 @@
 [versions]
 activityCompose = "1.10.1"
 androidApplication = "8.12.1"
+animation = "1.9.0"
 appcompat = "1.7.1"
 appUpdate = "2.1.0"
 camerax = "1.4.2"
@@ -10,6 +11,7 @@ coreSplashscreen = "1.0.1"
 coroutines = "1.10.2"
 datastorePreferences = "1.1.7"
 espressoCore = "3.7.0"
+foundation = "1.9.0"
 hiltAndroidGradlePlugin = "2.57"
 hiltCompiler = "1.2.0"
 junit = "4.13.2"
@@ -37,6 +39,7 @@ uiTextGoogleFonts = "1.9.0"
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityCompose" }
+androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 
 # Compose Core
@@ -49,6 +52,7 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx"
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltCompiler" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }

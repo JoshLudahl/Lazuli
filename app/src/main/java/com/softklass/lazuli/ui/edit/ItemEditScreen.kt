@@ -27,8 +27,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -109,7 +107,43 @@ fun ItemEditScreen(
                 title = {
                     Text("Edit")
                 },
-                actions = { },
+                actions = {
+                    if (!viewModel.isParentFlag) {
+                        com.softklass.lazuli.ui.theme.TopAppBarIcon(
+                            icon = if (reminderAt != null) Icons.Rounded.Alarm else Icons.Rounded.AlarmOff,
+                        ) {
+                            val now = Calendar.getInstance()
+                            val c = if (reminderAt != null) Calendar.getInstance().apply { timeInMillis = reminderAt!! } else now
+                            DatePickerDialog(
+                                context,
+                                { _, year, month, dayOfMonth ->
+                                    TimePickerDialog(
+                                        context,
+                                        { _, hourOfDay, minute ->
+                                            val picked =
+                                                Calendar.getInstance().apply {
+                                                    set(Calendar.YEAR, year)
+                                                    set(Calendar.MONTH, month)
+                                                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                                    set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                                    set(Calendar.MINUTE, minute)
+                                                    set(Calendar.SECOND, 0)
+                                                    set(Calendar.MILLISECOND, 0)
+                                                }
+                                            reminderAt = picked.timeInMillis
+                                        },
+                                        c.get(Calendar.HOUR_OF_DAY),
+                                        c.get(Calendar.MINUTE),
+                                        false,
+                                    ).show()
+                                },
+                                c.get(Calendar.YEAR),
+                                c.get(Calendar.MONTH),
+                                c.get(Calendar.DAY_OF_MONTH),
+                            ).show()
+                        }
+                    }
+                },
                 isEnabled = isEnabled,
             )
         },
@@ -440,58 +474,11 @@ private fun ReminderRow(
     onPick: (Long) -> Unit,
     onClear: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val cal =
-        remember(reminderAt) {
-            Calendar.getInstance().apply {
-                if (reminderAt != null) timeInMillis = reminderAt
-            }
-        }
+    // Icon moved to TopAppBar. Keep text and clear button here.
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(
-            onClick = {
-                val now = Calendar.getInstance()
-                val c = if (reminderAt != null) cal else now
-                DatePickerDialog(
-                    context,
-                    { _, year, month, dayOfMonth ->
-                        // After date, pick time
-                        TimePickerDialog(
-                            context,
-                            { _, hourOfDay, minute ->
-                                val picked =
-                                    Calendar.getInstance().apply {
-                                        set(Calendar.YEAR, year)
-                                        set(Calendar.MONTH, month)
-                                        set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                                        set(Calendar.HOUR_OF_DAY, hourOfDay)
-                                        set(Calendar.MINUTE, minute)
-                                        set(Calendar.SECOND, 0)
-                                        set(Calendar.MILLISECOND, 0)
-                                    }
-                                onPick(picked.timeInMillis)
-                            },
-                            c.get(Calendar.HOUR_OF_DAY),
-                            c.get(Calendar.MINUTE),
-                            false,
-                        ).show()
-                    },
-                    c.get(Calendar.YEAR),
-                    c.get(Calendar.MONTH),
-                    c.get(Calendar.DAY_OF_MONTH),
-                ).show()
-            },
-        ) {
-            Icon(
-                imageVector = if (reminderAt != null) Icons.Rounded.Alarm else Icons.Rounded.AlarmOff,
-                contentDescription = "Set reminder",
-            )
-            // Text(if (reminderAt == null) "Set reminder" else "Change reminder")
-        }
-
         if (reminderAt != null) {
             Text(
                 text = formatReminder(reminderAt),

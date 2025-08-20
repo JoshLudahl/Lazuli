@@ -104,6 +104,8 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.navigation.compose.android)
+    implementation(libs.androidx.animation)
+    implementation(libs.androidx.foundation)
 
     // MATERIAL 3
     implementation(libs.androidx.material3.android)

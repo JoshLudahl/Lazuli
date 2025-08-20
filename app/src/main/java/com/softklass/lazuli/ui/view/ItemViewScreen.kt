@@ -82,99 +82,107 @@ fun ItemViewScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
         ) {
-            // Due date / reminder section
-            val reminderAt = item?.reminderAt
-            Text(
-                text = "Due date",
-                fontSize = 18.sp,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-            )
-            Card(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-            ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = reminderAt?.let { formatReminder(it) } ?: "No reminders set.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-                    )
-                    val isPastDue = reminderAt != null && reminderAt < System.currentTimeMillis()
-                    if (isPastDue) {
-                        Text(
-                            text = "Past due",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 16.dp),
-                        )
-                    }
-                }
-            }
-
-            Text(
-                text = "Notes",
-                fontSize = 18.sp,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-            )
-            // Notes Card
-            val notes = item?.notes.orEmpty()
-
-            Card(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-            ) {
-                Column(
-                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                ) {
-                    // Notes
-                    if (notes.isBlank()) {
-                        Text(
-                            text = "No notes.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                        )
-                    } else {
-                        if (item?.notesIsMarkdown == true) {
-                            MarkdownBlock(text = notes)
-                        } else {
-                            Text(
-                                text = notes,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                            )
-                        }
-                    }
-                }
-            }
-
-            // Drawing section
-            val drawingJson = item?.drawing
-            if (!drawingJson.isNullOrBlank()) {
+            if (item == null) {
                 Text(
-                    text = "Drawing",
+                    text = "This item no longer exists.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(16.dp),
+                )
+            } else {
+                // Due date / reminder section
+                val reminderAt = item?.reminderAt
+                Text(
+                    text = "Due date",
                     fontSize = 18.sp,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp),
                 )
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                 ) {
-                    DrawingPreview(
-                        drawingJson = drawingJson,
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = reminderAt?.let { formatReminder(it) } ?: "No reminders set.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                        )
+                        val isPastDue = reminderAt != null && reminderAt < System.currentTimeMillis()
+                        if (isPastDue) {
+                            Text(
+                                text = "Past due",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 16.dp),
+                            )
+                        }
+                    }
+                }
+
+                Text(
+                    text = "Notes",
+                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+                )
+                // Notes Card
+                val notes = item?.notes.orEmpty()
+
+                Card(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+                    ) {
+                        // Notes
+                        if (notes.isBlank()) {
+                            Text(
+                                text = "No notes.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                            )
+                        } else {
+                            if (item?.notesIsMarkdown == true) {
+                                MarkdownBlock(text = notes)
+                            } else {
+                                Text(
+                                    text = notes,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Drawing section
+                val drawingJson = item?.drawing
+                if (!drawingJson.isNullOrBlank()) {
+                    Text(
+                        text = "Drawing",
+                        fontSize = 18.sp,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(start = 16.dp, top = 8.dp),
                     )
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    ) {
+                        DrawingPreview(
+                            drawingJson = drawingJson,
+                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        )
+                    }
                 }
             }
         }

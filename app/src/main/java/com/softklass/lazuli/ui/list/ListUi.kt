@@ -2,6 +2,7 @@ package com.softklass.lazuli.ui.list
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -70,6 +71,7 @@ fun DisplayList(
                             .padding(start = 16.dp, end = 16.dp)
                             .padding(bottom = 8.dp, top = 8.dp)
                             .animateItem()
+                            .animateContentSize()
                             .clickable {
                                 onItemClick(item.id)
                             },

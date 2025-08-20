@@ -1,6 +1,7 @@
 package com.softklass.lazuli.ui.detail
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
@@ -271,17 +272,17 @@ fun ListDetailContent(
             label = "Add list item",
         )
 
-        if (list.isEmpty()) {
+        AnimatedVisibility(list.isEmpty()) {
             EmptyList(message = "No items created.")
-        } else {
-            SectionTitle("Items")
-            DisplayList(
-                list = list,
-                onItemClick = onItemClick,
-                onDeleteIconClick = onDeleteItemClick,
-                onEditItemClick = onEditItemClick,
-                isListItemDetail = false,
-            )
         }
+
+        SectionTitle("Items")
+        DisplayList(
+            list = list,
+            onItemClick = onItemClick,
+            onDeleteIconClick = onDeleteItemClick,
+            onEditItemClick = onEditItemClick,
+            isListItemDetail = false,
+        )
     }
 }

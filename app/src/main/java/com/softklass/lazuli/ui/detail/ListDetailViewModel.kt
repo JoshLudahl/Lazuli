@@ -1,5 +1,6 @@
 package com.softklass.lazuli.ui.detail
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
@@ -9,10 +10,12 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.softklass.lazuli.data.device.ReminderScheduler
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.repository.ItemRepository
 import com.softklass.lazuli.data.repository.ParentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +32,7 @@ class ListDetailViewModel
         private val itemRepository: ItemRepository,
         parentRepository: ParentRepository,
         savedStateHandle: SavedStateHandle,
+        @ApplicationContext private val appContext: Context,
     ) : ViewModel() {
         private val listId: Int = checkNotNull(savedStateHandle["id"])
 
@@ -63,12 +67,18 @@ class ListDetailViewModel
 
         fun removeItem(item: Item) {
             viewModelScope.launch {
+                // Cancel any scheduled reminder for this item before deleting
+                ReminderScheduler.cancelReminder(appContext, item.id)
                 itemRepository.removeItem(item)
             }
         }
 
         fun clearList(parentId: Int) {
             viewModelScope.launch {
+                // Cancel reminders for all items in this list before deleting them
+                listItems.value.filterNotNull().forEach { item ->
+                    ReminderScheduler.cancelReminder(appContext, item.id)
+                }
                 itemRepository.deleteByParent(parentId)
             }
         }
