@@ -137,6 +137,8 @@ dependencies {
 
     // ML Kit Text Recognition
     implementation(libs.mlkit.text.recognition)
+    // ML Kit Digital Ink Recognition (for handwriting to text)
+    implementation(libs.mlkit.digital.ink)
 
     // Splash
     implementation(libs.androidx.core.splashscreen)

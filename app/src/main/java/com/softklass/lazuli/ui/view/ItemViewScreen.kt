@@ -1,9 +1,11 @@
 package com.softklass.lazuli.ui.view
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -120,8 +122,111 @@ fun ItemViewScreen(
                     }
                 }
             }
+
+            // Drawing section
+            val drawingJson = item?.drawing
+            if (!drawingJson.isNullOrBlank()) {
+                Text(
+                    text = "Drawing",
+                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+                )
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                ) {
+                    DrawingPreview(
+                        drawingJson = drawingJson,
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+private fun DrawingPreview(
+    drawingJson: String,
+    modifier: Modifier = Modifier,
+    strokeWidth: Float = 4f,
+) {
+    val strokes = remember(drawingJson) { parseDrawingJson(drawingJson) }
+    val color = MaterialTheme.colorScheme.onSurface
+    Canvas(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(top = 8.dp),
+    ) {
+        // Compute bounds of all points
+        val allPoints = strokes.flatten()
+        if (allPoints.isEmpty()) return@Canvas
+        val minX = allPoints.minOf { it.first }
+        val maxX = allPoints.maxOf { it.first }
+        val minY = allPoints.minOf { it.second }
+        val maxY = allPoints.maxOf { it.second }
+
+        val boundsWidth = (maxX - minX).coerceAtLeast(1e-3f)
+        val boundsHeight = (maxY - minY).coerceAtLeast(1e-3f)
+
+        // Leave a small margin around the drawing
+        val margin = 8.dp.toPx()
+        val availableWidth = (size.width - margin * 2).coerceAtLeast(1f)
+        val availableHeight = (size.height - margin * 2).coerceAtLeast(1f)
+
+        // Uniform scale to fit
+        val scale = minOf(availableWidth / boundsWidth, availableHeight / boundsHeight)
+
+        // Center the content
+        val contentWidth = boundsWidth * scale
+        val contentHeight = boundsHeight * scale
+        val offsetX = (size.width - contentWidth) / 2f - minX * scale
+        val offsetY = (size.height - contentHeight) / 2f - minY * scale
+
+        for (stroke in strokes) {
+            if (stroke.size < 2) continue
+            val path =
+                androidx.compose.ui.graphics
+                    .Path()
+            val first = stroke.first()
+            path.moveTo(first.first * scale + offsetX, first.second * scale + offsetY)
+            for (p in stroke.drop(1)) {
+                path.lineTo(p.first * scale + offsetX, p.second * scale + offsetY)
+            }
+            drawPath(
+                path = path,
+                color = color,
+                style =
+                    androidx.compose.ui.graphics.drawscope
+                        .Stroke(width = strokeWidth),
+            )
+        }
+    }
+}
+
+private fun parseDrawingJson(json: String): List<List<Pair<Float, Float>>> {
+    val out = mutableListOf<List<Pair<Float, Float>>>()
+    try {
+        val arr = org.json.JSONArray(json)
+        for (i in 0 until arr.length()) {
+            val sArr = arr.getJSONArray(i)
+            val stroke = mutableListOf<Pair<Float, Float>>()
+            for (j in 0 until sArr.length()) {
+                val o = sArr.getJSONObject(j)
+                val x = o.optDouble("x").toFloat()
+                val y = o.optDouble("y").toFloat()
+                stroke.add(x to y)
+            }
+            out.add(stroke)
+        }
+    } catch (_: Throwable) {
+        // ignore
+    }
+    return out
 }
 
 @Composable

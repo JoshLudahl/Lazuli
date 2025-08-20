@@ -13,5 +13,7 @@ data class Item(
     override val content: String,
     val notes: String? = null,
     val notesIsMarkdown: Boolean = false,
+    // Serialized drawing strokes (JSON); persisted when user saves without recognizing
+    val drawing: String? = null,
     val created: String = System.currentTimeMillis().toString(),
 ) : ListItem

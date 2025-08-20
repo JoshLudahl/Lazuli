@@ -26,8 +26,10 @@ object DatabaseModule {
             context,
             ListDatabase::class.java,
             "list_database",
-        ).addMigrations(ListDatabase.Companion.MIGRATION_1_2)
-        .build()
+        ).addMigrations(
+            ListDatabase.Companion.MIGRATION_1_2,
+            ListDatabase.Companion.MIGRATION_2_3,
+        ).build()
 
     @Singleton
     @Provides
