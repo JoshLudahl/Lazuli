@@ -1,17 +1,16 @@
 package com.softklass.lazuli.data.device
 
-import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.RequiresPermission
+import android.os.Build
+import android.util.Log
 
 object ReminderScheduler {
     const val EXTRA_ITEM_ID = "EXTRA_ITEM_ID"
     const val EXTRA_ITEM_TITLE = "EXTRA_ITEM_TITLE"
 
-    @RequiresPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)
     fun scheduleReminder(
         context: Context,
         itemId: Int,
@@ -22,12 +21,31 @@ object ReminderScheduler {
         val pi = pendingIntent(context, itemId, title)
         // Cancel any existing alarm for this item
         alarmManager.cancel(pi)
-        // Schedule exact alarm; if exact alarms are restricted, system may approximate
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerAtMillis,
-            pi,
-        )
+
+        val canExact =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                alarmManager.canScheduleExactAlarms()
+            } else {
+                true // exact allowed below Android 12
+            }
+
+        Log.i("ReminderScheduler", "Scheduling reminder for item $itemId with title $title at $triggerAtMillis")
+
+        if (canExact) {
+            // Use exact when permitted
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                pi,
+            )
+        } else {
+            // Fallback to inexact alarm; OS may delay slightly but reminder will still fire
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerAtMillis,
+                pi,
+            )
+        }
     }
 
     fun cancelReminder(
