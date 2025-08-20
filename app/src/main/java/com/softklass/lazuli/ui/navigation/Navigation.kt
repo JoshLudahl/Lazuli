@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -56,7 +58,7 @@ private sealed interface Navigation {
 }
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(initialItemId: Int? = null) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -142,6 +144,15 @@ fun AppNavHost() {
             },
         ) {
             val viewModel = hiltViewModel<MainViewModel>()
+            // If launched from a reminder notification, navigate to the item's view screen once.
+            val didHandleDeepLink = rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(initialItemId, didHandleDeepLink.value) {
+                val id = initialItemId
+                if (!didHandleDeepLink.value && id != null && id > 0) {
+                    didHandleDeepLink.value = true
+                    navController.navigate(Navigation.ItemView(id))
+                }
+            }
             Main(
                 viewModel = viewModel,
                 onDetailItemClick = { id ->

@@ -15,5 +15,7 @@ data class Item(
     val notesIsMarkdown: Boolean = false,
     // Serialized drawing strokes (JSON); persisted when user saves without recognizing
     val drawing: String? = null,
+    // UTC epoch millis when a reminder should fire; null if no reminder
+    val reminderAt: Long? = null,
     val created: String = System.currentTimeMillis().toString(),
 ) : ListItem

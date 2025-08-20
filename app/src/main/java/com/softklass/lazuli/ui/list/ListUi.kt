@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softklass.lazuli.R
+import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.Parent
 
@@ -107,6 +108,21 @@ fun DisplayList(
                                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     ),
                             )
+                            if (!isListItemDetail) {
+                                val reminderAt = (item as? Item)?.reminderAt
+                                if (reminderAt != null) {
+                                    Text(
+                                        text = "Due ${formatReminder(reminderAt)}",
+                                        style =
+                                            MaterialTheme.typography.bodySmall.copy(
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .8f),
+                                            ),
+                                        modifier =
+                                            Modifier
+                                                .padding(top = 4.dp),
+                                    )
+                                }
+                            }
                             if (isListItemDetail) {
                                 val count = itemCounts?.get(item.id) ?: 0
 
@@ -317,4 +333,25 @@ fun shareList(
 
     val shareIntent = Intent.createChooser(sendIntent, "Sharing List")
     context.startActivity(shareIntent)
+}
+
+private fun formatReminder(epochMillis: Long): String {
+    val cal =
+        java.util.Calendar
+            .getInstance()
+            .apply { timeInMillis = epochMillis }
+    val month = java.text.SimpleDateFormat("MMMM", java.util.Locale.getDefault()).format(cal.time)
+    val day = cal.get(java.util.Calendar.DAY_OF_MONTH)
+    val hourMinute = java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(cal.time)
+    return "$month ${ordinal(day)} at $hourMinute"
+}
+
+private fun ordinal(day: Int): String {
+    if (day in 11..13) return "${day}th"
+    return when (day % 10) {
+        1 -> "${day}st"
+        2 -> "${day}nd"
+        3 -> "${day}rd"
+        else -> "${day}th"
+    }
 }

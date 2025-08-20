@@ -1,5 +1,7 @@
 package com.softklass.lazuli.ui.edit
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
@@ -17,11 +19,16 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Alarm
+import androidx.compose.material.icons.rounded.AlarmOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -39,6 +46,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.pointer.pointerInput
@@ -54,6 +62,7 @@ import com.google.mlkit.vision.digitalink.DigitalInkRecognitionModel
 import com.google.mlkit.vision.digitalink.DigitalInkRecognitionModelIdentifier
 import com.google.mlkit.vision.digitalink.DigitalInkRecognizerOptions
 import com.google.mlkit.vision.digitalink.Ink
+import com.softklass.lazuli.data.device.ReminderScheduler
 import com.softklass.lazuli.ui.particles.ReusableTopAppBar
 import com.softklass.lazuli.ui.particles.useDebounce
 import com.softklass.lazuli.ui.theme.primaryLight
@@ -65,6 +74,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Calendar
 
 @Composable
 fun ItemEditScreen(
@@ -78,6 +88,7 @@ fun ItemEditScreen(
     var notesIsMarkdown by rememberSaveable(item) { mutableStateOf(if (viewModel.isParentFlag) false else (item as? com.softklass.lazuli.data.models.Item)?.notesIsMarkdown ?: false) }
     // Persisted drawing JSON if any
     val initialDrawingJson = (item as? com.softklass.lazuli.data.models.Item)?.drawing
+    var reminderAt by rememberSaveable(item) { mutableStateOf((item as? com.softklass.lazuli.data.models.Item)?.reminderAt) }
 
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
         Log.i(
@@ -114,6 +125,8 @@ fun ItemEditScreen(
             notesIsMarkdown = notesIsMarkdown,
             onNotesModeChange = { notesIsMarkdown = it },
             initialDrawingJson = initialDrawingJson,
+            reminderAt = if (viewModel.isParentFlag) null else reminderAt,
+            onReminderChange = { reminderAt = it },
             onSaveClick = { drawingJson ->
                 if (title.trim().isNotEmpty()) {
                     viewModel.saveItem(
@@ -121,7 +134,17 @@ fun ItemEditScreen(
                         if (viewModel.isParentFlag) null else notes,
                         if (viewModel.isParentFlag) false else notesIsMarkdown,
                         drawing = if (viewModel.isParentFlag) null else drawingJson,
+                        reminderAt = if (viewModel.isParentFlag) null else reminderAt,
                     )
+                    // Schedule or cancel reminder based on current selection
+                    if (!viewModel.isParentFlag) {
+                        val id = (item as? com.softklass.lazuli.data.models.Item)?.id ?: itemId
+                        if (reminderAt != null) {
+                            ReminderScheduler.scheduleReminder(context, id, title, reminderAt!!)
+                        } else {
+                            ReminderScheduler.cancelReminder(context, id)
+                        }
+                    }
                     onBack()
                 } else {
                     Toast
@@ -147,6 +170,8 @@ fun ItemDetailScreenContent(
     notesIsMarkdown: Boolean,
     onNotesModeChange: (Boolean) -> Unit,
     initialDrawingJson: String?,
+    reminderAt: Long?,
+    onReminderChange: (Long?) -> Unit,
     onSaveClick: (String?) -> Unit,
 ) {
     Column(
@@ -213,6 +238,13 @@ fun ItemDetailScreenContent(
         )
 
         if (!isParent) {
+            // Reminder selector
+            ReminderRow(
+                reminderAt = reminderAt,
+                onPick = { millis -> onReminderChange(millis) },
+                onClear = { onReminderChange(null) },
+            )
+
             // Notes section and input mode toggle (Text / Markdown / Draw)
             Text(
                 text = "Notes",
@@ -399,6 +431,99 @@ fun ItemDetailScreenContent(
         ) {
             Text("Save")
         }
+    }
+}
+
+@Composable
+private fun ReminderRow(
+    reminderAt: Long?,
+    onPick: (Long) -> Unit,
+    onClear: () -> Unit,
+) {
+    val context = LocalContext.current
+    val cal =
+        remember(reminderAt) {
+            Calendar.getInstance().apply {
+                if (reminderAt != null) timeInMillis = reminderAt
+            }
+        }
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(
+            onClick = {
+                val now = Calendar.getInstance()
+                val c = if (reminderAt != null) cal else now
+                DatePickerDialog(
+                    context,
+                    { _, year, month, dayOfMonth ->
+                        // After date, pick time
+                        TimePickerDialog(
+                            context,
+                            { _, hourOfDay, minute ->
+                                val picked =
+                                    Calendar.getInstance().apply {
+                                        set(Calendar.YEAR, year)
+                                        set(Calendar.MONTH, month)
+                                        set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                        set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                        set(Calendar.MINUTE, minute)
+                                        set(Calendar.SECOND, 0)
+                                        set(Calendar.MILLISECOND, 0)
+                                    }
+                                onPick(picked.timeInMillis)
+                            },
+                            c.get(Calendar.HOUR_OF_DAY),
+                            c.get(Calendar.MINUTE),
+                            false,
+                        ).show()
+                    },
+                    c.get(Calendar.YEAR),
+                    c.get(Calendar.MONTH),
+                    c.get(Calendar.DAY_OF_MONTH),
+                ).show()
+            },
+        ) {
+            Icon(
+                imageVector = if (reminderAt != null) Icons.Rounded.Alarm else Icons.Rounded.AlarmOff,
+                contentDescription = "Set reminder",
+            )
+            // Text(if (reminderAt == null) "Set reminder" else "Change reminder")
+        }
+
+        if (reminderAt != null) {
+            Text(
+                text = formatReminder(reminderAt),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.alpha(0.80f),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(Modifier.height(0.dp))
+            Spacer(Modifier.weight(1f))
+            Button(
+                onClick = onClear,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+            ) { Text("Clear") }
+        }
+    }
+}
+
+private fun formatReminder(epochMillis: Long): String {
+    val cal = Calendar.getInstance().apply { timeInMillis = epochMillis }
+    val month = java.text.SimpleDateFormat("MMMM", java.util.Locale.getDefault()).format(cal.time)
+    val day = cal.get(Calendar.DAY_OF_MONTH)
+    val hourMinute = java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(cal.time)
+    return "$month ${ordinal(day)} at $hourMinute"
+}
+
+private fun ordinal(day: Int): String {
+    if (day in 11..13) return "${day}th"
+    return when (day % 10) {
+        1 -> "${day}st"
+        2 -> "${day}nd"
+        3 -> "${day}rd"
+        else -> "${day}th"
     }
 }
 

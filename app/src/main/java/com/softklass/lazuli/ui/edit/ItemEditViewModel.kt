@@ -43,6 +43,7 @@ class ItemEditViewModel
             notes: String? = null,
             notesIsMarkdown: Boolean = false,
             drawing: String? = null,
+            reminderAt: Long? = null,
         ) {
             viewModelScope.launch {
                 if (isParent) {
@@ -63,6 +64,7 @@ class ItemEditViewModel
                                 notes = notes,
                                 notesIsMarkdown = notesIsMarkdown,
                                 drawing = drawing,
+                                reminderAt = reminderAt,
                             ),
                         )
                     }

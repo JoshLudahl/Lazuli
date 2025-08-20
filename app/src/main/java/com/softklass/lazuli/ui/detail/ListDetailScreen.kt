@@ -68,6 +68,7 @@ fun ListDetailScreen(
     var showCamera by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    var showMenu by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -96,6 +97,46 @@ fun ListDetailScreen(
                         bottom = 16.dp,
                     ),
                 actions = {
+//                    Box {
+//                        // We use a Box to anchor the DropdownMenu
+//                        IconButton(onClick = { showMenu = true }) {
+//                            Icon(
+//                                imageVector = Icons.AutoMirrored.Filled.Sort, // Or your custom sort icon
+//                                contentDescription = "Sort Options",
+//                            )
+//                        }
+//
+//                        DropdownMenu(
+//                            expanded = showMenu,
+//                            onDismissRequest = { showMenu = false },
+//                        ) {
+//                            DropdownMenuItem(
+//                                text = { Text("Sort Ascending") },
+//                                onClick = {
+//                                    // Handle sort ascending
+//                                    println("Sort Ascending clicked")
+//                                    showMenu = false // Dismiss the menu
+//                                },
+//                            )
+//                            DropdownMenuItem(
+//                                text = { Text("Sort Descending") },
+//                                onClick = {
+//                                    // Handle sort descending
+//                                    println("Sort Descending clicked")
+//                                    showMenu = false // Dismiss the menu
+//                                },
+//                            )
+//                            // Add more DropdownMenuItems as needed
+//                            DropdownMenuItem(
+//                                text = { Text("Sort by Date") },
+//                                onClick = {
+//                                    // Handle sort by date
+//                                    println("Sort by Date clicked")
+//                                    showMenu = false
+//                                },
+//                            )
+//                        }
+//                    }
                     IconButton(
                         onClick = {
                             openDialog.value = true

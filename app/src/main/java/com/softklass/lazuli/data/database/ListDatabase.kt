@@ -10,7 +10,7 @@ import com.softklass.lazuli.data.models.Parent
         Item::class,
         Parent::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = false,
 )
 abstract class ListDatabase : RoomDatabase() {
@@ -31,6 +31,13 @@ abstract class ListDatabase : RoomDatabase() {
             object : androidx.room.migration.Migration(2, 3) {
                 override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
                     db.execSQL("ALTER TABLE list_item ADD COLUMN drawing TEXT")
+                }
+            }
+
+        val MIGRATION_3_4 =
+            object : androidx.room.migration.Migration(3, 4) {
+                override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                    db.execSQL("ALTER TABLE list_item ADD COLUMN reminderAt INTEGER")
                 }
             }
     }

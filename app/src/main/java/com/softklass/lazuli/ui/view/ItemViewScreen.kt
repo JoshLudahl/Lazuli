@@ -82,6 +82,40 @@ fun ItemViewScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
         ) {
+            // Due date / reminder section
+            val reminderAt = item?.reminderAt
+            Text(
+                text = "Due date",
+                fontSize = 18.sp,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+            )
+            Card(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = reminderAt?.let { formatReminder(it) } ?: "No reminders set.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                    )
+                    val isPastDue = reminderAt != null && reminderAt < System.currentTimeMillis()
+                    if (isPastDue) {
+                        Text(
+                            text = "Past due",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 16.dp),
+                        )
+                    }
+                }
+            }
+
             Text(
                 text = "Notes",
                 fontSize = 18.sp,
@@ -244,5 +278,26 @@ fun MarkdownBlock(
         ) {
             BasicMarkdown(astNode = textAsNote)
         }
+    }
+}
+
+private fun formatReminder(epochMillis: Long): String {
+    val cal =
+        java.util.Calendar
+            .getInstance()
+            .apply { timeInMillis = epochMillis }
+    val month = java.text.SimpleDateFormat("MMMM", java.util.Locale.getDefault()).format(cal.time)
+    val day = cal.get(java.util.Calendar.DAY_OF_MONTH)
+    val hourMinute = java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(cal.time)
+    return "$month ${ordinal(day)} at $hourMinute"
+}
+
+private fun ordinal(day: Int): String {
+    if (day in 11..13) return "${day}th"
+    return when (day % 10) {
+        1 -> "${day}st"
+        2 -> "${day}nd"
+        3 -> "${day}rd"
+        else -> "${day}th"
     }
 }

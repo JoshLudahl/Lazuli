@@ -30,6 +30,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val requestNotifPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* no-op */ }
     private lateinit var appUpdateManager: AppUpdateManager
     private lateinit var aut: Task<AppUpdateInfo>
     private val updateType = AppUpdateType.FLEXIBLE
@@ -63,6 +65,7 @@ class MainActivity : ComponentActivity() {
         checkIsUpdateAvailable()
 
         enableEdgeToEdge()
+        ensureNotificationPermission()
         setContent {
             AppTheme(
                 darkTheme = themeManager.isDarkTheme(),
@@ -71,8 +74,22 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    AppNavHost()
+                    val itemId = intent?.getIntExtra(com.softklass.lazuli.data.device.ReminderScheduler.EXTRA_ITEM_ID, -1).takeIf { it != null && it > 0 }
+                    AppNavHost(initialItemId = itemId)
                 }
+            }
+        }
+    }
+
+    private fun ensureNotificationPermission() {
+        // Request POST_NOTIFICATIONS on Android 13+ if not yet granted
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            val nm =
+                androidx.core.app.NotificationManagerCompat
+                    .from(this)
+            val granted = nm.areNotificationsEnabled()
+            if (!granted) {
+                requestNotifPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
