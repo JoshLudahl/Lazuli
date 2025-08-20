@@ -115,7 +115,7 @@ fun DisplayList(
                                         text = "Due ${formatReminder(reminderAt)}",
                                         style =
                                             MaterialTheme.typography.bodySmall.copy(
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .8f),
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .5f),
                                             ),
                                         modifier =
                                             Modifier
