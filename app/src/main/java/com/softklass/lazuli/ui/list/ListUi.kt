@@ -44,6 +44,7 @@ import com.softklass.lazuli.R
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.Parent
+import com.softklass.lazuli.ui.composables.SwipeToDismissContainer
 
 @Composable
 fun DisplayList(
@@ -61,169 +62,153 @@ fun DisplayList(
                 .fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(list) { item ->
+        items(list, key = { it?.id ?: 0 }) { item ->
 
-            item?.content?.let { content ->
-                Card(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp)
-                            .padding(bottom = 8.dp, top = 8.dp)
-                            .animateItem()
-                            .animateContentSize()
-                            .clickable {
-                                onItemClick(item.id)
-                            },
-                    elevation =
-                        CardDefaults.cardElevation(
-                            defaultElevation = 2.dp,
-                        ),
-                    colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        ),
-                ) {
-                    Row {
-                        Column(
-                            modifier =
-                                Modifier
-                                    .padding(
-                                        start = 16.dp,
-                                        top = 16.dp,
-                                        bottom = 16.dp,
-                                        end = 8.dp,
-                                    ).align(Alignment.CenterVertically)
-                                    .weight(.9f)
-                                    .fillMaxWidth(),
-                        ) {
-                            BasicText(
-                                modifier = Modifier.testTag(item.content),
-                                text = content,
-                                autoSize =
-                                    TextAutoSize.StepBased(
-                                        minFontSize = 12.sp,
-                                        maxFontSize = 16.sp,
-                                    ),
-                                style =
-                                    MaterialTheme.typography.bodyLarge.copy(
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    ),
-                            )
-                            if (!isListItemDetail) {
-                                val reminderAt = (item as? Item)?.reminderAt
-                                if (reminderAt != null) {
+            SwipeToDismissContainer(
+                item = item,
+                onSwipeRightToLeft = { item?.let { onDeleteIconClick(item) } },
+                onSwipeLeftToRight = { item?.let { onEditItemClick(item) } },
+            ) {
+                item?.content?.let { content ->
+                    Card(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp)
+                                .padding(bottom = 8.dp, top = 8.dp)
+                                .animateItem()
+                                .animateContentSize()
+                                .clickable {
+                                    onItemClick(item.id)
+                                },
+                        elevation =
+                            CardDefaults.cardElevation(
+                                defaultElevation = 2.dp,
+                            ),
+                        colors =
+                            CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            ),
+                    ) {
+                        Row {
+                            Column(
+                                modifier =
+                                    Modifier
+                                        .padding(
+                                            start = 16.dp,
+                                            top = 16.dp,
+                                            bottom = 16.dp,
+                                            end = 8.dp,
+                                        ).align(Alignment.CenterVertically)
+                                        .weight(.9f)
+                                        .fillMaxWidth(),
+                            ) {
+                                BasicText(
+                                    modifier = Modifier.testTag(item.content),
+                                    text = content,
+                                    autoSize =
+                                        TextAutoSize.StepBased(
+                                            minFontSize = 12.sp,
+                                            maxFontSize = 16.sp,
+                                        ),
+                                    style =
+                                        MaterialTheme.typography.bodyLarge.copy(
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        ),
+                                )
+                                if (!isListItemDetail) {
+                                    val reminderAt = (item as? Item)?.reminderAt
+                                    if (reminderAt != null) {
+                                        Text(
+                                            text = "Due ${formatReminder(reminderAt)}",
+                                            style =
+                                                MaterialTheme.typography.bodySmall.copy(
+                                                    color =
+                                                        MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                                                            alpha = .5f,
+                                                        ),
+                                                ),
+                                            modifier =
+                                                Modifier
+                                                    .padding(top = 4.dp),
+                                        )
+                                    }
+                                }
+                                if (isListItemDetail) {
+                                    val count = itemCounts?.get(item.id) ?: 0
+
+                                    val text =
+                                        when (count) {
+                                            0 -> {
+                                                "Empty List"
+                                            }
+
+                                            1 -> {
+                                                "$count Item"
+                                            }
+
+                                            else -> {
+                                                "$count Items"
+                                            }
+                                        }
+
                                     Text(
-                                        text = "Due ${formatReminder(reminderAt)}",
+                                        text = text,
                                         style =
                                             MaterialTheme.typography.bodySmall.copy(
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .5f),
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             ),
                                         modifier =
                                             Modifier
-                                                .padding(top = 4.dp),
+                                                .padding(top = 4.dp)
+                                                .alpha(0.5f),
                                     )
                                 }
                             }
-                            if (isListItemDetail) {
-                                val count = itemCounts?.get(item.id) ?: 0
 
-                                val text =
-                                    when (count) {
-                                        0 -> {
-                                            "Empty List"
-                                        }
-
-                                        1 -> {
-                                            "$count Item"
-                                        }
-
-                                        else -> {
-                                            "$count Items"
-                                        }
-                                    }
-
-                                Text(
-                                    text = text,
-                                    style =
-                                        MaterialTheme.typography.bodySmall.copy(
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        ),
-                                    modifier =
-                                        Modifier
-                                            .padding(top = 4.dp)
-                                            .alpha(0.5f),
-                                )
-                            }
-                        }
-
-                        IconButton(
-                            onClick = {
-                                onEditItemClick(item)
-                            },
-                            colors =
-                                IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                    contentColor = MaterialTheme.colorScheme.onSurface,
-                                ),
-                            modifier =
-                                Modifier
-                                    .align(Alignment.CenterVertically),
-                        ) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
-                                tint = MaterialTheme.colorScheme.primaryContainer,
-                                contentDescription = "Edit item.",
-                                modifier =
-                                    Modifier
-                                        .size(24.dp)
-                                        .testTag("edit_icon"),
-                            )
-                        }
-
-                        IconButton(
-                            onClick = {
-                                onDeleteIconClick(item)
-                            },
-                            modifier =
-                                Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .testTag("delete_icon"),
-                            colors =
-                                IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.surface,
-                                    contentColor = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        ) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.delete_forever_24px),
-                                tint = MaterialTheme.colorScheme.error,
-                                contentDescription = "Remove list item.",
-                                modifier =
-                                    Modifier
-                                        .size(24.dp)
-                                        .testTag("delete_icon"),
-                            )
-                        }
-
-                        if (isListItemDetail) {
                             IconButton(
                                 onClick = {
-                                    onItemClick(item.id)
+                                    onEditItemClick(item)
                                 },
+                                colors =
+                                    IconButtonDefaults.filledIconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.surface,
+                                        contentColor = MaterialTheme.colorScheme.onSurface,
+                                    ),
                                 modifier =
                                     Modifier
                                         .align(Alignment.CenterVertically),
                             ) {
                                 Icon(
-                                    Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    contentDescription = "View Item",
-                                    modifier = Modifier.size(32.dp),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
+                                    tint = MaterialTheme.colorScheme.primaryContainer,
+                                    contentDescription = "Edit item.",
+                                    modifier =
+                                        Modifier
+                                            .size(24.dp)
+                                            .testTag("edit_icon"),
                                 )
                             }
-                        } else {
-                            Spacer(modifier = Modifier.padding(end = 16.dp))
+
+                            if (isListItemDetail) {
+                                IconButton(
+                                    onClick = {
+                                        onItemClick(item.id)
+                                    },
+                                    modifier =
+                                        Modifier
+                                            .align(Alignment.CenterVertically),
+                                ) {
+                                    Icon(
+                                        Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        contentDescription = "View Item",
+                                        modifier = Modifier.size(32.dp),
+                                    )
+                                }
+                            } else {
+                                Spacer(modifier = Modifier.padding(end = 16.dp))
+                            }
                         }
                     }
                 }

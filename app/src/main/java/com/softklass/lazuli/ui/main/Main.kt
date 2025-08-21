@@ -31,12 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.Parent
+import com.softklass.lazuli.ui.composables.ConfirmationDialog
+import com.softklass.lazuli.ui.composables.ReusableTopAppBar
 import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
 import com.softklass.lazuli.ui.list.SectionTitle
-import com.softklass.lazuli.ui.composables.ConfirmationDialog
-import com.softklass.lazuli.ui.composables.ReusableTopAppBar
 import com.softklass.lazuli.ui.theme.TopAppBarIcon
 import com.softklass.lazuli.utils.shareAppIntent
 
