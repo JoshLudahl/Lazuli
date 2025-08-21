@@ -39,9 +39,9 @@ import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
 import com.softklass.lazuli.ui.list.SectionTitle
 import com.softklass.lazuli.ui.list.shareList
-import com.softklass.lazuli.ui.particles.ConfirmationDialog
-import com.softklass.lazuli.ui.particles.ReusableTopAppBar
-import com.softklass.lazuli.ui.particles.useDebounce
+import com.softklass.lazuli.ui.composables.ConfirmationDialog
+import com.softklass.lazuli.ui.composables.ReusableTopAppBar
+import com.softklass.lazuli.ui.composables.useDebounce
 import kotlinx.coroutines.launch
 
 @Composable

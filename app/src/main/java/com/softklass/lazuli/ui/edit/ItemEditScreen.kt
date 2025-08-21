@@ -61,8 +61,8 @@ import com.google.mlkit.vision.digitalink.DigitalInkRecognitionModelIdentifier
 import com.google.mlkit.vision.digitalink.DigitalInkRecognizerOptions
 import com.google.mlkit.vision.digitalink.Ink
 import com.softklass.lazuli.data.device.ReminderScheduler
-import com.softklass.lazuli.ui.particles.ReusableTopAppBar
-import com.softklass.lazuli.ui.particles.useDebounce
+import com.softklass.lazuli.ui.composables.ReusableTopAppBar
+import com.softklass.lazuli.ui.composables.useDebounce
 import com.softklass.lazuli.ui.theme.primaryLight
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException

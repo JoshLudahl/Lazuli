@@ -1,4 +1,4 @@
-package com.softklass.lazuli.ui.particles
+package com.softklass.lazuli.ui.composables
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

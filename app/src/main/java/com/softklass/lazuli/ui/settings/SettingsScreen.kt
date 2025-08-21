@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.softklass.lazuli.BuildConfig
 import com.softklass.lazuli.R
-import com.softklass.lazuli.ui.particles.ReusableTopAppBar
+import com.softklass.lazuli.ui.composables.ReusableTopAppBar
 import com.softklass.lazuli.ui.theme.ThemeManager
 import com.softklass.lazuli.ui.theme.ThemeMode
 import com.softklass.lazuli.ui.theme.TopAppBarIcon

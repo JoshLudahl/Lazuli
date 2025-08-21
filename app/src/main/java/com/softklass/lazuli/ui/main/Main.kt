@@ -35,8 +35,8 @@ import com.softklass.lazuli.ui.list.DisplayList
 import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
 import com.softklass.lazuli.ui.list.SectionTitle
-import com.softklass.lazuli.ui.particles.ConfirmationDialog
-import com.softklass.lazuli.ui.particles.ReusableTopAppBar
+import com.softklass.lazuli.ui.composables.ConfirmationDialog
+import com.softklass.lazuli.ui.composables.ReusableTopAppBar
 import com.softklass.lazuli.ui.theme.TopAppBarIcon
 import com.softklass.lazuli.utils.shareAppIntent
 

@@ -1,4 +1,4 @@
-package com.softklass.lazuli.ui.particles
+package com.softklass.lazuli.ui.composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
