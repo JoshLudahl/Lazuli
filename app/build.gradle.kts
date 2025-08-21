@@ -18,8 +18,8 @@ android {
         applicationId = "com.softklass.lazuli"
         minSdk = 26
         targetSdk = target
-        versionCode = 27
-        versionName = "2025.8.20"
+        versionCode = 28
+        versionName = "2025.8.21"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments.putAll(mutableMapOf("clearPackageData" to "true"))
