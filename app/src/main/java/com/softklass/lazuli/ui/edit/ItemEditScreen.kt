@@ -1,7 +1,5 @@
 package com.softklass.lazuli.ui.edit
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
@@ -26,13 +24,21 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -73,7 +79,9 @@ import kotlinx.coroutines.withTimeout
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Calendar
+import java.util.TimeZone
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemEditScreen(
     viewModel: ItemEditViewModel,
@@ -86,7 +94,14 @@ fun ItemEditScreen(
     var notesIsMarkdown by rememberSaveable(item) { mutableStateOf(if (viewModel.isParentFlag) false else (item as? com.softklass.lazuli.data.models.Item)?.notesIsMarkdown ?: false) }
     // Persisted drawing JSON if any
     val initialDrawingJson = (item as? com.softklass.lazuli.data.models.Item)?.drawing
-    var reminderAt by rememberSaveable(item) { mutableStateOf((item as? com.softklass.lazuli.data.models.Item)?.reminderAt) }
+    var reminderAt by rememberSaveable(item) { mutableStateOf<Long?>((item as? com.softklass.lazuli.data.models.Item)?.reminderAt) }
+
+    // Dialog state for Material3 DatePicker
+    var showDatePicker by remember { mutableStateOf(false) }
+    var baseDateMillis by remember { mutableStateOf<Long?>(null) }
+    // Dialog state for Material3 TimePicker
+    var showTimePicker by remember { mutableStateOf(false) }
+    var pendingDateForTime by remember { mutableStateOf<Calendar?>(null) }
 
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
         Log.i(
@@ -114,33 +129,8 @@ fun ItemEditScreen(
                         ) {
                             val now = Calendar.getInstance()
                             val c = if (reminderAt != null) Calendar.getInstance().apply { timeInMillis = reminderAt!! } else now
-                            DatePickerDialog(
-                                context,
-                                { _, year, month, dayOfMonth ->
-                                    TimePickerDialog(
-                                        context,
-                                        { _, hourOfDay, minute ->
-                                            val picked =
-                                                Calendar.getInstance().apply {
-                                                    set(Calendar.YEAR, year)
-                                                    set(Calendar.MONTH, month)
-                                                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                                                    set(Calendar.HOUR_OF_DAY, hourOfDay)
-                                                    set(Calendar.MINUTE, minute)
-                                                    set(Calendar.SECOND, 0)
-                                                    set(Calendar.MILLISECOND, 0)
-                                                }
-                                            reminderAt = picked.timeInMillis
-                                        },
-                                        c.get(Calendar.HOUR_OF_DAY),
-                                        c.get(Calendar.MINUTE),
-                                        false,
-                                    ).show()
-                                },
-                                c.get(Calendar.YEAR),
-                                c.get(Calendar.MONTH),
-                                c.get(Calendar.DAY_OF_MONTH),
-                            ).show()
+                            baseDateMillis = c.timeInMillis
+                            showDatePicker = true
                         }
                     }
                 },
@@ -190,6 +180,87 @@ fun ItemEditScreen(
                 }
             },
         )
+    }
+
+    // Material3 Date Picker Dialog
+    if (showDatePicker) {
+        val initialLocalMillis = baseDateMillis ?: Calendar.getInstance().timeInMillis
+        val initialUtcStartOfDay = localMillisToUtcStartOfDay(initialLocalMillis)
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialUtcStartOfDay)
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val selectedUtc = datePickerState.selectedDateMillis
+                        showDatePicker = false
+                        if (selectedUtc != null) {
+                            // selectedDateMillis is UTC start-of-day; extract Y/M/D using UTC, then create local calendar
+                            val utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply { timeInMillis = selectedUtc }
+                            val y = utcCal.get(Calendar.YEAR)
+                            val m = utcCal.get(Calendar.MONTH)
+                            val d = utcCal.get(Calendar.DAY_OF_MONTH)
+                            val dayCal =
+                                Calendar.getInstance().apply {
+                                    set(Calendar.YEAR, y)
+                                    set(Calendar.MONTH, m)
+                                    set(Calendar.DAY_OF_MONTH, d)
+                                    set(Calendar.HOUR_OF_DAY, 0)
+                                    set(Calendar.MINUTE, 0)
+                                    set(Calendar.SECOND, 0)
+                                    set(Calendar.MILLISECOND, 0)
+                                }
+                            pendingDateForTime = dayCal
+                            showTimePicker = true
+                        }
+                    },
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+            },
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    // Material3 Time Picker Dialog
+    if (showTimePicker) {
+        val defaultTime = if (reminderAt != null) Calendar.getInstance().apply { timeInMillis = reminderAt!! } else Calendar.getInstance()
+        val timeState =
+            rememberTimePickerState(
+                initialHour = defaultTime.get(Calendar.HOUR_OF_DAY),
+                initialMinute = defaultTime.get(Calendar.MINUTE),
+                is24Hour = false,
+            )
+        TimePickerDialog(
+            onDismissRequest = { showTimePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val dayCal = pendingDateForTime ?: Calendar.getInstance()
+                        val picked =
+                            Calendar.getInstance().apply {
+                                set(Calendar.YEAR, dayCal.get(Calendar.YEAR))
+                                set(Calendar.MONTH, dayCal.get(Calendar.MONTH))
+                                set(Calendar.DAY_OF_MONTH, dayCal.get(Calendar.DAY_OF_MONTH))
+                                set(Calendar.HOUR_OF_DAY, timeState.hour)
+                                set(Calendar.MINUTE, timeState.minute)
+                                set(Calendar.SECOND, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }
+                        reminderAt = picked.timeInMillis
+                        showTimePicker = false
+                    },
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showTimePicker = false }) { Text("Cancel") }
+            },
+            title = { Text("Select time") },
+        ) {
+            TimePicker(state = timeState)
+        }
     }
 }
 
@@ -389,6 +460,7 @@ fun ItemDetailScreenContent(
                                         }
                                     }
                                 } catch (e: TimeoutCancellationException) {
+                                    Log.i("Recognition", "Recognition timed out, ${e.message}")
                                     withContext(Dispatchers.Main) {
                                         Toast.makeText(context, "Recognition timed out. Please try again.", Toast.LENGTH_SHORT).show()
                                     }
@@ -734,4 +806,22 @@ private suspend fun recognizeInkToText(
         .firstOrNull()
         ?.text
         .orEmpty()
+}
+
+private fun localMillisToUtcStartOfDay(localMillis: Long): Long {
+    val local = Calendar.getInstance().apply { timeInMillis = localMillis }
+    val year = local.get(Calendar.YEAR)
+    val month = local.get(Calendar.MONTH)
+    val day = local.get(Calendar.DAY_OF_MONTH)
+    val utc =
+        Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, day)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+    return utc.timeInMillis
 }
