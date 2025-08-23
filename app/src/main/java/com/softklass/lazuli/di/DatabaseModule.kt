@@ -42,7 +42,10 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesParentRepository(parentDao: ParentDao) = ParentRepository(parentDao)
+    fun providesParentRepository(
+        parentDao: ParentDao,
+        itemDao: ItemDao,
+    ) = ParentRepository(parentDao, itemDao)
 
     @Singleton
     @Provides

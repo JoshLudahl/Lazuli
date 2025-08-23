@@ -1,5 +1,6 @@
 package com.softklass.lazuli.data.repository
 
+import com.softklass.lazuli.data.database.ItemDao
 import com.softklass.lazuli.data.database.ParentDao
 import com.softklass.lazuli.data.models.Parent
 import javax.inject.Inject
@@ -8,6 +9,7 @@ class ParentRepository
     @Inject
     constructor(
         private val parentDao: ParentDao,
+        private val itemDao: ItemDao,
     ) {
         fun getAllListItems() = parentDao.getAll()
 
@@ -15,7 +17,10 @@ class ParentRepository
 
         fun getParentItem(id: Int) = parentDao.getById(id)
 
-        suspend fun removeItem(item: Parent) = parentDao.delete(item)
+        suspend fun removeItem(item: Parent) {
+            parentDao.delete(item)
+            itemDao.deleteByParent(item.id)
+        }
 
         suspend fun clearDatabase() = parentDao.deleteAll()
 
