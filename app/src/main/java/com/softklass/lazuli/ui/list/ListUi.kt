@@ -329,7 +329,8 @@ private fun formatReminder(epochMillis: Long): String {
             .apply { timeInMillis = epochMillis }
     val month = java.text.SimpleDateFormat("MMMM", java.util.Locale.getDefault()).format(cal.time)
     val day = cal.get(java.util.Calendar.DAY_OF_MONTH)
-    val hourMinute = java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(cal.time)
+    val hourMinute =
+        java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(cal.time)
     return "$month ${ordinal(day)} at $hourMinute"
 }
 

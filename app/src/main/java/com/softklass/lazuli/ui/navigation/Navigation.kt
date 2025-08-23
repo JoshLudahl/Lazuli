@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +59,10 @@ private sealed interface Navigation {
 }
 
 @Composable
-fun AppNavHost(initialItemId: Int? = null) {
+fun AppNavHost(
+    initialItemId: Int? = null,
+    windowSizeClass: androidx.compose.material3.windowsizeclass.WindowSizeClass,
+) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -153,18 +157,128 @@ fun AppNavHost(initialItemId: Int? = null) {
                     navController.navigate(Navigation.ItemView(id))
                 }
             }
-            Main(
-                viewModel = viewModel,
-                onDetailItemClick = { id ->
-                    navController.navigate(Navigation.ListDetail(id))
-                },
-                onEditItemClick = {
-                    navController.navigate(Navigation.ItemEdit(it.id))
-                },
-                onSettingsClick = {
-                    navController.navigate(Navigation.Settings)
-                },
-            )
+            val isCompact = windowSizeClass.widthSizeClass == androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact
+            if (isCompact) {
+                Main(
+                    viewModel = viewModel,
+                    onDetailItemClick = { id ->
+                        navController.navigate(Navigation.ListDetail(id))
+                    },
+                    onEditItemClick = {
+                        navController.navigate(Navigation.ItemEdit(it.id))
+                    },
+                    onSettingsClick = {
+                        navController.navigate(Navigation.Settings)
+                    },
+                    windowSizeClass = windowSizeClass,
+                )
+            } else {
+                val detailNavController = rememberNavController()
+                Main(
+                    viewModel = viewModel,
+                    onDetailItemClick = { id ->
+                        detailNavController.navigate(Navigation.ListDetail(id))
+                    },
+                    onEditItemClick = { item ->
+                        // Edit parent/list on the right pane as well
+                        detailNavController.navigate(Navigation.ItemEdit(item.id))
+                    },
+                    onSettingsClick = {
+                        // Settings remains a full-screen destination on the root controller
+                        navController.navigate(Navigation.Settings)
+                    },
+                    windowSizeClass = windowSizeClass,
+                    trailingContent = {
+                        NavHost(
+                            navController = detailNavController,
+                            startDestination = "placeholder",
+                        ) {
+                            composable("placeholder") {
+                                androidx.compose.material3.Text("Select a list to view its items")
+                            }
+                            composable<Navigation.ListDetail>(
+                                enterTransition = {
+                                    // Fade-through for two-pane: incoming fades/scale in after outgoing fades out
+                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
+                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                },
+                                exitTransition = {
+                                    // Outgoing content just fades out quickly
+                                    fadeOut(animationSpec = tween(durationMillis = 90))
+                                },
+                                popEnterTransition = {
+                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
+                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                },
+                                popExitTransition = {
+                                    fadeOut(animationSpec = tween(durationMillis = 90))
+                                },
+                            ) {
+                                val listVm = hiltViewModel<ListDetailViewModel>()
+                                val screen: Navigation.ListDetail = it.toRoute()
+                                ListDetailScreen(
+                                    listId = screen.id,
+                                    viewModel = listVm,
+                                    onBack = { detailNavController.popBackStack() },
+                                    onEditItemClick = { item ->
+                                        detailNavController.navigate(Navigation.ItemEdit(item.id, isParent = false))
+                                    },
+                                    onViewItemClick = { id ->
+                                        detailNavController.navigate(Navigation.ItemView(id))
+                                    },
+                                )
+                            }
+                            composable<Navigation.ItemView>(
+                                enterTransition = {
+                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
+                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                },
+                                exitTransition = {
+                                    fadeOut(animationSpec = tween(durationMillis = 90))
+                                },
+                                popEnterTransition = {
+                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
+                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                },
+                                popExitTransition = {
+                                    fadeOut(animationSpec = tween(durationMillis = 90))
+                                },
+                            ) {
+                                val screen: Navigation.ItemView = it.toRoute()
+                                com.softklass.lazuli.ui.view.ItemViewScreen(
+                                    itemId = screen.id,
+                                    onBack = { detailNavController.popBackStack() },
+                                    onEdit = { id -> detailNavController.navigate(Navigation.ItemEdit(id, isParent = false)) },
+                                )
+                            }
+                            composable<Navigation.ItemEdit>(
+                                enterTransition = {
+                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
+                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                },
+                                exitTransition = {
+                                    fadeOut(animationSpec = tween(durationMillis = 90))
+                                },
+                                popEnterTransition = {
+                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
+                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                },
+                                popExitTransition = {
+                                    fadeOut(animationSpec = tween(durationMillis = 90))
+                                },
+                            ) {
+                                val screen: Navigation.ItemEdit = it.toRoute()
+                                val editVm = hiltViewModel<ItemEditViewModel>()
+                                ItemEditScreen(
+                                    viewModel = editVm,
+                                    itemId = screen.id,
+                                    onBack = { detailNavController.popBackStack() },
+                                )
+                            }
+                        }
+                    },
+                )
+            }
         }
 
         // Navigation.ListDetail

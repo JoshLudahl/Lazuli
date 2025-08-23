@@ -19,6 +19,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -47,6 +48,17 @@ class ListDetailViewModel
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList(),
             )
+
+        // Loading indicator flips to false after first DB emission
+        private val _isLoading = MutableStateFlow(true)
+        val isLoading: StateFlow<Boolean> = _isLoading
+
+        init {
+            viewModelScope.launch {
+                _listItems.first()
+                _isLoading.value = false
+            }
+        }
 
         private val _parent = parentRepository.getParentItem(listId)
         val parent =

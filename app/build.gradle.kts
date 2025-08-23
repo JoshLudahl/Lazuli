@@ -109,6 +109,7 @@ dependencies {
 
     // MATERIAL 3
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidxMaterial3WindowSizeClassAndroid)
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material.icons.extended)
 

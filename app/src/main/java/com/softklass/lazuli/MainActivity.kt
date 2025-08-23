@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+    @androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
     override fun onCreate(savedInstanceState: Bundle?) {
         // Handle the splash screen transition.
         installSplashScreen()
@@ -75,7 +77,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     val itemId = intent?.getIntExtra(com.softklass.lazuli.data.device.ReminderScheduler.EXTRA_ITEM_ID, -1).takeIf { it != null && it > 0 }
-                    AppNavHost(initialItemId = itemId)
+                    val windowSizeClass = calculateWindowSizeClass(this)
+                    AppNavHost(initialItemId = itemId, windowSizeClass = windowSizeClass)
                 }
             }
         }

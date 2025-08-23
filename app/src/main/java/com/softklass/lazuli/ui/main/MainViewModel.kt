@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -32,6 +33,18 @@ class MainViewModel
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList(),
             )
+
+        // Loading indicator flips to false after the first emission from DB (even if empty)
+        private val _isLoading = kotlinx.coroutines.flow.MutableStateFlow(true)
+        val isLoading: kotlinx.coroutines.flow.StateFlow<Boolean> = _isLoading
+
+        init {
+            viewModelScope.launch {
+                // Wait for the first emission to indicate DB has responded
+                _parentItems.first()
+                _isLoading.value = false
+            }
+        }
 
         // Map of Parent.id -> item count
         @OptIn(ExperimentalCoroutinesApi::class)

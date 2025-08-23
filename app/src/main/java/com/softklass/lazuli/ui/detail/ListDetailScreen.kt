@@ -56,6 +56,7 @@ fun ListDetailScreen(
     var listItem: String by rememberSaveable { mutableStateOf("") }
     val listItems by viewModel.listItems.collectAsStateWithLifecycle()
     val processingImage by viewModel.processingImage.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     val parent by viewModel.parent.collectAsStateWithLifecycle(null)
     var isEnabled by remember { mutableStateOf(true) }.useDebounce {
@@ -204,34 +205,39 @@ fun ListDetailScreen(
             }
         }
 
-        ListDetailContent(
-            modifier = Modifier.padding(innerPadding),
-            listItem = listItem,
-            list =
-                if (sorted) {
-                    listItems.sortedWith { first, second ->
-                        second?.content?.let {
-                            first?.content?.compareTo(
-                                it,
-                                ignoreCase = true,
-                            )
-                        } ?: 0
-                    }
-                } else {
-                    listItems
+        if (isLoading) {
+            com.softklass.lazuli.ui.composables
+                .Loading(modifier = Modifier.padding(innerPadding))
+        } else {
+            ListDetailContent(
+                modifier = Modifier.padding(innerPadding),
+                listItem = listItem,
+                list =
+                    if (sorted) {
+                        listItems.sortedWith { first, second ->
+                            second?.content?.let {
+                                first?.content?.compareTo(
+                                    it,
+                                    ignoreCase = true,
+                                )
+                            } ?: 0
+                        }
+                    } else {
+                        listItems
+                    },
+                onListItemChange = { listItem = it },
+                onAddItemClick = {
+                    viewModel.addListItem(it, listId)
+                    listItem = ""
                 },
-            onListItemChange = { listItem = it },
-            onAddItemClick = {
-                viewModel.addListItem(it, listId)
-                listItem = ""
-            },
-            onDeleteItemClick = {
-                viewModel.removeItem(it as Item)
-            },
-            onEditItemClick = onEditItemClick,
-            onItemClick = onViewItemClick,
-            onCameraClick = { showCamera = true },
-        )
+                onDeleteItemClick = {
+                    viewModel.removeItem(it as Item)
+                },
+                onEditItemClick = onEditItemClick,
+                onItemClick = onViewItemClick,
+                onCameraClick = { showCamera = true },
+            )
+        }
 
         ConfirmationDialog(
             onDismissRequest = {

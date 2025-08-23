@@ -1,21 +1,26 @@
 package com.softklass.lazuli.ui.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,14 +51,20 @@ fun Main(
     onDetailItemClick: (Int) -> Unit,
     onEditItemClick: (ListItem) -> Unit,
     onSettingsClick: () -> Unit,
+    windowSizeClass: androidx.compose.material3.windowsizeclass.WindowSizeClass,
+    trailingContent: (@Composable () -> Unit)? = null,
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
     val itemCounts by viewModel.itemCounts.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val openDialog = remember { mutableStateOf(false) }
     val openDeleteListDialog = remember { mutableStateOf(false) }
     val parent = remember { mutableStateOf<Parent?>(null) }
     val context = LocalContext.current
+
+    val widthClass = windowSizeClass.widthSizeClass
+    val isCompact = widthClass == androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact
 
     Scaffold(
         topBar = {
@@ -71,36 +82,38 @@ fun Main(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.height(56.dp),
-                containerColor = MaterialTheme.colorScheme.surface,
-                windowInsets =
-                    WindowInsets(
-                        left = 8.dp,
-                        top = 0.dp,
-                        right = 0.dp,
-                        bottom = 16.dp,
-                    ),
-            ) {
-                IconButton(onClick = onSettingsClick) {
-                    Icon(
-                        imageVector = Icons.Rounded.Settings,
-                        contentDescription = "Settings",
-                    )
-                }
-
-                IconButton(
-                    onClick = {
-                        if (items.isNotEmpty()) {
-                            openDialog.value = true
-                        }
-                    },
-                    enabled = items.isNotEmpty(),
+            if (isCompact) {
+                BottomAppBar(
+                    modifier = Modifier.height(56.dp),
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    windowInsets =
+                        WindowInsets(
+                            left = 8.dp,
+                            top = 0.dp,
+                            right = 0.dp,
+                            bottom = 16.dp,
+                        ),
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.DeleteSweep,
-                        contentDescription = "Delete everything.",
-                    )
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(
+                            imageVector = Icons.Rounded.Settings,
+                            contentDescription = "Settings",
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            if (items.isNotEmpty()) {
+                                openDialog.value = true
+                            }
+                        },
+                        enabled = items.isNotEmpty(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.DeleteSweep,
+                            contentDescription = "Delete everything.",
+                        )
+                    }
                 }
             }
         },
@@ -110,23 +123,88 @@ fun Main(
                 .windowInsetsPadding(WindowInsets.systemBars),
     ) { innerPadding ->
 
-        MainContent(
-            modifier = Modifier.padding(innerPadding),
-            onDetailItemClick = onDetailItemClick,
-            list = items,
-            listName = listName,
-            onListNameChange = { listName = it },
-            onAddItemClick = {
-                viewModel.addList(it)
-                listName = ""
-            },
-            onDeleteIconClick = {
-                parent.value = it as Parent
-                openDeleteListDialog.value = true
-            },
-            onEditItemClick = onEditItemClick,
-            itemCounts = itemCounts,
-        )
+        if (!isCompact) {
+            androidx.compose.foundation.layout.Row(modifier = Modifier.padding(innerPadding)) {
+                NavigationRail(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ) {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(imageVector = Icons.Rounded.Settings, contentDescription = "Settings")
+                    }
+                    IconButton(
+                        onClick = {
+                            if (items.isNotEmpty()) openDialog.value = true
+                        },
+                        enabled = items.isNotEmpty(),
+                    ) {
+                        Icon(imageVector = Icons.Rounded.DeleteSweep, contentDescription = "Delete everything.")
+                    }
+                }
+                androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                    if (isLoading) {
+                        com.softklass.lazuli.ui.composables
+                            .Loading()
+                    } else {
+                        MainContent(
+                            modifier = Modifier.padding(start = 16.dp),
+                            onDetailItemClick = onDetailItemClick,
+                            list = items,
+                            listName = listName,
+                            onListNameChange = { listName = it },
+                            onAddItemClick = {
+                                viewModel.addList(it)
+                                listName = ""
+                            },
+                            onDeleteIconClick = {
+                                parent.value = it as Parent
+                                openDeleteListDialog.value = true
+                            },
+                            onEditItemClick = onEditItemClick,
+                            itemCounts = itemCounts,
+                        )
+                    }
+                }
+                // Divider between panes
+                androidx.compose.foundation.layout.Box(
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp)
+                            .fillMaxHeight()
+                            .width(1.dp)
+                            .background(MaterialTheme.colorScheme.outlineVariant),
+                ) {}
+                // Trailing content pane (details) if provided; otherwise placeholder
+                androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1.5f)) {
+                    if (trailingContent != null) {
+                        trailingContent()
+                    } else {
+                        Column(
+                            modifier = Modifier.fillMaxSize().padding(24.dp),
+                        ) {
+                            Text("Select a list to view its items")
+                        }
+                    }
+                }
+            }
+        } else {
+            MainContent(
+                modifier = Modifier.padding(innerPadding),
+                onDetailItemClick = onDetailItemClick,
+                list = items,
+                listName = listName,
+                onListNameChange = { listName = it },
+                onAddItemClick = {
+                    viewModel.addList(it)
+                    listName = ""
+                },
+                onDeleteIconClick = {
+                    parent.value = it as Parent
+                    openDeleteListDialog.value = true
+                },
+                onEditItemClick = onEditItemClick,
+                itemCounts = itemCounts,
+            )
+        }
 
         ConfirmationDialog(
             onDismissRequest = {
@@ -156,6 +234,7 @@ fun Main(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
