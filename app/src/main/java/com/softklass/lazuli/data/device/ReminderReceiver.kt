@@ -43,7 +43,7 @@ class ReminderReceiver : BroadcastReceiver() {
         val notification =
             NotificationCompat
                 .Builder(context, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.animated_drawable)
                 .setContentTitle("Reminder")
                 .setContentText(title)
                 .setAutoCancel(true)
