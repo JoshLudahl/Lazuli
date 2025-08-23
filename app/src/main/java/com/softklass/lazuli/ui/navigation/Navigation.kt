@@ -174,9 +174,11 @@ fun AppNavHost(
                 )
             } else {
                 val detailNavController = rememberNavController()
+                val currentDetailListId = rememberSaveable { mutableStateOf<Int?>(null) }
                 Main(
                     viewModel = viewModel,
                     onDetailItemClick = { id ->
+                        currentDetailListId.value = id
                         detailNavController.navigate(Navigation.ListDetail(id))
                     },
                     onEditItemClick = { item ->
@@ -188,6 +190,13 @@ fun AppNavHost(
                         navController.navigate(Navigation.Settings)
                     },
                     windowSizeClass = windowSizeClass,
+                    onListDeleted = { deletedId ->
+                        if (currentDetailListId.value == deletedId) {
+                            // Reset and pop detail pane back to placeholder when the displayed list is removed
+                            currentDetailListId.value = null
+                            detailNavController.popBackStack("placeholder", false)
+                        }
+                    },
                     trailingContent = {
                         NavHost(
                             navController = detailNavController,

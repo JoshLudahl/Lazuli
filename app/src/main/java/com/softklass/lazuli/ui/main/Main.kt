@@ -53,6 +53,7 @@ fun Main(
     onSettingsClick: () -> Unit,
     windowSizeClass: androidx.compose.material3.windowsizeclass.WindowSizeClass,
     trailingContent: (@Composable () -> Unit)? = null,
+    onListDeleted: ((Int) -> Unit)? = null,
 ) {
     var listName: String by rememberSaveable { mutableStateOf("") }
     val items by viewModel.parentItems.collectAsStateWithLifecycle()
@@ -224,7 +225,9 @@ fun Main(
                 openDeleteListDialog.value = false
             },
             onConfirmation = {
-                viewModel.removeItem(parent.value as Parent)
+                val deleted = parent.value as Parent
+                viewModel.removeItem(deleted)
+                onListDeleted?.invoke(deleted.id)
                 openDeleteListDialog.value = false
             },
             dialogTitle = "Clear List?",
