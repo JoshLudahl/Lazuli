@@ -122,7 +122,7 @@ fun ListDetailScreen(
                             onDismissRequest = { showMenu = false },
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Sort Ascending") },
+                                text = { Text("Sort by Ascending") },
                                 onClick = {
                                     // Handle sort ascending
                                     viewModel.sortByOption(SortOption.ASCENDING)
@@ -131,12 +131,12 @@ fun ListDetailScreen(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Rounded.Sort, // Or your custom sort icon
-                                        contentDescription = "Sort",
+                                        contentDescription = "Sort by Ascending",
                                     )
                                 },
                             )
                             DropdownMenuItem(
-                                text = { Text("Sort Descending") },
+                                text = { Text("Sort by Descending") },
                                 onClick = {
                                     // Handle sort descending
                                     viewModel.sortByOption(SortOption.DESCENDING)
@@ -145,14 +145,14 @@ fun ListDetailScreen(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Rounded.Sort, // Or your custom sort icon
-                                        contentDescription = "Sort",
+                                        contentDescription = "Sort by Descending",
                                         modifier = Modifier.rotate(180f),
                                     )
                                 },
                             )
                             // Add more DropdownMenuItems as needed
                             DropdownMenuItem(
-                                text = { Text("Sort by Date") },
+                                text = { Text("Sort by Due Date") },
                                 onClick = {
                                     // Handle sort by date
                                     viewModel.sortByOption(SortOption.DATE)
@@ -161,7 +161,7 @@ fun ListDetailScreen(
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Rounded.DateRange, // Or your custom date icon
-                                        contentDescription = "Date",
+                                        contentDescription = "Sort by Due Date icon",
                                     )
                                 },
                             )
