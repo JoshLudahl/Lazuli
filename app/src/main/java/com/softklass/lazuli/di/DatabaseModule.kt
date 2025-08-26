@@ -30,7 +30,8 @@ object DatabaseModule {
             ListDatabase.Companion.MIGRATION_1_2,
             ListDatabase.Companion.MIGRATION_2_3,
             ListDatabase.Companion.MIGRATION_3_4,
-        ).build()
+        ).fallbackToDestructiveMigrationOnDowngrade(false)
+        .build()
 
     @Singleton
     @Provides
