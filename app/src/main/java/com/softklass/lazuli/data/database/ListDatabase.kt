@@ -4,11 +4,13 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.Parent
+import com.softklass.lazuli.data.models.SortPreference
 
 @Database(
     entities = [
         Item::class,
         Parent::class,
+        SortPreference::class
     ],
     version = 4,
     exportSchema = false,
@@ -17,6 +19,8 @@ abstract class ListDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDao
 
     abstract fun parentDao(): ParentDao
+
+    abstract fun sortPreferenceDao(): SortPreferenceDao
 
     companion object {
         val MIGRATION_1_2 =

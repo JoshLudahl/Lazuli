@@ -50,4 +50,8 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun providesItemRepository(itemDao: ItemDao) = ItemRepository(itemDao)
+
+    @Singleton
+    @Provides
+    fun providesSortPreferenceDao(database: ListDatabase) = database.sortPreferenceDao()
 }
