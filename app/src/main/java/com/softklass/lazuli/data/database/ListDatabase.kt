@@ -10,7 +10,7 @@ import com.softklass.lazuli.data.models.SortPreference
     entities = [
         Item::class,
         Parent::class,
-        SortPreference::class
+        SortPreference::class,
     ],
     version = 4,
     exportSchema = false,
