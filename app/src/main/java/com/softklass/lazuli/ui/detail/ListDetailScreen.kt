@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DropdownMenu
@@ -20,6 +21,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -44,6 +47,7 @@ import com.softklass.lazuli.data.models.SortOption
 import com.softklass.lazuli.data.models.getSortedList
 import com.softklass.lazuli.ui.camera.CameraScreen
 import com.softklass.lazuli.ui.composables.ConfirmationDialog
+import com.softklass.lazuli.ui.composables.Loading
 import com.softklass.lazuli.ui.composables.ReusableTopAppBar
 import com.softklass.lazuli.ui.composables.useDebounce
 import com.softklass.lazuli.ui.list.DisplayList
@@ -128,6 +132,10 @@ fun ListDetailScreen(
                                     viewModel.sortByOption(SortOption.ASCENDING)
                                     showMenu = false // Dismiss the menu
                                 },
+                                colors =
+                                    MenuDefaults.itemColors(
+                                        textColor = sortedMenuOption(SortOption.ASCENDING, sorted),
+                                    ),
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Rounded.Sort, // Or your custom sort icon
@@ -142,6 +150,10 @@ fun ListDetailScreen(
                                     viewModel.sortByOption(SortOption.DESCENDING)
                                     showMenu = false // Dismiss the menu
                                 },
+                                colors =
+                                    MenuDefaults.itemColors(
+                                        textColor = sortedMenuOption(SortOption.DESCENDING, sorted),
+                                    ),
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Rounded.Sort, // Or your custom sort icon
@@ -150,7 +162,8 @@ fun ListDetailScreen(
                                     )
                                 },
                             )
-                            // Add more DropdownMenuItems as needed
+
+                            // Sort by Due Date
                             DropdownMenuItem(
                                 text = { Text("Sort by Due Date") },
                                 onClick = {
@@ -158,10 +171,34 @@ fun ListDetailScreen(
                                     viewModel.sortByOption(SortOption.DATE)
                                     showMenu = false
                                 },
+                                colors =
+                                    MenuDefaults.itemColors(
+                                        textColor = sortedMenuOption(SortOption.DATE, sorted),
+                                    ),
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Rounded.DateRange, // Or your custom date icon
                                         contentDescription = "Sort by Due Date icon",
+                                    )
+                                },
+                            )
+
+                            // Sort by Created At
+                            DropdownMenuItem(
+                                text = { Text("Sort by Created") },
+                                onClick = {
+                                    // Handle sort by date
+                                    viewModel.sortByOption(SortOption.CREATED)
+                                    showMenu = false
+                                },
+                                colors =
+                                    MenuDefaults.itemColors(
+                                        textColor = sortedMenuOption(SortOption.CREATED, sorted),
+                                    ),
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Rounded.CalendarMonth, // Or your custom date icon
+                                        contentDescription = "Sort by Created Date icon",
                                     )
                                 },
                             )
@@ -223,8 +260,7 @@ fun ListDetailScreen(
         }
 
         if (isLoading) {
-            com.softklass.lazuli.ui.composables
-                .Loading(modifier = Modifier.padding(innerPadding))
+            Loading(modifier = Modifier.padding(innerPadding))
         } else {
             ListDetailContent(
                 modifier = Modifier.padding(innerPadding),
@@ -296,4 +332,14 @@ fun ListDetailContent(
             isListItemDetail = false,
         )
     }
+}
+
+@Composable
+private fun sortedMenuOption(
+    sortByOption: SortOption,
+    sorted: SortOption,
+): Color {
+    val selectedColor = MaterialTheme.colorScheme.primary
+    val unselectedColor = MaterialTheme.colorScheme.onBackground
+    return if (sortByOption == sorted) selectedColor else unselectedColor
 }
