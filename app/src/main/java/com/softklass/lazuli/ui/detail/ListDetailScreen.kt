@@ -2,6 +2,7 @@ package com.softklass.lazuli.ui.detail
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
@@ -9,8 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -33,6 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.R
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
+import com.softklass.lazuli.data.models.SortOption
+import com.softklass.lazuli.data.models.getSortedList
 import com.softklass.lazuli.ui.camera.CameraScreen
 import com.softklass.lazuli.ui.composables.ConfirmationDialog
 import com.softklass.lazuli.ui.composables.ReusableTopAppBar
@@ -99,46 +108,66 @@ fun ListDetailScreen(
                         bottom = 16.dp,
                     ),
                 actions = {
-//                    Box {
-//                        // We use a Box to anchor the DropdownMenu
-//                        IconButton(onClick = { showMenu = true }) {
-//                            Icon(
-//                                imageVector = Icons.AutoMirrored.Filled.Sort, // Or your custom sort icon
-//                                contentDescription = "Sort Options",
-//                            )
-//                        }
-//
-//                        DropdownMenu(
-//                            expanded = showMenu,
-//                            onDismissRequest = { showMenu = false },
-//                        ) {
-//                            DropdownMenuItem(
-//                                text = { Text("Sort Ascending") },
-//                                onClick = {
-//                                    // Handle sort ascending
-//                                    println("Sort Ascending clicked")
-//                                    showMenu = false // Dismiss the menu
-//                                },
-//                            )
-//                            DropdownMenuItem(
-//                                text = { Text("Sort Descending") },
-//                                onClick = {
-//                                    // Handle sort descending
-//                                    println("Sort Descending clicked")
-//                                    showMenu = false // Dismiss the menu
-//                                },
-//                            )
-//                            // Add more DropdownMenuItems as needed
-//                            DropdownMenuItem(
-//                                text = { Text("Sort by Date") },
-//                                onClick = {
-//                                    // Handle sort by date
-//                                    println("Sort by Date clicked")
-//                                    showMenu = false
-//                                },
-//                            )
-//                        }
-//                    }
+                    Box {
+                        // We use a Box to anchor the DropdownMenu
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Sort, // Or your custom sort icon
+                                contentDescription = "Sort Options",
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false },
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Sort Ascending") },
+                                onClick = {
+                                    // Handle sort ascending
+                                    viewModel.sortByOption(SortOption.ASCENDING)
+                                    showMenu = false // Dismiss the menu
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Rounded.Sort, // Or your custom sort icon
+                                        contentDescription = "Sort",
+                                    )
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Sort Descending") },
+                                onClick = {
+                                    // Handle sort descending
+                                    viewModel.sortByOption(SortOption.DESCENDING)
+                                    showMenu = false // Dismiss the menu
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Rounded.Sort, // Or your custom sort icon
+                                        contentDescription = "Sort",
+                                        modifier = Modifier.rotate(180f),
+                                    )
+                                },
+                            )
+                            // Add more DropdownMenuItems as needed
+                            DropdownMenuItem(
+                                text = { Text("Sort by Date") },
+                                onClick = {
+                                    // Handle sort by date
+                                    viewModel.sortByOption(SortOption.DATE)
+                                    showMenu = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Rounded.DateRange, // Or your custom date icon
+                                        contentDescription = "Date",
+                                    )
+                                },
+                            )
+                        }
+                    }
+
                     IconButton(
                         onClick = {
                             openDialog.value = true
@@ -148,18 +177,6 @@ fun ListDetailScreen(
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.delete_sweep_24px),
                             contentDescription = "Delete",
-                        )
-                    }
-
-                    IconButton(
-                        onClick = {
-                            viewModel.toggleSort()
-                        },
-                        enabled = listItems.isNotEmpty(),
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.sort_24px),
-                            contentDescription = "Sort",
                         )
                     }
 
@@ -212,19 +229,7 @@ fun ListDetailScreen(
             ListDetailContent(
                 modifier = Modifier.padding(innerPadding),
                 listItem = listItem,
-                list =
-                    if (sorted) {
-                        listItems.sortedWith { first, second ->
-                            second?.content?.let {
-                                first?.content?.compareTo(
-                                    it,
-                                    ignoreCase = true,
-                                )
-                            } ?: 0
-                        }
-                    } else {
-                        listItems
-                    },
+                list = getSortedList(sortByOption = sorted, list = listItems),
                 onListItemChange = { listItem = it },
                 onAddItemClick = {
                     viewModel.addListItem(it, listId)
