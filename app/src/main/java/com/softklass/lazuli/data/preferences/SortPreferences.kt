@@ -21,12 +21,13 @@ class SortPreferences
         private val sortOptionKey = stringPreferencesKey("list_detail_sort_option")
 
         val sortOptionPreference: Flow<SortOption> =
-            dataStore.data.map { preferences ->
-                SortOption.valueOf(preferences[sortOptionKey] ?: SortOption.CREATED.name)
-            }.catch { exception ->
-                Log.e("SortPreferences", "Error reading sort option", exception)
-                emit(SortOption.CREATED)
-            }
+            dataStore.data
+                .map { preferences ->
+                    SortOption.valueOf(preferences[sortOptionKey] ?: SortOption.CREATED.name)
+                }.catch { exception ->
+                    Log.e("SortPreferences", "Error reading sort option", exception)
+                    emit(SortOption.CREATED)
+                }
 
         suspend fun setSortOption(option: SortOption) {
             Log.i("SortPreferences", "setSortOption: $option")
