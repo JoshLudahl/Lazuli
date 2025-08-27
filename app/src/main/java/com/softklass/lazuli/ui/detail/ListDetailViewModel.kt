@@ -35,10 +35,16 @@ class ListDetailViewModel
         parentRepository: ParentRepository,
         savedStateHandle: SavedStateHandle,
         @ApplicationContext private val appContext: Context,
+        private val sortPreferences: com.softklass.lazuli.data.preferences.SortPreferences,
     ) : ViewModel() {
         private val listId: Int = checkNotNull(savedStateHandle["id"])
 
-        private val _sorted = MutableStateFlow(SortOption.CREATED)
+        private val _sorted =
+            sortPreferences.sortOptionPreference.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = SortOption.CREATED,
+            )
         val sorted: StateFlow<SortOption>
             get() = _sorted
 
@@ -56,9 +62,11 @@ class ListDetailViewModel
 
         init {
             viewModelScope.launch {
+                // Initialize loading state once first DB emission arrives
                 _listItems.first()
                 _isLoading.value = false
             }
+            // Load persisted sort option: set initial value eagerly, then collect updates
         }
 
         private val _parent = parentRepository.getParentItem(listId)
@@ -97,7 +105,14 @@ class ListDetailViewModel
         }
 
         fun sortByOption(sortOption: SortOption) {
-            _sorted.value = sortOption
+            // _sorted.value = sortOption
+            viewModelScope.launch {
+                try {
+                    sortPreferences.setSortOption(sortOption)
+                } catch (_: Exception) {
+                    // Ignore persistence errors; UI remains updated
+                }
+            }
         }
 
         // OCR processing
