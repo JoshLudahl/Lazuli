@@ -82,10 +82,12 @@ class MainActivity : ComponentActivity() {
                             .windowInsetsPadding(WindowInsets.statusBars)
                             .fillMaxSize(),
                 ) {
-                    val itemId = intent?.getIntExtra(
-                        com.softklass.lazuli.data.device.ReminderScheduler.EXTRA_ITEM_ID,
-                        -1
-                    ).takeIf { it != null && it > 0 }
+                    val itemId =
+                        intent
+                            ?.getIntExtra(
+                                com.softklass.lazuli.data.device.ReminderScheduler.EXTRA_ITEM_ID,
+                                -1,
+                            ).takeIf { it != null && it > 0 }
                     val windowSizeClass = calculateWindowSizeClass(this)
                     AppNavHost(initialItemId = itemId, windowSizeClass = windowSizeClass)
                 }
