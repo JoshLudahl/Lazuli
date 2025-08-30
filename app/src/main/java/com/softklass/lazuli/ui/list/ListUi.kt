@@ -112,7 +112,7 @@ fun DisplayList(
                                             maxFontSize = 16.sp,
                                         ),
                                     style =
-                                        MaterialTheme.typography.bodyLarge.copy(
+                                        MaterialTheme.typography.labelMedium.copy(
                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         ),
                                 )
@@ -122,10 +122,10 @@ fun DisplayList(
                                         Text(
                                             text = "Due ${formatReminder(reminderAt)}",
                                             style =
-                                                MaterialTheme.typography.bodySmall.copy(
+                                                MaterialTheme.typography.labelMedium.copy(
                                                     color =
                                                         MaterialTheme.colorScheme.onPrimaryContainer.copy(
-                                                            alpha = .5f,
+                                                            alpha = .6f,
                                                         ),
                                                 ),
                                             modifier =
@@ -155,13 +155,13 @@ fun DisplayList(
                                     Text(
                                         text = text,
                                         style =
-                                            MaterialTheme.typography.bodySmall.copy(
+                                            MaterialTheme.typography.labelMedium.copy(
                                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             ),
                                         modifier =
                                             Modifier
                                                 .padding(top = 4.dp)
-                                                .alpha(0.5f),
+                                                .alpha(0.6f),
                                     )
                                 }
                             }

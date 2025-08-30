@@ -73,7 +73,7 @@ fun Main(
                 onNavigateBack = {},
                 includeBackArrow = false,
                 title = {
-                    Text("Lazuli")
+                    Text("Lazuli", style = MaterialTheme.typography.headlineMedium)
                 },
                 modifier = Modifier.testTag("title"),
                 actions = {
