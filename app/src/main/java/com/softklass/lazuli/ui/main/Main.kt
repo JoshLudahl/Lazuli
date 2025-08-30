@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Settings
@@ -120,8 +118,7 @@ fun Main(
         },
         modifier =
             Modifier
-                .padding(start = 8.dp, end = 8.dp)
-                .windowInsetsPadding(WindowInsets.systemBars),
+                .padding(start = 8.dp, end = 8.dp),
     ) { innerPadding ->
 
         if (!isCompact) {

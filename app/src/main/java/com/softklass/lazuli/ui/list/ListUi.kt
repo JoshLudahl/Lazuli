@@ -181,7 +181,7 @@ fun DisplayList(
                             ) {
                                 Icon(
                                     imageVector = ImageVector.vectorResource(id = R.drawable.edit_note_24px),
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    tint = MaterialTheme.colorScheme.onSurface,
                                     contentDescription = "Edit item.",
                                     modifier =
                                         Modifier
