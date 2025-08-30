@@ -7,7 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
@@ -74,7 +77,10 @@ class MainActivity : ComponentActivity() {
                 dynamicColor = themeManager.dynamicColor.collectAsState().value,
             ) {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier =
+                        Modifier
+                             .windowInsetsPadding(WindowInsets.statusBars)
+                            .fillMaxSize(),
                 ) {
                     val itemId = intent?.getIntExtra(com.softklass.lazuli.data.device.ReminderScheduler.EXTRA_ITEM_ID, -1).takeIf { it != null && it > 0 }
                     val windowSizeClass = calculateWindowSizeClass(this)
