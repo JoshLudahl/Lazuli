@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.10.1"
-androidApplication = "8.12.2"
+androidApplication = "8.13.0"
 animation = "1.9.0"
 appcompat = "1.7.1"
 appUpdate = "2.1.0"
