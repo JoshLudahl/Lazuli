@@ -33,7 +33,7 @@ mlkitDigitalInk = "19.0.0"
 navigationComposeAndroid = "2.9.4"
 orchestrator = "1.6.1"
 richtextCommonmark = "1.0.0-alpha03"
-roomRuntime = "2.8.0"
+roomRuntime = "2.8.1"
 ui = "1.9.1"
 uiTextGoogleFonts = "1.9.1"
 
