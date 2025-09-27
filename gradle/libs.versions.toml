@@ -35,7 +35,7 @@ orchestrator = "1.6.1"
 richtextCommonmark = "1.0.0-alpha03"
 roomRuntime = "2.8.1"
 ui = "1.9.2"
-uiTextGoogleFonts = "1.9.1"
+uiTextGoogleFonts = "1.9.2"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
