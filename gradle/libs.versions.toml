@@ -1,7 +1,7 @@
 [versions]
 activityCompose = "1.11.0"
 androidApplication = "8.13.0"
-animation = "1.9.1"
+animation = "1.9.2"
 appcompat = "1.7.1"
 appUpdate = "2.1.0"
 camerax = "1.5.0"
