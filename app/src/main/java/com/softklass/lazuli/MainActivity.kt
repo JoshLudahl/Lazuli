@@ -7,10 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.collectAsState
@@ -77,10 +74,7 @@ class MainActivity : ComponentActivity() {
                 dynamicColor = themeManager.dynamicColor.collectAsState().value,
             ) {
                 Surface(
-                    modifier =
-                        Modifier
-                            .windowInsetsPadding(WindowInsets.statusBars)
-                            .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     val itemId =
                         intent
