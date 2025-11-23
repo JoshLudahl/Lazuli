@@ -19,7 +19,7 @@ android {
         minSdk = 26
         targetSdk = target
         versionCode = 37
-        versionName = "2025.10.11"
+        versionName = "2025.11.23"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments.putAll(mutableMapOf("clearPackageData" to "true"))
