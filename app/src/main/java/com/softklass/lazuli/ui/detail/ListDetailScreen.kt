@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
@@ -100,7 +101,7 @@ fun ListDetailScreen(
         },
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier.height(56.dp),
+                modifier = Modifier.navigationBarsPadding().height(56.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
                 windowInsets =
                     WindowInsets(
