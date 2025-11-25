@@ -126,6 +126,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
+    // build.gradle.kts
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
     // In App Updates
     implementation(libs.app.update)
