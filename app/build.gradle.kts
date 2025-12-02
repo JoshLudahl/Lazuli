@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId = "com.softklass.lazuli"
-        
+
         minSdk =
             libs.versions.minSdk
                 .get()
