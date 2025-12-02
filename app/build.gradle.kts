@@ -11,15 +11,31 @@ plugins {
 }
 
 android {
-    val target = 36
-    compileSdk = target
+
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "com.softklass.lazuli"
-        minSdk = 26
-        targetSdk = target
-        versionCode = 38
-        versionName = "2025.11.23.1410"
+        
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
+
+        versionCode =
+            libs.versions.versionCode
+                .get()
+                .toInt()
+
+        versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments.putAll(mutableMapOf("clearPackageData" to "true"))

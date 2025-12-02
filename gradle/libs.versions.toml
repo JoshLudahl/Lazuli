@@ -1,4 +1,11 @@
 [versions]
+# App
+minSdk = "26"
+targetSdk = "36"
+compileSdk = "36"
+versionCode = "39"
+versionName = "2025.11.23.1410"
+
 activityCompose = "1.12.0"
 androidApplication = "8.13.1"
 animation = "1.9.5"
