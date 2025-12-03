@@ -42,7 +42,7 @@ navigationComposeAndroid = "2.9.6"
 orchestrator = "1.6.1"
 richtextCommonmark = "1.0.0-alpha03"
 roomRuntime = "2.8.4"
-ui = "1.9.5"
+ui = "1.10.0"
 uiTextGoogleFonts = "1.9.5"
 
 # Navigation 3
