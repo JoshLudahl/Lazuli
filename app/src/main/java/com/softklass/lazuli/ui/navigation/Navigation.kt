@@ -64,6 +64,7 @@ fun AppNavHost(
     windowSizeClass: androidx.compose.material3.windowsizeclass.WindowSizeClass,
 ) {
     val navController = rememberNavController()
+
     NavHost(
         navController = navController,
         startDestination = Navigation.Entry,
@@ -157,7 +158,8 @@ fun AppNavHost(
                     navController.navigate(Navigation.ItemView(id))
                 }
             }
-            val isCompact = windowSizeClass.widthSizeClass == androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact
+            val isCompact =
+                windowSizeClass.widthSizeClass == androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact
             if (isCompact) {
                 Main(
                     viewModel = viewModel,
@@ -208,16 +210,36 @@ fun AppNavHost(
                             composable<Navigation.ListDetail>(
                                 enterTransition = {
                                     // Fade-through for two-pane: incoming fades/scale in after outgoing fades out
-                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
-                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                    fadeIn(
+                                        animationSpec = tween(
+                                            durationMillis = 210,
+                                            delayMillis = 90
+                                        )
+                                    ) +
+                                            scaleIn(
+                                                animationSpec = tween(
+                                                    durationMillis = 210,
+                                                    delayMillis = 90
+                                                ), initialScale = 0.92f
+                                            )
                                 },
                                 exitTransition = {
                                     // Outgoing content just fades out quickly
                                     fadeOut(animationSpec = tween(durationMillis = 90))
                                 },
                                 popEnterTransition = {
-                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
-                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                    fadeIn(
+                                        animationSpec = tween(
+                                            durationMillis = 210,
+                                            delayMillis = 90
+                                        )
+                                    ) +
+                                            scaleIn(
+                                                animationSpec = tween(
+                                                    durationMillis = 210,
+                                                    delayMillis = 90
+                                                ), initialScale = 0.92f
+                                            )
                                 },
                                 popExitTransition = {
                                     fadeOut(animationSpec = tween(durationMillis = 90))
@@ -230,7 +252,12 @@ fun AppNavHost(
                                     viewModel = listVm,
                                     onBack = { detailNavController.popBackStack() },
                                     onEditItemClick = { item ->
-                                        detailNavController.navigate(Navigation.ItemEdit(item.id, isParent = false))
+                                        detailNavController.navigate(
+                                            Navigation.ItemEdit(
+                                                item.id,
+                                                isParent = false
+                                            )
+                                        )
                                     },
                                     onViewItemClick = { id ->
                                         detailNavController.navigate(Navigation.ItemView(id))
@@ -239,15 +266,35 @@ fun AppNavHost(
                             }
                             composable<Navigation.ItemView>(
                                 enterTransition = {
-                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
-                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                    fadeIn(
+                                        animationSpec = tween(
+                                            durationMillis = 210,
+                                            delayMillis = 90
+                                        )
+                                    ) +
+                                            scaleIn(
+                                                animationSpec = tween(
+                                                    durationMillis = 210,
+                                                    delayMillis = 90
+                                                ), initialScale = 0.92f
+                                            )
                                 },
                                 exitTransition = {
                                     fadeOut(animationSpec = tween(durationMillis = 90))
                                 },
                                 popEnterTransition = {
-                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
-                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                    fadeIn(
+                                        animationSpec = tween(
+                                            durationMillis = 210,
+                                            delayMillis = 90
+                                        )
+                                    ) +
+                                            scaleIn(
+                                                animationSpec = tween(
+                                                    durationMillis = 210,
+                                                    delayMillis = 90
+                                                ), initialScale = 0.92f
+                                            )
                                 },
                                 popExitTransition = {
                                     fadeOut(animationSpec = tween(durationMillis = 90))
@@ -257,20 +304,47 @@ fun AppNavHost(
                                 com.softklass.lazuli.ui.view.ItemViewScreen(
                                     itemId = screen.id,
                                     onBack = { detailNavController.popBackStack() },
-                                    onEdit = { id -> detailNavController.navigate(Navigation.ItemEdit(id, isParent = false)) },
+                                    onEdit = { id ->
+                                        detailNavController.navigate(
+                                            Navigation.ItemEdit(
+                                                id,
+                                                isParent = false
+                                            )
+                                        )
+                                    },
                                 )
                             }
                             composable<Navigation.ItemEdit>(
                                 enterTransition = {
-                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
-                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                    fadeIn(
+                                        animationSpec = tween(
+                                            durationMillis = 210,
+                                            delayMillis = 90
+                                        )
+                                    ) +
+                                            scaleIn(
+                                                animationSpec = tween(
+                                                    durationMillis = 210,
+                                                    delayMillis = 90
+                                                ), initialScale = 0.92f
+                                            )
                                 },
                                 exitTransition = {
                                     fadeOut(animationSpec = tween(durationMillis = 90))
                                 },
                                 popEnterTransition = {
-                                    fadeIn(animationSpec = tween(durationMillis = 210, delayMillis = 90)) +
-                                        scaleIn(animationSpec = tween(durationMillis = 210, delayMillis = 90), initialScale = 0.92f)
+                                    fadeIn(
+                                        animationSpec = tween(
+                                            durationMillis = 210,
+                                            delayMillis = 90
+                                        )
+                                    ) +
+                                            scaleIn(
+                                                animationSpec = tween(
+                                                    durationMillis = 210,
+                                                    delayMillis = 90
+                                                ), initialScale = 0.92f
+                                            )
                                 },
                                 popExitTransition = {
                                     fadeOut(animationSpec = tween(durationMillis = 90))
@@ -352,7 +426,14 @@ fun AppNavHost(
             com.softklass.lazuli.ui.view.ItemViewScreen(
                 itemId = screen.id,
                 onBack = { navController.popBackStack() },
-                onEdit = { id -> navController.navigate(Navigation.ItemEdit(id, isParent = false)) },
+                onEdit = { id ->
+                    navController.navigate(
+                        Navigation.ItemEdit(
+                            id,
+                            isParent = false
+                        )
+                    )
+                },
             )
         }
 
