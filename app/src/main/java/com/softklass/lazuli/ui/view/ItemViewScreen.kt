@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.halilibo.richtext.commonmark.CommonmarkAstNodeParser
 import com.halilibo.richtext.markdown.BasicMarkdown
@@ -38,7 +37,7 @@ fun ItemViewScreen(
     itemId: Int,
     onBack: () -> Unit,
     onEdit: (Int) -> Unit,
-    viewModel: ItemViewViewModel = hiltViewModel(),
+    viewModel: ItemViewViewModel,
 ) {
     val item by viewModel.item.collectAsStateWithLifecycle()
 
