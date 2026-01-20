@@ -48,7 +48,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.softklass.lazuli.BuildConfig
 import com.softklass.lazuli.R
 import com.softklass.lazuli.ui.composables.ReusableTopAppBar
 import com.softklass.lazuli.ui.theme.ThemeManager
@@ -249,7 +248,7 @@ fun SettingsContent(
 
         // App Version
         Text(
-            text = "Version ${BuildConfig.VERSION_NAME}",
+            text = "Version ${R.string.app_version_name}",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.align(Alignment.CenterHorizontally),

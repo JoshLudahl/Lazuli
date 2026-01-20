@@ -42,6 +42,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        resValue("string", "app_version_name", "\"${versionName}\"")
     }
 
     buildTypes {
