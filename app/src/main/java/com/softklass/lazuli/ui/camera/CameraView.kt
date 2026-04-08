@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -168,7 +169,7 @@ fun CameraView(
 }
 
 private suspend fun Context.getCameraProvider(): ProcessCameraProvider =
-    suspendCoroutine { continuation ->
+    suspendCancellableCoroutine { continuation ->
         ProcessCameraProvider.getInstance(this).also { future ->
             future.addListener(
                 {
@@ -183,7 +184,7 @@ val Context.executor: Executor
     get() = ContextCompat.getMainExecutor(this)
 
 suspend fun ImageCapture.takePicture(executor: Executor): Bitmap =
-    suspendCoroutine { continuation ->
+    suspendCancellableCoroutine { continuation ->
         takePicture(
             executor,
             object : ImageCapture.OnImageCapturedCallback() {
