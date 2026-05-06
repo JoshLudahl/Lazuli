@@ -7,7 +7,7 @@ versionCode = "40"
 versionName = "2025.12.16"
 
 activityCompose = "1.13.0"
-androidApplication = "9.2.0"
+androidApplication = "9.2.1"
 animation = "1.11.0"
 appcompat = "1.7.1"
 appUpdate = "2.1.0"
