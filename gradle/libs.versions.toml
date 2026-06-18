@@ -3,8 +3,8 @@
 minSdk = "26"
 targetSdk = "37"
 compileSdk = "37"
-versionCode = "40"
-versionName = "2025.12.16"
+versionCode = "41"
+versionName = "2026.06.18"
 
 activityCompose = "1.13.0"
 androidApplication = "9.2.1"
