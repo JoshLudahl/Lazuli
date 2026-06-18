@@ -119,14 +119,18 @@ fun DisplayList(
                                 if (!isListItemDetail) {
                                     val reminderAt = (item as? Item)?.reminderAt
                                     if (reminderAt != null) {
+                                        val isPastDue = reminderAt < System.currentTimeMillis()
+                                        val textColor =
+                                            if (isPastDue) {
+                                                MaterialTheme.colorScheme.errorContainer
+                                            } else {
+                                                MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .6f)
+                                            }
                                         Text(
                                             text = "Due ${formatReminder(reminderAt)}",
                                             style =
                                                 MaterialTheme.typography.labelMedium.copy(
-                                                    color =
-                                                        MaterialTheme.colorScheme.onPrimaryContainer.copy(
-                                                            alpha = .6f,
-                                                        ),
+                                                    color = textColor,
                                                 ),
                                             modifier =
                                                 Modifier
