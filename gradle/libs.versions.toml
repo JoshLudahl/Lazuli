@@ -1,5 +1,6 @@
 [versions]
 # App
+guava = "33.6.0-android"
 minSdk = "26"
 targetSdk = "37"
 compileSdk = "37"
@@ -95,6 +96,7 @@ androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycl
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 
 # ML Kit
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkitTextRecognition" }
 mlkit-digital-ink = { group = "com.google.mlkit", name = "digital-ink-recognition", version.ref = "mlkitDigitalInk" }
