@@ -1,11 +1,10 @@
 [versions]
 # App
-guava = "33.6.0-android"
 minSdk = "26"
 targetSdk = "37"
 compileSdk = "37"
-versionCode = "41"
-versionName = "2026.06.18"
+versionCode = "42"
+versionName = "2026.08.12"
 
 activityCompose = "1.13.0"
 androidApplication = "9.3.1"
@@ -20,6 +19,7 @@ coroutines = "1.11.0"
 datastorePreferences = "1.2.1"
 espressoCore = "3.7.0"
 foundation = "1.11.4"
+guava = "33.6.0-android"
 hiltAndroidGradlePlugin = "2.60.1"
 hiltCompiler = "1.4.0"
 hiltLifecycleViewmodelCompose = "1.4.0"
