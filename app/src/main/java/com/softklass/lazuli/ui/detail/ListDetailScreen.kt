@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.Sort
@@ -101,15 +101,8 @@ fun ListDetailScreen(
         },
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier.navigationBarsPadding().height(56.dp),
+                modifier = Modifier.navigationBarsPadding().systemBarsPadding().height(56.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
-                windowInsets =
-                    WindowInsets(
-                        left = 8.dp,
-                        top = 0.dp,
-                        right = 0.dp,
-                        bottom = 16.dp,
-                    ),
                 actions = {
                     Box {
                         // We use a Box to anchor the DropdownMenu

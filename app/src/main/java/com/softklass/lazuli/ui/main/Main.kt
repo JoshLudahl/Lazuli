@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -65,10 +67,12 @@ fun Main(
 
     val widthClass = windowSizeClass.widthSizeClass
     val isCompact = widthClass == androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         topBar = {
             ReusableTopAppBar(
+                scrollBehavior = scrollBehavior,
                 onNavigateBack = {},
                 includeBackArrow = false,
                 title = {
@@ -119,7 +123,8 @@ fun Main(
         },
         modifier =
             Modifier
-                .padding(start = 8.dp, end = 8.dp),
+                .padding(start = 8.dp, end = 8.dp)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
 
         if (!isCompact) {

@@ -2,11 +2,11 @@ package com.softklass.lazuli.ui.view
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -57,22 +57,15 @@ fun ItemViewScreen(
         },
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier,
+                modifier = Modifier.systemBarsPadding(),
                 containerColor = MaterialTheme.colorScheme.surface,
-                windowInsets =
-                    WindowInsets(
-                        left = 8.dp,
-                        top = 0.dp,
-                        right = 0.dp,
-                        bottom = 0.dp,
-                    ),
                 actions = {},
             )
         },
         modifier =
             Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(horizontal = 8.dp),
     ) { innerPadding ->
         Column(
             modifier =

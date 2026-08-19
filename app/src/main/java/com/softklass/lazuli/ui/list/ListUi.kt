@@ -71,6 +71,7 @@ fun DisplayList(
             ) {
                 item?.content?.let { content ->
                     Card(
+                        shape = MaterialTheme.shapes.largeIncreased,
                         modifier =
                             Modifier
                                 .fillMaxWidth()
