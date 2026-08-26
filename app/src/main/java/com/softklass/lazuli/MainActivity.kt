@@ -67,6 +67,9 @@ class MainActivity : ComponentActivity() {
         checkIsUpdateAvailable()
 
         enableEdgeToEdge()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
         ensureNotificationPermission()
         setContent {
             AppTheme(

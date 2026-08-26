@@ -2,12 +2,11 @@ package com.softklass.lazuli.ui.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -15,6 +14,7 @@ import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -88,15 +88,9 @@ fun Main(
         bottomBar = {
             if (isCompact) {
                 BottomAppBar(
-                    modifier = Modifier.navigationBarsPadding().height(56.dp),
+                    modifier = Modifier.height(56.dp),
                     containerColor = MaterialTheme.colorScheme.surface,
-                    windowInsets =
-                        WindowInsets(
-                            left = 8.dp,
-                            top = 0.dp,
-                            right = 0.dp,
-                            bottom = 16.dp,
-                        ),
+                    windowInsets = BottomAppBarDefaults.windowInsets,
                 ) {
                     IconButton(onClick = onSettingsClick) {
                         Icon(
@@ -192,7 +186,7 @@ fun Main(
             }
         } else {
             MainContent(
-                modifier = Modifier.padding(innerPadding),
+                contentPadding = innerPadding,
                 onDetailItemClick = onDetailItemClick,
                 list = items,
                 listName = listName,
@@ -244,6 +238,7 @@ fun Main(
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     onDetailItemClick: (Int) -> Unit,
     onAddItemClick: (String) -> Unit,
     list: List<Parent?>,
@@ -277,6 +272,7 @@ fun MainContent(
                 onEditItemClick = onEditItemClick,
                 isListItemDetail = true,
                 itemCounts = itemCounts,
+                contentPadding = contentPadding,
             )
 
             Spacer(modifier = Modifier.weight(.5f))

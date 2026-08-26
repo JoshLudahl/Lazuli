@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -137,10 +138,9 @@ fun ItemEditScreen(
                 isEnabled = isEnabled,
             )
         },
-        modifier = Modifier.padding(8.dp),
     ) { innerPadding ->
         ItemDetailScreenContent(
-            modifier = Modifier.padding(innerPadding).fillMaxHeight(),
+            modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding).fillMaxHeight(),
             title = title,
             onTitleChange = { title = it },
             isParent = viewModel.isParentFlag,

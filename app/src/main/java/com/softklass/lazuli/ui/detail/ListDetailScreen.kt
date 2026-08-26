@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.automirrored.rounded.Sort
@@ -15,6 +14,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.R
 import com.softklass.lazuli.data.models.Item
@@ -101,8 +102,9 @@ fun ListDetailScreen(
         },
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier.navigationBarsPadding().systemBarsPadding().height(56.dp),
+                modifier = Modifier.height(56.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
+                windowInsets = BottomAppBarDefaults.windowInsets,
                 actions = {
                     Box {
                         // We use a Box to anchor the DropdownMenu
@@ -236,6 +238,11 @@ fun ListDetailScreen(
         if (showCamera) {
             Dialog(
                 onDismissRequest = { showCamera = false },
+                properties =
+                    DialogProperties(
+                        usePlatformDefaultWidth = false,
+                        decorFitsSystemWindows = false,
+                    ),
             ) {
                 CameraScreen(
                     onImageCaptured = { bitmap ->
@@ -254,7 +261,7 @@ fun ListDetailScreen(
             Loading(modifier = Modifier.padding(innerPadding))
         } else {
             ListDetailContent(
-                modifier = Modifier.padding(innerPadding),
+                contentPadding = innerPadding,
                 listItem = listItem,
                 list = getSortedList(sortByOption = sorted, list = listItems),
                 onListItemChange = { listItem = it },
@@ -289,6 +296,7 @@ fun ListDetailScreen(
 @Composable
 fun ListDetailContent(
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     listItem: String,
     list: List<Item?>,
     onListItemChange: (String) -> Unit,
@@ -321,6 +329,7 @@ fun ListDetailContent(
             onDeleteIconClick = onDeleteItemClick,
             onEditItemClick = onEditItemClick,
             isListItemDetail = false,
+            contentPadding = contentPadding,
         )
     }
 }
