@@ -2,13 +2,17 @@ package com.softklass.lazuli.ui.camera
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
+import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
@@ -58,7 +62,16 @@ fun CameraView(
             ImageCapture
                 .Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .build(),
+                .setResolutionSelector(
+                    ResolutionSelector
+                        .Builder()
+                        .setResolutionStrategy(
+                            ResolutionStrategy(
+                                Size(1920, 1080),
+                                ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER,
+                            ),
+                        ).build(),
+                ).build(),
         )
     }
 
@@ -188,7 +201,12 @@ suspend fun ImageCapture.takePicture(executor: Executor): Bitmap =
             executor,
             object : ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(image: ImageProxy) {
-                    val bitmap = image.toBitmap()
+                    val bitmap = image.decodeToBitmapWithDownsampling()
+                    if (bitmap == null) {
+                        continuation.resumeWith(Result.failure(Exception("Failed to decode bitmap")))
+                        image.close()
+                        return
+                    }
                     val rotatedBitmap =
                         bitmap.rotateBitmap(image.imageInfo.rotationDegrees.toFloat())
                     image.close()
@@ -209,4 +227,41 @@ fun Bitmap.rotateBitmap(rotationDegrees: Float): Bitmap {
             postRotate(rotationDegrees)
         }
     return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
+}
+
+fun ImageProxy.decodeToBitmapWithDownsampling(): Bitmap? {
+    val buffer = planes[0].buffer
+    val bytes = ByteArray(buffer.remaining())
+    buffer.get(bytes)
+
+    val options =
+        BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
+
+    // Target ~1080p dimensions for OCR to reduce memory pressure
+    options.inSampleSize = calculateInSampleSize(options, 1920, 1080)
+    options.inJustDecodeBounds = false
+
+    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
+}
+
+fun calculateInSampleSize(
+    options: BitmapFactory.Options,
+    reqWidth: Int,
+    reqHeight: Int,
+): Int {
+    val (height: Int, width: Int) = options.outHeight to options.outWidth
+    var inSampleSize = 1
+
+    if (height > reqHeight || width > reqWidth) {
+        val halfHeight: Int = height / 2
+        val halfWidth: Int = width / 2
+
+        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
 }
