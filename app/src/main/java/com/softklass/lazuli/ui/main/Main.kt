@@ -255,7 +255,15 @@ fun MainContent(
     onEditItemClick: (ListItem) -> Unit,
     itemCounts: Map<Int, Int>,
 ) {
-    Column(modifier = modifier.fillMaxSize().padding(contentPadding)) {
+    Column(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding(),
+                ),
+    ) {
         val context = LocalContext.current
 
         SectionTitle(title = "Create New List")
@@ -279,7 +287,6 @@ fun MainContent(
                 onEditItemClick = onEditItemClick,
                 isListItemDetail = true,
                 itemCounts = itemCounts,
-                contentPadding = contentPadding,
             )
 
             Spacer(modifier = Modifier.weight(.5f))

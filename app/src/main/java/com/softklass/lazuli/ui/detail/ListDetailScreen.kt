@@ -304,7 +304,14 @@ fun ListDetailContent(
     onItemClick: (Int) -> Unit,
     onCameraClick: (() -> Unit)? = null,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier =
+            modifier
+                .padding(
+                    top = contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding(),
+                ),
+    ) {
         SectionTitle(title = "Add New Item")
 
         HeaderUi(
@@ -321,13 +328,17 @@ fun ListDetailContent(
         }
 
         SectionTitle("Items")
+
         DisplayList(
             list = list,
             onItemClick = onItemClick,
             onDeleteIconClick = onDeleteItemClick,
             onEditItemClick = onEditItemClick,
             isListItemDetail = false,
-            contentPadding = contentPadding,
+            contentPadding =
+                PaddingValues(
+                    bottom = contentPadding.calculateBottomPadding(),
+                ),
         )
     }
 }
