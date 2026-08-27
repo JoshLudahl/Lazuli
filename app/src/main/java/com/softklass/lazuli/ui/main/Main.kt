@@ -1,12 +1,13 @@
 package com.softklass.lazuli.ui.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -66,7 +67,8 @@ fun Main(
     val context = LocalContext.current
 
     val widthClass = windowSizeClass.widthSizeClass
-    val isCompact = widthClass == androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact
+    val isCompact =
+        widthClass == androidx.compose.material3.windowsizeclass.WindowWidthSizeClass.Compact
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
@@ -88,7 +90,6 @@ fun Main(
         bottomBar = {
             if (isCompact) {
                 BottomAppBar(
-                    modifier = Modifier.height(56.dp),
                     containerColor = MaterialTheme.colorScheme.surface,
                     windowInsets = BottomAppBarDefaults.windowInsets,
                 ) {
@@ -122,7 +123,7 @@ fun Main(
     ) { innerPadding ->
 
         if (!isCompact) {
-            androidx.compose.foundation.layout.Row(modifier = Modifier.padding(innerPadding)) {
+            Row(modifier = Modifier.padding(innerPadding)) {
                 NavigationRail(
                     containerColor = MaterialTheme.colorScheme.surface,
                 ) {
@@ -135,10 +136,13 @@ fun Main(
                         },
                         enabled = items.isNotEmpty(),
                     ) {
-                        Icon(imageVector = Icons.Rounded.DeleteSweep, contentDescription = "Delete everything.")
+                        Icon(
+                            imageVector = Icons.Rounded.DeleteSweep,
+                            contentDescription = "Delete everything.",
+                        )
                     }
                 }
-                androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.weight(1f)) {
                     if (isLoading) {
                         com.softklass.lazuli.ui.composables
                             .Loading()
@@ -163,7 +167,7 @@ fun Main(
                     }
                 }
                 // Divider between panes
-                androidx.compose.foundation.layout.Box(
+                Box(
                     modifier =
                         Modifier
                             .padding(horizontal = 8.dp)
@@ -172,12 +176,15 @@ fun Main(
                             .background(MaterialTheme.colorScheme.outlineVariant),
                 ) {}
                 // Trailing content pane (details) if provided; otherwise placeholder
-                androidx.compose.foundation.layout.Box(modifier = Modifier.weight(1.5f)) {
+                Box(modifier = Modifier.weight(1.5f)) {
                     if (trailingContent != null) {
                         trailingContent()
                     } else {
                         Column(
-                            modifier = Modifier.fillMaxSize().padding(24.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .padding(24.dp),
                         ) {
                             Text("Select a list to view its items")
                         }
@@ -248,7 +255,7 @@ fun MainContent(
     onEditItemClick: (ListItem) -> Unit,
     itemCounts: Map<Int, Int>,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize().padding(contentPadding)) {
         val context = LocalContext.current
 
         SectionTitle(title = "Create New List")
