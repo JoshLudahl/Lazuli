@@ -1,12 +1,12 @@
 package com.softklass.lazuli.ui.navigation
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.core.os.bundleOf
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.DEFAULT_ARGS_KEY
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
@@ -16,6 +16,7 @@ import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -70,6 +71,19 @@ private sealed interface Navigation : NavKey {
     data object Settings : Navigation
 }
 
+private fun Navigation.toBundle(): Bundle =
+    Bundle().apply {
+        when (val key = this@toBundle) {
+            is Navigation.ListDetail -> putInt("id", key.id)
+            is Navigation.ItemView -> putInt("id", key.id)
+            is Navigation.ItemEdit -> {
+                putInt("id", key.id)
+                putBoolean("isParent", key.isParent)
+            }
+            else -> {}
+        }
+    }
+
 @Composable
 fun AppNavHost(
     initialItemId: Int? = null,
@@ -86,8 +100,7 @@ fun AppNavHost(
                 rememberViewModelStoreNavEntryDecorator(),
             ),
         entryProvider = { key ->
-            val navKey = key as Navigation
-            when (navKey) {
+            when (val navKey = key as Navigation) {
                 is Navigation.Entry ->
                     NavEntry(navKey) {
                         val vm = hiltViewModel<OnboardingViewModel>()
@@ -120,10 +133,9 @@ fun AppNavHost(
                         val viewModel = hiltViewModel<MainViewModel>()
                         val didHandleDeepLink = rememberSaveable { mutableStateOf(false) }
                         LaunchedEffect(initialItemId, didHandleDeepLink.value) {
-                            val id = initialItemId
-                            if (!didHandleDeepLink.value && id != null && id > 0) {
+                            if (!didHandleDeepLink.value && initialItemId != null && initialItemId > 0) {
                                 didHandleDeepLink.value = true
-                                backStack.add(Navigation.ItemView(id))
+                                backStack.add(Navigation.ItemView(initialItemId))
                             }
                         }
                         val isCompact =
@@ -177,8 +189,7 @@ fun AppNavHost(
                                                 rememberViewModelStoreNavEntryDecorator(),
                                             ),
                                         entryProvider = { dKey ->
-                                            val detailKey = dKey as Navigation
-                                            when (detailKey) {
+                                            when (val detailKey = dKey as Navigation) {
                                                 is Navigation.Entry ->
                                                     NavEntry(detailKey) {
                                                         androidx.compose.material3.Text("Select a list to view its items")
@@ -198,14 +209,14 @@ fun AppNavHost(
                                                                         get() = parentViewModelStoreOwner.viewModelStore
 
                                                                     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-                                                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, bundleOf("id" to detailKey.id))
+                                                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, detailKey.toBundle())
 
-                                                                    override val defaultViewModelCreationExtras: androidx.lifecycle.viewmodel.CreationExtras
+                                                                    override val defaultViewModelCreationExtras: CreationExtras
                                                                         get() {
                                                                             val extras = MutableCreationExtras()
-                                                                            extras.set(SAVED_STATE_REGISTRY_OWNER_KEY, parentSavedStateRegistryOwner)
-                                                                            extras.set(VIEW_MODEL_STORE_OWNER_KEY, this)
-                                                                            extras.set(DEFAULT_ARGS_KEY, bundleOf("id" to detailKey.id))
+                                                                            extras[SAVED_STATE_REGISTRY_OWNER_KEY] = parentSavedStateRegistryOwner
+                                                                            extras[VIEW_MODEL_STORE_OWNER_KEY] = this
+                                                                            extras[DEFAULT_ARGS_KEY] = detailKey.toBundle()
                                                                             return extras
                                                                         }
                                                                 }
@@ -246,14 +257,14 @@ fun AppNavHost(
                                                                         get() = parentViewModelStoreOwner.viewModelStore
 
                                                                     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-                                                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, bundleOf("id" to detailKey.id))
+                                                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, detailKey.toBundle())
 
-                                                                    override val defaultViewModelCreationExtras: androidx.lifecycle.viewmodel.CreationExtras
+                                                                    override val defaultViewModelCreationExtras: CreationExtras
                                                                         get() {
                                                                             val extras = MutableCreationExtras()
-                                                                            extras.set(SAVED_STATE_REGISTRY_OWNER_KEY, parentSavedStateRegistryOwner)
-                                                                            extras.set(VIEW_MODEL_STORE_OWNER_KEY, this)
-                                                                            extras.set(DEFAULT_ARGS_KEY, bundleOf("id" to detailKey.id))
+                                                                            extras[SAVED_STATE_REGISTRY_OWNER_KEY] = parentSavedStateRegistryOwner
+                                                                            extras[VIEW_MODEL_STORE_OWNER_KEY] = this
+                                                                            extras[DEFAULT_ARGS_KEY] = detailKey.toBundle()
                                                                             return extras
                                                                         }
                                                                 }
@@ -291,14 +302,14 @@ fun AppNavHost(
                                                                         get() = parentViewModelStoreOwner.viewModelStore
 
                                                                     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-                                                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, bundleOf("id" to detailKey.id, "isParent" to detailKey.isParent))
+                                                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, detailKey.toBundle())
 
-                                                                    override val defaultViewModelCreationExtras: androidx.lifecycle.viewmodel.CreationExtras
+                                                                    override val defaultViewModelCreationExtras: CreationExtras
                                                                         get() {
                                                                             val extras = MutableCreationExtras()
-                                                                            extras.set(SAVED_STATE_REGISTRY_OWNER_KEY, parentSavedStateRegistryOwner)
-                                                                            extras.set(VIEW_MODEL_STORE_OWNER_KEY, this)
-                                                                            extras.set(DEFAULT_ARGS_KEY, bundleOf("id" to detailKey.id, "isParent" to detailKey.isParent))
+                                                                            extras[SAVED_STATE_REGISTRY_OWNER_KEY] = parentSavedStateRegistryOwner
+                                                                            extras[VIEW_MODEL_STORE_OWNER_KEY] = this
+                                                                            extras[DEFAULT_ARGS_KEY] = detailKey.toBundle()
                                                                             return extras
                                                                         }
                                                                 }
@@ -339,14 +350,14 @@ fun AppNavHost(
                                         get() = parentViewModelStoreOwner.viewModelStore
 
                                     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, bundleOf("id" to navKey.id))
+                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, navKey.toBundle())
 
-                                    override val defaultViewModelCreationExtras: androidx.lifecycle.viewmodel.CreationExtras
+                                    override val defaultViewModelCreationExtras: CreationExtras
                                         get() {
                                             val extras = MutableCreationExtras()
-                                            extras.set(SAVED_STATE_REGISTRY_OWNER_KEY, parentSavedStateRegistryOwner)
-                                            extras.set(VIEW_MODEL_STORE_OWNER_KEY, this)
-                                            extras.set(DEFAULT_ARGS_KEY, bundleOf("id" to navKey.id))
+                                            extras[SAVED_STATE_REGISTRY_OWNER_KEY] = parentSavedStateRegistryOwner
+                                            extras[VIEW_MODEL_STORE_OWNER_KEY] = this
+                                            extras[DEFAULT_ARGS_KEY] = navKey.toBundle()
                                             return extras
                                         }
                                 }
@@ -382,14 +393,14 @@ fun AppNavHost(
                                         get() = parentViewModelStoreOwner.viewModelStore
 
                                     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, bundleOf("id" to navKey.id))
+                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, navKey.toBundle())
 
-                                    override val defaultViewModelCreationExtras: androidx.lifecycle.viewmodel.CreationExtras
+                                    override val defaultViewModelCreationExtras: CreationExtras
                                         get() {
                                             val extras = MutableCreationExtras()
-                                            extras.set(SAVED_STATE_REGISTRY_OWNER_KEY, parentSavedStateRegistryOwner)
-                                            extras.set(VIEW_MODEL_STORE_OWNER_KEY, this)
-                                            extras.set(DEFAULT_ARGS_KEY, bundleOf("id" to navKey.id))
+                                            extras[SAVED_STATE_REGISTRY_OWNER_KEY] = parentSavedStateRegistryOwner
+                                            extras[VIEW_MODEL_STORE_OWNER_KEY] = this
+                                            extras[DEFAULT_ARGS_KEY] = navKey.toBundle()
                                             return extras
                                         }
                                 }
@@ -427,14 +438,14 @@ fun AppNavHost(
                                         get() = parentViewModelStoreOwner.viewModelStore
 
                                     override val defaultViewModelProviderFactory: ViewModelProvider.Factory
-                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, bundleOf("id" to navKey.id, "isParent" to navKey.isParent))
+                                        get() = SavedStateViewModelFactory(null, parentSavedStateRegistryOwner, navKey.toBundle())
 
-                                    override val defaultViewModelCreationExtras: androidx.lifecycle.viewmodel.CreationExtras
+                                    override val defaultViewModelCreationExtras: CreationExtras
                                         get() {
                                             val extras = MutableCreationExtras()
-                                            extras.set(SAVED_STATE_REGISTRY_OWNER_KEY, parentSavedStateRegistryOwner)
-                                            extras.set(VIEW_MODEL_STORE_OWNER_KEY, this)
-                                            extras.set(DEFAULT_ARGS_KEY, bundleOf("id" to navKey.id, "isParent" to navKey.isParent))
+                                            extras[SAVED_STATE_REGISTRY_OWNER_KEY] = parentSavedStateRegistryOwner
+                                            extras[VIEW_MODEL_STORE_OWNER_KEY] = this
+                                            extras[DEFAULT_ARGS_KEY] = navKey.toBundle()
                                             return extras
                                         }
                                 }
