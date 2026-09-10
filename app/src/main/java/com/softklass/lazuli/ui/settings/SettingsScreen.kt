@@ -75,7 +75,7 @@ fun SettingsScreen(
                 isEnabled = true,
             )
         },
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(horizontal = 8.dp),
     ) { innerPadding ->
         SettingsContent(
             modifier = Modifier.padding(innerPadding),
