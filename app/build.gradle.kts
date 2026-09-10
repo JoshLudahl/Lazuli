@@ -114,6 +114,13 @@ tasks.named("preBuild") {
     dependsOn("ktlintFormat")
 }
 
+configurations.all {
+    resolutionStrategy {
+        force(libs.androidx.concurrent.futures)
+        force(libs.androidx.concurrent.futures.ktx)
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
