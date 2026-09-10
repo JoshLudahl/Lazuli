@@ -41,9 +41,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 
@@ -143,7 +145,7 @@ fun CameraView(
                     onClick = {
                         coroutineScope.launch {
                             try {
-                                val bitmap = imageCaptureUseCase.takePicture(context.executor)
+                                val bitmap = imageCaptureUseCase.takePicture(Dispatchers.IO.asExecutor())
                                 onImageCaptured(bitmap)
                             } catch (e: Exception) {
                                 Log.e("CameraView", "Failed to take picture", e)
@@ -183,19 +185,9 @@ fun CameraView(
 }
 
 private suspend fun Context.getCameraProvider(): ProcessCameraProvider =
-    suspendCancellableCoroutine { continuation ->
-        ProcessCameraProvider.getInstance(this).also { future ->
-            future.addListener(
-                {
-                    continuation.resume(future.get())
-                },
-                executor,
-            )
-        }
+    withContext(Dispatchers.IO) {
+        ProcessCameraProvider.getInstance(this@getCameraProvider).get()
     }
-
-val Context.executor: Executor
-    get() = ContextCompat.getMainExecutor(this)
 
 suspend fun ImageCapture.takePicture(executor: Executor): Bitmap =
     suspendCancellableCoroutine { continuation ->
@@ -239,6 +231,7 @@ fun ImageProxy.decodeToBitmapWithDownsampling(): Bitmap? {
     val options =
         BitmapFactory.Options().apply {
             inJustDecodeBounds = true
+            inSampleSize = 1
         }
     BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
 

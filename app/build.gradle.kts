@@ -49,14 +49,18 @@ configure<ApplicationExtension> {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            optimization {
+                enable = true
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
         }
         debug {
-            isMinifyEnabled = false
+            optimization {
+                enable = false
+            }
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             resValue(type = "string", name = "app_name", value = "Lazuli debug")
