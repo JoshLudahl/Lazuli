@@ -3,7 +3,6 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serializable)
     alias(libs.plugins.ksp)
@@ -83,6 +82,7 @@ configure<ApplicationExtension> {
 
     buildFeatures {
         compose = true
+        resValues = true
     }
 
     namespace = "com.softklass.lazuli"
@@ -114,14 +114,16 @@ tasks.named("preBuild") {
     dependsOn("ktlintFormat")
 }
 
-configurations.all {
-    resolutionStrategy {
-        force(libs.androidx.concurrent.futures)
-        force(libs.androidx.concurrent.futures.ktx)
-    }
-}
-
 dependencies {
+    constraints {
+        implementation(libs.androidx.concurrent.futures) {
+            version { strictly(libs.versions.concurrentFutures.get()) }
+            because("Conflict with transitive dependency from junit/espresso and lock file")
+        }
+        implementation(libs.androidx.concurrent.futures.ktx) {
+            version { strictly(libs.versions.concurrentFutures.get()) }
+        }
+    }
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
