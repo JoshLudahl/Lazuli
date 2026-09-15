@@ -2,7 +2,6 @@ package com.softklass.lazuli.ui.camera
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
 import android.util.Size
@@ -41,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.softklass.lazuli.utils.BitmapUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.launch
@@ -228,35 +228,5 @@ fun ImageProxy.decodeToBitmapWithDownsampling(): Bitmap? {
     val bytes = ByteArray(buffer.remaining())
     buffer.get(bytes)
 
-    val options =
-        BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-            inSampleSize = 1
-        }
-    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
-
-    // Target ~1080p dimensions for OCR to reduce memory pressure
-    options.inSampleSize = calculateInSampleSize(options, 1920, 1080)
-    options.inJustDecodeBounds = false
-
-    return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
-}
-
-fun calculateInSampleSize(
-    options: BitmapFactory.Options,
-    reqWidth: Int,
-    reqHeight: Int,
-): Int {
-    val (height: Int, width: Int) = options.outHeight to options.outWidth
-    var inSampleSize = 1
-
-    if (height > reqHeight || width > reqWidth) {
-        val halfHeight: Int = height / 2
-        val halfWidth: Int = width / 2
-
-        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-            inSampleSize *= 2
-        }
-    }
-    return inSampleSize
+    return BitmapUtils.decodeByteArrayWithDownsampling(bytes, 1920, 1080)
 }
