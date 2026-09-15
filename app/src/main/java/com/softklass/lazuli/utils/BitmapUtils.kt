@@ -34,9 +34,10 @@ object BitmapUtils {
         reqWidth: Int,
         reqHeight: Int,
     ): Bitmap? {
-        val options = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-        }
+        val options =
+            BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
         BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
 
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
