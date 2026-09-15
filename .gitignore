@@ -17,3 +17,4 @@ local.properties
 /Untitled
 *.aab
 *.jks
+/app/release/mapping.txt
