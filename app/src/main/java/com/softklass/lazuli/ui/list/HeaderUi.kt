@@ -12,15 +12,12 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -110,28 +107,6 @@ fun HeaderUi(
                 },
                 shape = RoundedCornerShape(corner = CornerSize(16.dp)),
             )
-
-            if (onCameraClick != null) {
-                Surface(
-                    modifier =
-                        Modifier
-                            .padding(start = 8.dp, top = 12.dp)
-                            .clickable {
-                                onCameraClick()
-                            },
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.CameraAlt,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        contentDescription = "Scan with camera",
-                        modifier =
-                            Modifier
-                                .padding(8.dp)
-                                .size(36.dp)
-                                .testTag("camera_icon"),
-                    )
-                }
-            }
         }
     }
 }

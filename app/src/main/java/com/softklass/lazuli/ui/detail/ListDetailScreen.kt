@@ -36,15 +36,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.softklass.lazuli.R
 import com.softklass.lazuli.data.models.Item
 import com.softklass.lazuli.data.models.ListItem
 import com.softklass.lazuli.data.models.SortOption
 import com.softklass.lazuli.data.models.getSortedList
-import com.softklass.lazuli.ui.camera.CameraScreen
 import com.softklass.lazuli.ui.composables.ConfirmationDialog
 import com.softklass.lazuli.ui.composables.Loading
 import com.softklass.lazuli.ui.composables.ReusableTopAppBar
@@ -54,7 +51,6 @@ import com.softklass.lazuli.ui.list.EmptyList
 import com.softklass.lazuli.ui.list.HeaderUi
 import com.softklass.lazuli.ui.list.SectionTitle
 import com.softklass.lazuli.ui.list.shareList
-import kotlinx.coroutines.launch
 
 @Composable
 fun ListDetailScreen(
@@ -231,29 +227,6 @@ fun ListDetailScreen(
             Modifier
                 .padding(start = 8.dp, end = 8.dp),
     ) { innerPadding ->
-
-        // Camera screen dialog
-        if (showCamera) {
-            Dialog(
-                onDismissRequest = { showCamera = false },
-                properties =
-                    DialogProperties(
-                        usePlatformDefaultWidth = false,
-                        decorFitsSystemWindows = false,
-                    ),
-            ) {
-                CameraScreen(
-                    onImageCaptured = { bitmap ->
-                        coroutineScope.launch {
-                            viewModel.processImageForOcr(bitmap)
-                            showCamera = false
-                        }
-                    },
-                    onClose = { showCamera = false },
-                    isProcessing = processingImage,
-                )
-            }
-        }
 
         if (isLoading) {
             Loading(modifier = Modifier.padding(innerPadding))
