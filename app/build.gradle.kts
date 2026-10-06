@@ -115,15 +115,6 @@ tasks.named("preBuild") {
 }
 
 dependencies {
-    constraints {
-        implementation(libs.androidx.concurrent.futures) {
-            version { strictly(libs.versions.concurrentFutures.get()) }
-            because("Conflict with transitive dependency from junit/espresso and lock file")
-        }
-        implementation(libs.androidx.concurrent.futures.ktx) {
-            version { strictly(libs.versions.concurrentFutures.get()) }
-        }
-    }
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -195,10 +186,6 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation3)
 
     testImplementation(libs.junit)
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
 
     androidTestUtil(libs.androidx.orchestrator)
 }
