@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -82,9 +82,14 @@ fun DisplayList(
                                 .padding(bottom = 8.dp, top = 8.dp)
                                 .animateItem()
                                 .animateContentSize()
-                                .clickable {
-                                    onItemClick(item.id)
-                                },
+                                .combinedClickable(
+                                    onClick = {
+                                        onItemClick(item.id)
+                                    },
+                                    onLongClick = {
+                                        onDeleteIconClick(item)
+                                    },
+                                ),
                         elevation =
                             CardDefaults.cardElevation(
                                 defaultElevation = 2.dp,

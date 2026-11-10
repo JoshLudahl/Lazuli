@@ -75,6 +75,8 @@ fun ListDetailScreen(
     }
 
     val openDialog = remember { mutableStateOf(false) }
+    val openDeleteItemDialog = remember { mutableStateOf(false) }
+    val itemToDelete = remember { mutableStateOf<Item?>(null) }
     var showCamera by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -241,7 +243,8 @@ fun ListDetailScreen(
                     listItem = ""
                 },
                 onDeleteItemClick = {
-                    viewModel.removeItem(it as Item)
+                    itemToDelete.value = it as Item
+                    openDeleteItemDialog.value = true
                 },
                 onEditItemClick = onEditItemClick,
                 onItemClick = onViewItemClick,
@@ -260,6 +263,21 @@ fun ListDetailScreen(
             dialogTitle = "Clear List",
             dialogText = "Are you sure you want to clear this list?",
             showConfirmation = openDialog.value,
+        )
+
+        ConfirmationDialog(
+            onDismissRequest = {
+                openDeleteItemDialog.value = false
+                itemToDelete.value = null
+            },
+            onConfirmation = {
+                itemToDelete.value?.let { viewModel.removeItem(it) }
+                openDeleteItemDialog.value = false
+                itemToDelete.value = null
+            },
+            dialogTitle = "Delete Item?",
+            dialogText = "Are you sure you want to delete this item?",
+            showConfirmation = openDeleteItemDialog.value,
         )
     }
 }
