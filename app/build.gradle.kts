@@ -17,6 +17,11 @@ configure<ApplicationExtension> {
             .get()
             .toInt()
 
+    compileSdkMinor =
+        libs.versions.compileSdkMinor
+            .get()
+            .toInt()
+
     defaultConfig {
         applicationId = "com.softklass.lazuli"
 
