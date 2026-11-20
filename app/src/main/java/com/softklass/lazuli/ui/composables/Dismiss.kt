@@ -1,138 +1,128 @@
 package com.softklass.lazuli.ui.composables
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun <T> SwipeToDismissContainer(
     item: T,
     onSwipeLeftToRight: (T) -> Unit,
     onSwipeRightToLeft: (T) -> Unit,
-    animationDuration: Long = 500L,
     leftIcon: ImageVector = Icons.Rounded.Edit,
     rightIcon: ImageVector = Icons.Rounded.Delete,
     content: @Composable (T) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val dismissState =
         rememberSwipeToDismissBoxState(
-            initialValue = SwipeToDismissBoxValue.Settled,
-            positionalThreshold = { distance -> distance * .25f },
+            positionalThreshold = { distance -> distance * 0.25f },
         )
 
-    var isSwipeLeftToRight by remember { mutableStateOf(false) }
-    var isSwipeRightToLeft by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = isSwipeRightToLeft) {
-        if (isSwipeRightToLeft) {
-            delay(animationDuration)
-            onSwipeRightToLeft(item)
-            dismissState.reset()
-            isSwipeRightToLeft = false
-        }
-    }
-
-    LaunchedEffect(key1 = isSwipeLeftToRight) {
-        if (isSwipeLeftToRight) {
-            onSwipeLeftToRight(item)
-            dismissState.reset()
-            isSwipeLeftToRight = false
-        }
-    }
-
-    AnimatedVisibility(
-        visible = !isSwipeRightToLeft,
-        exit =
-            shrinkVertically(
-                animationSpec = tween(durationMillis = animationDuration.toInt()),
-                shrinkTowards = Alignment.Top,
-            ) + fadeOut(),
-    ) {
-        SwipeToDismissBox(
-            state = dismissState,
-            enableDismissFromStartToEnd = true,
-            enableDismissFromEndToStart = true,
-            onDismiss = {
-                when (it) {
-                    SwipeToDismissBoxValue.StartToEnd -> {
-                        isSwipeLeftToRight = true
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromStartToEnd = true,
+        enableDismissFromEndToStart = true,
+        onDismiss = { dismissValue ->
+            when (dismissValue) {
+                SwipeToDismissBoxValue.StartToEnd -> {
+                    onSwipeLeftToRight(item)
+                    coroutineScope.launch {
+                        dismissState.reset()
                     }
-
-                    SwipeToDismissBoxValue.EndToStart -> {
-                        isSwipeRightToLeft = true
-                    }
-
-                    else -> {}
                 }
-            },
-            backgroundContent = {
-                DismissBackground(
-                    leftIcon = leftIcon,
-                    rightIcon = rightIcon,
-                )
-            },
-        ) {
-            content(item)
-        }
+
+                SwipeToDismissBoxValue.EndToStart -> {
+                    onSwipeRightToLeft(item)
+                    coroutineScope.launch {
+                        dismissState.reset()
+                    }
+                }
+
+                else -> {}
+            }
+        },
+        backgroundContent = {
+            DismissBackground(
+                dismissState = dismissState,
+                leftIcon = leftIcon,
+                rightIcon = rightIcon,
+            )
+        },
+    ) {
+        content(item)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DismissBackground(
-    leftIcon: ImageVector = Icons.Rounded.Archive,
+    dismissState: SwipeToDismissBoxState,
+    leftIcon: ImageVector = Icons.Rounded.Edit,
     rightIcon: ImageVector = Icons.Rounded.Delete,
 ) {
-    Row(
+    val direction = dismissState.dismissDirection
+
+    val color =
+        when (direction) {
+            SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.secondaryContainer
+            SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.errorContainer
+            SwipeToDismissBoxValue.Settled -> Color.Transparent
+        }
+
+    val alignment =
+        when (direction) {
+            SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+            SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+            SwipeToDismissBoxValue.Settled -> Alignment.Center
+        }
+
+    val icon =
+        when (direction) {
+            SwipeToDismissBoxValue.StartToEnd -> leftIcon
+            SwipeToDismissBoxValue.EndToStart -> rightIcon
+            SwipeToDismissBoxValue.Settled -> null
+        }
+
+    val iconTint =
+        when (direction) {
+            SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.onSecondaryContainer
+            SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.onErrorContainer
+            SwipeToDismissBoxValue.Settled -> Color.Transparent
+        }
+
+    Box(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(Color.Transparent, shape = RoundedCornerShape(16.dp))
-                .padding(16.dp, 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+                .background(color, shape = MaterialTheme.shapes.largeIncreased),
+        contentAlignment = alignment,
     ) {
-        Icon(
-            imageVector = leftIcon,
-            contentDescription = "Archive",
-            tint = MaterialTheme.colorScheme.primary,
-        )
-        Spacer(modifier = Modifier)
-        Icon(
-            // make sure add archive.xml resource to drawable folder
-            imageVector = rightIcon,
-            contentDescription = "Delete",
-            tint = MaterialTheme.colorScheme.error,
-        )
+        icon?.let {
+            Icon(
+                imageVector = it,
+                contentDescription = if (direction == SwipeToDismissBoxValue.EndToStart) "Delete" else "Edit",
+                tint = iconTint,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+        }
     }
 }
